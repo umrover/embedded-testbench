@@ -21,6 +21,9 @@ def read_data(num):
 # get to m/s2
 # Uses read_data() function.
 def get_decimal(ls, ms):
+    #uncomment this code 
+    # data = * combined MSB and LSB data* 
+    return data * .004 * -9.80665 * 9.80665
     pass
 
 # Rounds the number to a specified number of decimal places
