@@ -24,7 +24,7 @@ void write_byte_data(Bus *bus, uint8_t addr, char cmd, uint8_t data);
 
 long read_word_data(Bus *bus, uint8_t addr, char cmd);
 
-void write_word_data(Bus *bus, uint8_t addr, char cmd, uint8_t data);
+void write_word_data(Bus *bus, uint8_t addr, char cmd, uint16_t data);
 
 int check_error(Bus *bus);
 
