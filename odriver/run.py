@@ -84,12 +84,12 @@ def main():
     odrv = odrive.find_any(serial_number=id)
     print("found odrive")
     test_motor = odrv.axis0
+    t = time.clock()
 
     while(1):
         cmd_input = select.select([sys.stdin], [], [], 1)[0]
         f = open("current_draw.txt", "a")
         g = open("speed.txt", "a")
-        t = time.clock()
 
         if cmd_input:
             value = sys.stdin.readline().rstrip()
