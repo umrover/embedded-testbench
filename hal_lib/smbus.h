@@ -1,18 +1,22 @@
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "stm32f3xx_hal.h"
 
-const int true = 1;
-const int false = 0;
+#ifndef SMBUS_H_
+#define SMBUS_H_
+
+#define TRUE 1
+#define FALSE 0
 
 typedef struct {
-    I2C_HandleTypeDef hi2c;
-    UART_HandleTypeDef huart;
+    I2C_HandleTypeDef *i2c;
+    UART_HandleTypeDef *uart;
     HAL_StatusTypeDef ret;
     uint8_t buf[30];
 } Bus;
 
-Bus new_bus(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart);
+Bus *new_bus(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart);
 
 long read_byte(Bus *bus, uint8_t addr);
 
@@ -26,6 +30,8 @@ long read_word_data(Bus *bus, uint8_t addr, char cmd);
 
 void write_word_data(Bus *bus, uint8_t addr, char cmd, uint16_t data);
 
-int check_error(Bus *bus);
+int _check_error(Bus *bus);
 
 void reset(Bus *bus);
+
+#endif
