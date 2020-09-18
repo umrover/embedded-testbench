@@ -10,6 +10,4 @@ with open('current_draw.txt', "r") as f:
 		writer.writerow(["time", "current"])
 		for i in range(1, len(split_data) - 1, 2):
 			writer.writerow([split_data[i], split_data[i + 1]])
-
-	
-
+			
