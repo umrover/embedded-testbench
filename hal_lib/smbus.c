@@ -64,6 +64,39 @@ void write_word_data(Bus *bus, uint8_t addr, char cmd, uint16_t data) {
     _check_error(bus);
 }
 
+long *read_block_data(Bus *bus, uint8_t addr, char cmd) {
+    bus->buf[0] = cmd;
+    bus->ret = HAL_I2C_Master_Transmit(bus->i2c, addr << 1, bus->buf, 1, HAL_MAX_DELAY);
+    _check_error(bus);
+
+    bus->ret = HAL_I2C_Master_Receive(bus->i2c, (addr << 1) | 1, bus->buf, size + 1, HAL_MAX_DELAY);
+    _check_error(bus);
+
+    return bus->buf + 1 
+}
+
+
+void write_block_data(Bus *bus, uint8_t addr, char cmd, uint8_t *data, uint8_t size) {
+    if (size > 28) {
+        strcpy((char*)bus->buf, "Data too large, increase buffer size \r\n");
+
+        HAL_UART_Transmit(bus->uart, bus->buf, strlen((char*)bus->buf), HAL_MAX_DELAY);
+    }
+
+    bus->buf[0] = cmd;
+    bus->buf[1] = size;
+    
+    for (uint8_t i = 0; i < size; ++i) {
+        bus->buf[2 + i] = *data;
+        ++data;
+    } 
+
+    bus->ret = HAL_I2C_Master_Transmit(bus->i2c, addr << 1, bus->buf, size + 2, HAL_MAX_DELAY);
+    _check_error(bus);
+}
+
+
+
 int _check_error(Bus *bus) {
     if (bus->ret != HAL_OK) {
         strcpy((char*)bus->buf, "Err \r\n");
