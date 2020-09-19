@@ -9,7 +9,7 @@ Bus *new_bus(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart) {
     return bus;
 }
 
-long read_byte(Bus *bus, uint8_t addr) {
+uint8_t read_byte(Bus *bus, uint8_t addr) {
     bus->ret = HAL_I2C_Master_Receive(bus->i2c, (addr << 1) | 1, bus->buf, 1, HAL_MAX_DELAY);
     _check_error(bus);
     return bus->buf[0];
@@ -21,7 +21,7 @@ void write_byte(Bus *bus, uint8_t addr, uint8_t data) {
     _check_error(bus);
 }
 
-long read_byte_data(Bus *bus, uint8_t addr, char cmd) {
+uint8_t read_byte_data(Bus *bus, uint8_t addr, char cmd) {
     //transmits the address to read from
     bus->buf[0] = cmd;
     bus->ret = HAL_I2C_Master_Transmit(bus->i2c, addr << 1, bus->buf, 1, HAL_MAX_DELAY);
@@ -42,7 +42,7 @@ void write_byte_data(Bus *bus, uint8_t addr, char cmd, uint8_t data) {
     _check_error(bus);
 }
 
-long read_word_data(Bus *bus, uint8_t addr, char cmd) {
+uint16_t read_word_data(Bus *bus, uint8_t addr, char cmd) {
     bus->buf[0] = cmd;
     bus->ret = HAL_I2C_Master_Transmit(bus->i2c, addr << 1, bus->buf, 1, HAL_MAX_DELAY);
     _check_error(bus);
@@ -64,7 +64,7 @@ void write_word_data(Bus *bus, uint8_t addr, char cmd, uint16_t data) {
     _check_error(bus);
 }
 
-long *read_block_data(Bus *bus, uint8_t addr, char cmd) {
+uint8_t *read_block_data(Bus *bus, uint8_t addr, char cmd) {
     if (size > 28) {
         strcpy((char*)bus->buf, "Data too large, increase buffer size \r\n");
         HAL_UART_Transmit(bus->uart, bus->buf, strlen((char*)bus->buf), HAL_MAX_DELAY);
