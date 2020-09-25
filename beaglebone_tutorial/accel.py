@@ -7,7 +7,7 @@ from math import ceil
 bus = smbus.SMBus(2)
 
 # Accelerometer I2C address.
-I2C_ADDRESS = 0x53
+I2C_DEV_ADDRESS = 0x53
 
 # Relevant registers.
 X_LS = 0x32
@@ -17,27 +17,37 @@ Y_MS = 0x35
 Z_LS = 0x36
 Z_MS = 0x37
 
-# Wakes the accelerometer from sleep mode.
-bus.write_byte_data(I2C_ADDRESS, 0x2D, 0x08)
+POWER_CTRL = 0x2D
+DATA_FORMAT = 0x31
 
-# Reads byte data from the accelerometer.
+
+# Wakes the accelerometer from sleep mode.
+# TODO write the value to wake the accelerometer from sleep mode 
+bus.write_byte_data(I2C_DEV_ADDRESS, POWER_CTRL, <value>)
+
+# Formats output data (pg 24/25 on data sheet)
+# TODO format data so that the output range is full resolution +/- 16g 
+bus.write_byte_data(I2C_DEV_ADDRESS, DATA_FORMAT, <value>)
+
+
+# Reads 1 byte of data from a specified register on the accelerometer.
 # You will need to use this to grab both the most significant bit and
 # the least significant bit.
+# this is a wrapper for smbus.read_byte_data
 def read_data(register):
     # TODO
     pass
 
 # Gets the most significant bit (MSG) and shifts it by 8 bits to the left
 # combines MSB and LSB (least significant bit) and scales data based off
-# values in the Arduino ADXL343 digital accelerometer library.
-# Essentially multiply your data output by .004 * -9.80665 * 9.80665 to 
-# get to m/s2
+# values in the Arduino ADXL343 digital accelerometer library. 
+# (numbers that can additionally be found in the datasheet)
 # Uses read_data() function to get data and numpy to combine ls and ms.
-def get_decimal(ls, ms):
+def get_decimal(lsb_register, msb_register):
     # TODO
-    #uncomment this code 
-    # data = * combined MSB and LSB data* 
-    return data * .004 * -9.80665 * 9.80665
+    # uncomment this code 
+    # data = <combined MSB and LSB data>
+    return data * <scaled values> 
     pass
 
 # Rounds the number to a specified number of decimal places
