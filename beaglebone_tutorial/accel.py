@@ -64,7 +64,8 @@ while(True):
     print("X: " + str(xdecimal) +
           " Y: " + str(ydecimal) +
           " Z: " + str(zdecimal))
-    File_object.writelines(L) for L = [str(xdecimal), str(ydecimal), str(zdecimal)]
+    L = [str(xdecimal), str(ydecimal), str(zdecimal)]
+    File_object.writelines(L)
 
 
 # *******************************************
