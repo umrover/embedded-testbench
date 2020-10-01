@@ -25,20 +25,24 @@ bus.write_byte_data(I2C_ADDRESS, 0x2D, 0x08)
 # the least significant bit.
 def read_data(register):
     # TODO
-    pass
+    readbytedata = bus.read_byte_data(I2C_ADDRESS, register)
+    return readbytedata
 
 # Gets the most significant bit (MSG) and shifts it by 8 bits to the left
+
+
 # combines MSB and LSB (least significant bit) and scales data based off
 # values in the Arduino ADXL343 digital accelerometer library.
 # Essentially multiply your data output by .004 * -9.80665 * 9.80665 to 
 # get to m/s2
 # Uses read_data() function to get data and numpy to combine ls and ms.
 def get_decimal(ls, ms):
-    # TODO
-    #uncomment this code 
-    # data = * combined MSB and LSB data* 
-    return data * .004 * -9.80665 * 9.80665
+    lsb = read_data(ls)
+    msb = read_data(ms) << 8
+    data = msb | lsb
+    return np.int16(data) * .004 * -9.80665
     pass
+
 
 # Rounds the number to a specified number of decimal places
 def float_round(num, places = 0, direction = ceil):
@@ -47,11 +51,21 @@ def float_round(num, places = 0, direction = ceil):
 # *******************************************
 # Write your data output loop here. It should print x, y, and z data.
 # Make sure to use your get_decimal function.
+
+File_object = open(r"Acceleration_data.txt","a")
 while(True):
     # TODO
-    print("X: " + str(""" x accel value""") + 
-          " Y: " + str("""y accel value""") + 
-          " Z: " + str("""z accel value""")) 
+    xdecimal = get_decimal(X_LS, X_MS)
+    ydecimal = get_decimal(Y_LS, Y_MS)
+    zdecimal = get_decimal(Z_LS, Z_MS)
+    xdecimal = float_round(xdecimal)
+    ydecimal = float_round(ydecimal)
+    zdecimal = float_round(zdecimal)
+    print("X: " + str(xdecimal) +
+          " Y: " + str(ydecimal) +
+          " Z: " + str(zdecimal))
+    File_object.writelines(L) for L = [str(xdecimal), str(ydecimal), str(zdecimal)]
+
 
 # *******************************************
 
