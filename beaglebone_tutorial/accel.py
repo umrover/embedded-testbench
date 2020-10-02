@@ -52,7 +52,7 @@ def float_round(num, places = 0, direction = ceil):
 # Write your data output loop here. It should print x, y, and z data.
 # Make sure to use your get_decimal function.
 
-File_object = open(r"Acceleration_data.txt","a")
+File_object = open(r"Acceleration_data.txt","w")
 while(True):
     # TODO
     xdecimal = get_decimal(X_LS, X_MS)
@@ -64,7 +64,7 @@ while(True):
     print("X: " + str(xdecimal) +
           " Y: " + str(ydecimal) +
           " Z: " + str(zdecimal))
-    L = [str(xdecimal), str(ydecimal), str(zdecimal)]
+    L = [str(xdecimal) + "," + str(ydecimal) + "," + str(zdecimal)]
     File_object.writelines(L)
 
 
