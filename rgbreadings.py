@@ -23,14 +23,13 @@ bus.write_byte_data(I2C_ADDRESS, 0x0F, 0x00)
 
 # Sets command register
 
-bus.register(0xA6)
-
+# Prints data and saves to a file
 File_object = open(r"rgb_data.txt","w")
 while(True):
     # TODO
-    rdecimal = read_word_data(I2C_ADDRESS, R_LS)
-    gdecimal = read_word_data(I2C_ADDRESS, G_LS)
-    bdecimal = read_word_data(I2C_ADDRESS, B_LS)
+    rdecimal = read_word_data(I2C_ADDRESS, R_LS | 0xA6)
+    gdecimal = read_word_data(I2C_ADDRESS, G_LS | 0xA6)
+    bdecimal = read_word_data(I2C_ADDRESS, B_LS | 0xA6)
     print("R: " + str(rdecimal) +
           " G: " + str(gdecimal) +
           " B: " + str(bdecimal))
