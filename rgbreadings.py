@@ -6,6 +6,7 @@ from math import ceil
 # We initialize bus 2 because that is the only free on on the beaglebone.
 bus = smbus.SMBus(2)
 
+
 # TCS34725 RGB light sensor I2C address.
 I2C_ADDRESS = 0x29
 
@@ -14,32 +15,15 @@ R_LS = 0x16
 G_LS = 0x18
 B_LS = 0x1A
 
+# Powers the TCS34725 device on
+bus.write_byte_data(I2C_ADDRESS, 0x00, 0x03)
+
 # Sets the RGBC Gain value to 1xgain
 bus.write_byte_data(I2C_ADDRESS, 0x0F, 0x00)
 
-# Reads byte data from the light sensor.
-# You will need to use this to grab both the most significant bit and
-# the least significant bit.
-def read_data(register):
-    # TODO
-    readbytedata = bus.read_byte_data(I2C_ADDRESS, register)
-    return readbytedata
+# Sets command register
 
-# Gets the most significant bit (MSG) and shifts it by 8 bits to the left
-
-
-# combines MSB and LSB (least significant bit) and scales data based off
-# values in the Arduino ADXL343 digital accelerometer library.
-# Uses read_data() function to get data and numpy to combine ls and ms.
-
-
-# Rounds the number to a specified number of decimal places
-def float_round(num, places = 0, direction = ceil):
-    return direction(num * (10**places)) / float(10**places)
-
-# *******************************************
-# Write your data output loop here. It should print x, y, and z data.
-# Make sure to use your get_decimal function.
+bus.register(0xA6)
 
 File_object = open(r"rgb_data.txt","w")
 while(True):
