@@ -14,6 +14,7 @@ typedef struct {
     UART_HandleTypeDef *uart;
     HAL_StatusTypeDef ret;
     uint8_t buf[30];
+    uint8_t DMA = TRUE;
 } Bus;
 
 Bus *new_bus(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart);
@@ -33,5 +34,7 @@ void write_word_data(Bus *bus, uint8_t addr, char cmd, uint16_t data);
 int _check_error(Bus *bus);
 
 void reset(Bus *bus);
+
+void disable_DMA(Bus *bus);
 
 #endif
