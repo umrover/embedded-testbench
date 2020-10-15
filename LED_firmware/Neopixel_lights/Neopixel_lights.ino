@@ -1,65 +1,56 @@
-#include "Adafruit_NeoPixel.h"
+#include <Adafruit_NeoPixel.h>
 #include <SoftwareSerial.h>
-import Serial
 #ifdef _AVR_
 #include <avr/power.h>
 #endif
 
 #define PIN 3
-
 #define NUMPIXELS 64
 
-Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
-
-#define DELAYVAL 400
+Adafruit_NeoPixel matrix(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
 SoftwareSerial uart(10,11);
 
 void setup() {
-  
-#if defined(__AVR_ATtiny85__) && (F_CPU == 16000000)
-  clock_prescale_set(clock_div_1);
-#endif
-
-  pixels.begin();
-  Serial.begin(9600);
+  matrix.begin();
   uart.begin(9600);
+  Serial.begin(9600);
 }
 
+char command = 'M';
+
 void loop() {
- pixels.clear();
+   if(uart.available()){
+      command = char(uart.read());
+   }
+   
+   //auton
+   if (command == 'A') {
+      fillScreen(matrix.Color(64, 0, 0));
+      command = 'N';
+   }
   
- if(uart.available() > 0)
-  {
-    Serial.write(uart.read());
+   //manual
+   else if (command == 'M') {
+      fillScreen(matrix.Color(0, 0, 64));
+      command = 'N';
+   }
+  
+   //mission leg done
+   else if (command == 'D') {
+   command = 'A';
+      for (int i=0; i<3; i++){
+          fillScreen(matrix.Color(0, 64, 0));
+          delay(400);
+          fillScreen(matrix.Color(0, 0, 0));
+          delay(400);
+      }
+   }
+}
+
+void fillScreen(uint32_t color){
+  for(int i = 0; i < matrix.numPixels(); i++){
+     matrix.setPixelColor(i, color);
   }
-  
- //auton
- if (Serial.read() == "a") {
-   for(int i=0; i<NUMPIXELS; i++) {
-     pixels.setPixelColor(i, pixels.Color(255, 0, 0));
-     pixels.show();
-     pixels.delay_ns(DELAYVAL)
-   }
- }
-
-//manual
- else if (Serial.read() == "m") {
-   for(int i=0; i<NUMPIXELS; i++) {
-     pixels.setPixelColor(i, pixels.Color(0, 0, 255));
-     pixels.show();
-     pixels.delay_ns(DELAYVAL)
-   }
- }
-
-//mission leg
- else if (Serial.read() == "l") {
-   for(int i=0; i<NUMPIXELS; i++) {
-     pixels.setPixelColor(i, pixels.Color(0, 150, 0));
-     pixels.delay_ns(DELAYVAL)
-     pixels.clear();
-     pixels.delay_ns(DELAYVAL)
-   }
- }
-
+  matrix.show();
 }
