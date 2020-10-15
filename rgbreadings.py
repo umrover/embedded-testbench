@@ -18,10 +18,10 @@ B_LS = 0x1A
 # Powers the TCS34725 device on
 # "When a start condition is detected on the I2C bus, the device transitions to the Idle state where it checks the
 # Enable Register (0x00) PON bit."
-bus.write_byte_data(I2C_ADDRESS, 0x00, 0x03)
+bus.write_byte_data(I2C_ADDRESS, 0x00, 0x03 | 0xA6)
 
 # Sets the RGBC Gain value to 1xgain
-bus.write_byte_data(I2C_ADDRESS, 0x0F, 0x00)
+bus.write_byte_data(I2C_ADDRESS, 0x0F, 0x00 | 0xA6)
 
 # Prints data and saves to a file
 File_object = open(r"rgb_data.txt","w")
