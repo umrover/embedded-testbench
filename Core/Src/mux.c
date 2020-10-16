@@ -1,20 +1,25 @@
 #include "mux.h"
 #include "smbus.h"
 
-Mux *new_mux(Bus *i2cbus, int channels, int *channel_list) {
+Mux *new_mux(SMBus *i2cBus) {
     Mux *mux = malloc(sizeof(Mux));
-    mux->i2cbus = i2cbus;
-
-    for (int i = 0; i < channels; ++i) {
-        if (i > 7) {
-            break;
-        }
-        // if someone is trying to turn on a channel that doesn't exist 
-        mux->channel_list[i] = channel_map[channel_list[i]];
+    mux->i2cBus = i2cBus;
+    for (int i = 0; i < 8; ++i) {
+        mux->channel_list[i] = 0x00;
     }
+    mux->channels_active = 0;
+
     return mux;
 }
 
+void add_channel(Mux *mux, int channel) {
+    if (channel > 7) {
+        return;
+    }
+    mux->channel_list[channel] = channel_map[channel];
+    mux->channels_active += 1;
+}
+
 void select(Mux *mux, int channel){
-    write_byte_data(mux->bus, I2C_MUX_ADDRESS, MUX_CMD, channel);
+    write_byte_data(mux->i2cBus, I2C_MUX_ADDRESS, MUX_CMD, channel);
 }

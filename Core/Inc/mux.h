@@ -8,16 +8,19 @@
 const int I2C_MUX_ADDRESS = 0x70;
 const int MUX_CMD = 0xCC;  // filler address
 
-int *channel_map = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 }
+int *channel_map = { 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80 };
 
 typedef struct {
-    Bus *i2cbus;
+    SMBus *i2cBus;
     int channel_list[8];
+    int channels_active;
 } Mux;
 
 // takes in the i2c bus and the channels to be written 
 // to on the mux (0 - 7), and the number of channels 
-Mux *new_mux(Bus *i2cbus, int channels, int *channel_list);
+Mux *new_mux(SMBus *i2cBus);
+
+void add_channel(Mux *mux, int channel);
 
 // Requires : channel is an actual register ie 0x01 (0x00 is not one of these)
 // IF you want to read data, talk to only one sensor at a time -

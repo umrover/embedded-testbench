@@ -22,6 +22,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "spectral.h"
+#include "mux.h"
+#include "smbus.h"
 
 /* USER CODE END Includes */
 
@@ -43,7 +46,44 @@
 I2C_HandleTypeDef hi2c1;
 DMA_HandleTypeDef hdma_i2c1_tx;
 
+UART_HandleTypeDef huart2;
+
 /* USER CODE BEGIN PV */
+  /* spectral code */
+  SMBus *i2cbus;
+  Spectral *spectral;
+  const int SPECTRAL_0_CHANNEL = 0;
+  const int SPECTRAL_1_CHANNEL = 1;
+  const int SPECTRAL_2_CHANNEL = 2;
+
+  const int SPECTRAL_DEVICES = 3;
+  int *spectral_channels = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
+  
+  Mux *mux;
+
+  /* thermistor code 
+   *
+   * 
+   * 
+   */
+
+  /* mosfet code 
+   *
+   * 
+   * 
+   */
+
+  /* ammonia motor code 
+   *
+   * 
+   * 
+   */
+
+  /* peristaltic pump code 
+   *
+   * 
+   * 
+   */
 
 /* USER CODE END PV */
 
@@ -58,6 +98,32 @@ static void MX_I2C1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+  /* spectral code */
+
+  /* thermistor code 
+   *
+   * 
+   * 
+   */
+
+  /* mosfet code 
+   *
+   * 
+   * 
+   */
+
+  /* ammonia motor code 
+   *
+   * 
+   * 
+   */
+
+  /* peristaltic pump code 
+   *
+   * 
+   * 
+   */
+
 
 /* USER CODE END 0 */
 
@@ -77,7 +143,34 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  /* spectral code */ 
+  i2cBus = new_bus(&hi2c1, &huart2);
+  mux = new_mux(&i2cbus);
+  spectral = new_spectral(&i2cbus);
 
+  /* thermistor code 
+   *
+   * 
+   * 
+   */
+
+  /* mosfet code 
+   *
+   * 
+   * 
+   */
+
+  /* ammonia motor code 
+   *
+   * 
+   * 
+   */
+
+  /* peristaltic pump code 
+   *
+   * 
+   * 
+   */
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -93,6 +186,42 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 
+  /* spectral code */
+  // adds all the spectral channels 
+  for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+    add_channel(mux, spectral_channels[i]);
+  }
+
+  // opens all channels on the mux to listen 
+  select(mux, mux->channel_list[SPECTRAL_0_CHANNEL] + 
+              mux->channel_list[SPECTRAL_1_CHANNEL] + 
+              mux->channel_list[SPECTRAL_2_CHANNEL]);
+  enable(spectral);
+
+  /* thermistor code 
+   *
+   * 
+   * 
+   */
+
+  /* mosfet code 
+   *
+   * 
+   * 
+   */
+
+  /* ammonia motor code 
+   *
+   * 
+   * 
+   */
+
+  /* peristaltic pump code 
+   *
+   * 
+   * 
+   */
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,6 +229,37 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
+  /* spectral code */
+  for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+    select(mux, spectral_channels[i])
+    uint16_t spectral_data = get_data(spectral);
+    // format and transmit this over uart here
+    HAL_Delay(50);
+  }
+
+  /* thermistor code 
+   *
+   * 
+   * 
+   */
+
+  /* mosfet code 
+   *
+   * 
+   * 
+   */
+
+  /* ammonia motor code 
+   *
+   * 
+   * 
+   */
+
+  /* peristaltic pump code 
+   *
+   * 
+   * 
+   */
 
     /* USER CODE BEGIN 3 */
   }
@@ -224,6 +384,20 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 38400;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  huart2.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
+  huart2.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
 
 /* USER CODE END 4 */
 

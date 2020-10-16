@@ -15,26 +15,26 @@ typedef struct {
     HAL_StatusTypeDef ret;
     uint8_t buf[30];
     uint8_t DMA = TRUE;
-} Bus;
+} SMBus;
 
-Bus *new_bus(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart);
+SMBus *new_smbus(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart);
 
-long read_byte(Bus *bus, uint8_t addr);
+long read_byte(SMBus *smbus, uint8_t addr);
 
-void write_byte(Bus *bus, uint8_t addr, uint8_t data);
+void write_byte(SMBus *smbus, uint8_t addr, uint8_t data);
 
-long read_byte_data(Bus *bus, uint8_t addr, char cmd);
+long read_byte_data(SMBus *smbus, uint8_t addr, char cmd);
 
-void write_byte_data(Bus *bus, uint8_t addr, char cmd, uint8_t data);
+void write_byte_data(SMBus *smbus, uint8_t addr, char cmd, uint8_t data);
 
-long read_word_data(Bus *bus, uint8_t addr, char cmd);
+long read_word_data(SMBus *smbus, uint8_t addr, char cmd);
 
-void write_word_data(Bus *bus, uint8_t addr, char cmd, uint16_t data);
+void write_word_data(SMBus *smbus, uint8_t addr, char cmd, uint16_t data);
 
-int _check_error(Bus *bus);
+int _check_error(SMBus *smbus);
 
-void reset(Bus *bus);
+void reset(SMBus *smbus);
 
-void disable_DMA(Bus *bus);
+void disable_DMA(SMBus *smbus);
 
 #endif

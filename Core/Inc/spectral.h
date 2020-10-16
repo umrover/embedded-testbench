@@ -43,12 +43,21 @@ const int INT_TIME = 0x05;
 /*public interface*/
 
 typedef struct {
-    Bus *i2cbus;
+    SMBus *i2cBus;
     Channel *channels[CHANNELS];
 } Spectral;
 
 // initalizes spectral object, adds bus to it
-Spectral *new_spectral(Bus *i2cbus);
+Spectral *new_spectral(SMBus *i2cBus);
+
+// sets enable bits in devices
+void enable(Spectral *spectral);
+
+// gets the data as an array of 16 bit integers
+uint16_t *get_data(Spectral *spectral);
+
+
+/*private interface*/
 
 // functionallly like write_byte  
 void virtual_write(Spectral *spectral, uint8_t v_reg, uint8_t data);
@@ -56,17 +65,8 @@ void virtual_write(Spectral *spectral, uint8_t v_reg, uint8_t data);
 // functionally like read_byte
 uint8_t virtual_read(Spectral *spectral, uint8_t v_reg);
 
-// sets enable bits in devices
-void enable(Spectral *spectral);
-
 // gets the data as an array of 6 channels
-Channel *get_data(Spectral *spectral);
-
-// gets the data as an array of 16 bit integers
-uint16_t *get_data(Spectral *spectral);
-
-
-/*private interface*/
+void get_data(Spectral *spectral);
 
 typedef struct {
 	uint8_t lsb_register;
@@ -75,8 +75,8 @@ typedef struct {
 } Channel;
 
 // creates a channel
-Channel* new_channel(uint8_t lsb_r, uint8_t msb_r);
+uint16_t read_channel(Spectral *spectral, int channel);
 
 // gets value of channel 
 uint16_t read_channel(Channel *channel);
-uint16_t get_val(uint8_t virtual_reg_l, uint8_t virtual_reg_h);
+uint16_t get_val(Spectral *spectral, uint8_t virtual_reg_l, uint8_t virtual_reg_h);
