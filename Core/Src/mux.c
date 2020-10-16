@@ -12,6 +12,7 @@ Mux *new_mux(Bus *i2cbus, int channels, int *channel_list) {
         // if someone is trying to turn on a channel that doesn't exist 
         mux->channel_list[i] = channel_map[channel_list[i]];
     }
+    return mux;
 }
 
 void select(Mux *mux, int channel){
