@@ -18,7 +18,7 @@ const int DEVICE_SLAVE_ADDRESS_READ = 0x93;
 const int DEVICE_SLAVE_ADDRESS_WRITE = 0x92;
 const int DEVICE_SLAVE_ADDRESS = 0x49;
 
-// registers for triad
+// registers for spectral sensor
 const int RAW_VALUE_RGA_HIGH = 0x08;
 const int RAW_VALUE_RGA_LOW = 0x09;
 
@@ -37,8 +37,46 @@ const int RAW_VALUE_VKE_LOW = 0x11;
 const int RAW_VALUE_WLF_HIGH = 0x12;
 const int RAW_VALUE_WLF_LOW = 0x13;
 
-static HAL_StatusTypeDef ret;
-uint8_t buf[30];
+const int CONTROL_SET_UP = 0x04;
+const int INT_TIME = 0x05;
+
+/*public interface*/
+
+typedef struct {
+    Bus *i2cbus;
+    Channel *channels[CHANNELS];
+} Spectral;
+
+// initalizes spectral object, adds bus to it
+Spectral *new_spectral(Spectral *spectral, Bus *i2cbus);
+
+// functionallly like write_byte  
+void virtual_write(Spectral *spectral, uint8_t v_reg, uint8_t data);
+
+// functionally like read_byte
+uint8_t virtual_read(Spectral *spectral, uint8_t v_reg);
+
+// sets enable bits in devices
+void enable(Spectral *spectral);
+
+// gets the data as an array of 6 channels
+Channel *get_data(Spectral *spectral);
+
+// gets the data as an array of 16 bit integers
+uint16_t *get_data(Spectral *spectral);
 
 
+/*private interface*/
 
+typedef struct {
+	uint8_t lsb_register;
+	uint8_t msb_register;
+	uint16_t color_data;
+} Channel;
+
+// creates a channel
+Channel* new_channel(uint8_t lsb_r, uint8_t msb_r);
+
+// gets value of channel 
+uint16_t read_channel(Channel *channel);
+uint16_t get_val(uint8_t virtual_reg_l, uint8_t virtual_reg_h);
