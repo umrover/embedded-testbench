@@ -1,0 +1,29 @@
+#include "smbus.h"
+#include "spectral.h"
+
+// initalizes spectral object, adds bus to it
+Spectral *new_spectral(SMBus *i2cBus);
+
+// sets enable bits in devices
+void enable(Spectral *spectral);
+
+
+// gets the data as an array of 16 bit integers
+uint16_t *get_spectral_data(Spectral *spectral);
+
+
+/*private interface*/
+
+// functionallly like write_byte
+void virtual_write(Spectral *spectral, uint8_t v_reg, uint8_t data);
+
+// functionally like read_byte
+uint8_t virtual_read(Spectral *spectral, uint8_t v_reg);
+
+void get_channel_data(Spectral *spectral);
+
+// creates a channel
+Channel* new_channel(uint8_t lsb_r, uint8_t msb_r);
+
+// gets value of channel 
+uint16_t read_channel(Spectral *spectral, int channel);

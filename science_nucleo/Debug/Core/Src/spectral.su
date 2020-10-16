@@ -1,0 +1,9 @@
+spectral.c:5:11:new_spectral	40	static
+spectral.c:18:6:enable	16	static
+spectral.c:27:11:get_spectral_data	24	static
+spectral.c:40:6:virtual_write	24	static
+spectral.c:63:9:virtual_read	24	static
+spectral.c:94:6:get_channel_data	24	static
+spectral.c:103:10:new_channel	24	static
+spectral.c:112:10:read_channel	24	static
+spectral.c:117:10:get_val	24	static
