@@ -48,7 +48,7 @@ typedef struct {
 } Spectral;
 
 // initalizes spectral object, adds bus to it
-Spectral *new_spectral(Spectral *spectral, Bus *i2cbus);
+Spectral *new_spectral(Bus *i2cbus);
 
 // functionallly like write_byte  
 void virtual_write(Spectral *spectral, uint8_t v_reg, uint8_t data);
