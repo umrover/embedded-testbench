@@ -6,7 +6,7 @@ SMBus *new_smbus(I2C_HandleTypeDef *hi2c, UART_HandleTypeDef *huart) {
     smbus->i2c = hi2c;
     smbus->uart = huart;
     smbus->DMA = TRUE;
-    memset(smbus->buf, 0, sizeof smbus->buf);
+    memset(smbus->buf, 0, sizeof(smbus->buf));
 
     return smbus;
 }
