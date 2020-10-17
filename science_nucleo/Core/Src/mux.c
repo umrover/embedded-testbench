@@ -23,5 +23,5 @@ void add_channel(Mux *mux, int channel) {
 }
 
 void channel_select(Mux *mux, int channel){
-    write_byte_data(mux->i2cBus, I2C_MUX_ADDRESS, MUX_CMD, channel_map[channel]);
+    write_byte_data(mux->i2cBus, I2C_MUX_ADDRESS, MUX_CMD, channel);
 }

@@ -37,6 +37,7 @@
 /* USER CODE BEGIN PD */
 /*spectral code*/
 #define SPECTRAL_DEVICES 3
+
 #define SPECTRAL_0_CHANNEL 0
 #define  SPECTRAL_1_CHANNEL 1
 #define  SPECTRAL_2_CHANNEL 2
@@ -218,7 +219,7 @@ int main(void)
   /* spectral code */
   // adds all the spectral channels
   for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-  add_channel(mux, spectral_channels[i]);
+    add_channel(mux, spectral_channels[i]);
   }
 
   // opens all channels on the mux to listen
@@ -264,7 +265,7 @@ int main(void)
 	  // adds all the spectral channels
 
 	  for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-      channel_select(mux, spectral_channels[i]);
+      channel_select(mux, mux->channel_list[spectral_channels[i]]);
       uint16_t data = get_spectral_data(spectral);
       /*transmit over data over uart here*/
 	  }
