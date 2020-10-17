@@ -215,6 +215,41 @@ int main(void)
   MX_I2C1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  /* spectral code */
+  // adds all the spectral channels
+  for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+  add_channel(mux, spectral_channels[i]);
+  }
+
+  // opens all channels on the mux to listen
+  channel_select(mux, mux->channel_list[SPECTRAL_0_CHANNEL] +
+        mux->channel_list[SPECTRAL_1_CHANNEL] +
+        mux->channel_list[SPECTRAL_2_CHANNEL]);
+  enable(spectral);
+
+  /* thermistor code
+    *
+    *
+    *
+    */
+
+  /* mosfet code
+    *
+    *
+    *
+    */
+
+  /* ammonia motor code
+    *
+    *
+    *
+    */
+
+  /* peristaltic pump code
+    *
+    *
+    *
+    */
 
   /* USER CODE END 2 */
 
@@ -227,16 +262,12 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  /* spectral code */
 	  // adds all the spectral channels
+
 	  for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-		add_channel(mux, spectral_channels[i]);
+      channel_select(mux, spectral_channels[i]);
+      uint16_t data = get_spectral_data(spectral);
+      /*transmit over data over uart here*/
 	  }
-
-	  // opens all channels on the mux to listen
-	  channel_select(mux, mux->channel_list[SPECTRAL_0_CHANNEL] +
-				  mux->channel_list[SPECTRAL_1_CHANNEL] +
-				  mux->channel_list[SPECTRAL_2_CHANNEL]);
-	  enable(spectral);
-
 	  /* thermistor code
 	   *
 	   *
