@@ -35,9 +35,3 @@ while(True):
           " B: " + str(bdecimal))
     L = [str(rdecimal) + "," + str(gdecimal) + "," + str(bdecimal)]
     File_object.writelines(L)
-
-
-# *******************************************
-
-# !!! Bonus !!!
-# Try modifying this code to output data to a text file.
