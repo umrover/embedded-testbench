@@ -226,7 +226,7 @@ int main(void)
   channel_select(mux, mux->channel_list[SPECTRAL_0_CHANNEL] +
         mux->channel_list[SPECTRAL_1_CHANNEL] +
         mux->channel_list[SPECTRAL_2_CHANNEL]);
-  enable(spectral);
+  enable_spectral(spectral);
 
   /* thermistor code
     *

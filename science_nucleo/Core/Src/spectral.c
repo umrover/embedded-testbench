@@ -15,7 +15,7 @@ Spectral *new_spectral(SMBus *i2cBus) {
 }
 
 // sets enable bits in devices
-void enable(Spectral *spectral) {
+void enable_spectral(Spectral *spectral) {
     virtual_write(spectral, CONTROL_SET_UP, 0x28);  // runs twice to account for status miss
     HAL_Delay(5);
     virtual_write(spectral, CONTROL_SET_UP, 0x28);  // converts data bank to 2

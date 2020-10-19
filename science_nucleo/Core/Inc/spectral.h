@@ -79,7 +79,7 @@ Channel* new_channel(uint8_t lsb_r, uint8_t msb_r);
 Spectral *new_spectral(SMBus *i2cBus);
 
 // sets enable bits in devices
-void enable(Spectral *spectral);
+void enable_spectral(Spectral *spectral);
 
 // gets the data as an array of 16 bit integers
 uint16_t *get_spectral_data(Spectral *spectral);
