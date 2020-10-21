@@ -82,6 +82,7 @@ Spectral *new_spectral(SMBus *i2cBus);
 void enable_spectral(Spectral *spectral);
 
 // gets the data as an array of 16 bit integers
+// channels RSTUVW
 uint16_t *get_spectral_data(Spectral *spectral);
 
 #endif
