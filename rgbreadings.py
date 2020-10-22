@@ -6,7 +6,6 @@ from math import ceil
 # We initialize bus 2 because that is the only free on on the beaglebone.
 bus = smbus.SMBus(2)
 
-
 # TCS34725 RGB light sensor I2C address.
 I2C_ADDRESS = 0x29
 
