@@ -15,10 +15,16 @@ R_LS = 0x16
 G_LS = 0x18
 B_LS = 0x1A
 
-# Powers the TCS34725 device on
-# "When a start condition is detected on the I2C bus, the device transitions to the Idle state where it checks the
-# Enable Register (0x00) PON bit."
+# The following lines powers the TCS34725 device on
+
+# Enable Register (0x00) PON bit.
+bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x86, 0x01)
+
+# Enable Register (0x00) AEN bit.
 bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x86, 0x03)
+
+# Enable Register (0x00) WEN bit.
+bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x86, 0x0B)
 
 # Sets the RGBC Gain value to 1xgain
 bus.write_byte_data(I2C_ADDRESS, 0x0F | 0x86, 0x00)
