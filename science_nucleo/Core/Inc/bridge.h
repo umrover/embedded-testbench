@@ -29,7 +29,7 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 	// Copy the data to buffer
 	for (uint8_t i = 0; i < devices; ++i) {
 		for (uint8_t j = 0; j < channels; ++j) {
-			sprintf((char*)buffer, "%d,", data[(channels + i) + j]);
+			sprintf((char*)buffer, "%d,", data[(channels * i) + j]);
 		}
 	}
 	HAL_UART_Transmit(huart, (uint8_t *)buffer, sizeof(buffer), 50);
