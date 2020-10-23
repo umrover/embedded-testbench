@@ -38,4 +38,6 @@ void add_channel(Mux *mux, int channel);
 
 void channel_select(Mux *mux, int channel);
 
+void del_mux(Mux *mux);
+
 #endif

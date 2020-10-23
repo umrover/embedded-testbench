@@ -35,7 +35,6 @@ void del_spectral(Spectral *spectral) {
 	for (int i = 0; i < CHANNELS; ++i) {
 		del_channel(spectral->channels[i]);
 	}
-	del_smbus(spectral->i2cBus);
 	free(spectral);
 }
 
