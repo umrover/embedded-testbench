@@ -306,7 +306,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  /* spectral code */
-	  uint16_t spectral_data[18];
+	  uint16_t spectral_data[SPECTRAL_DEVICES * CHANNELS];
 	  for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
 		  channel_select(mux, mux->channel_list[spectral_channels[i]]);
 		  get_spectral_data(spectral, spectral_data + (i * CHANNELS));

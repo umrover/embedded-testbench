@@ -14,23 +14,28 @@
 #include <stdlib.h>
 #include "stm32f3xx_hal.h"
 
+//transmits the spectral data as a sentance
+//$RSTUVW,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,P
 void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 	//indicate start of sequence with spectral identifier
-	uint8_t *identifer = "$RSTUVW";
-	HAL_UART_Transmit(&huart, identifier, sizeof(identifier), 50);
+	char *identifier = "$RSTUVW,";
+	HAL_UART_Transmit(huart, (uint8_t *)identifier, sizeof(identifier), 50);
+
+	int channels = 6;
+	int devices = 3;
 
 	char buffer[sizeof(data)]; // Create a char buffer of right size
 
-	//put identifier in buffer
-	memcpy(buffer, &identifier, sizeof(identifier));
-
 	// Copy the data to buffer
 	for (uint8_t i = 0; i < devices; ++i) {
-		for (uint8_t = 0; j < channels; ++j) {
-			sprintf(spectral_data, "%d,", data[(channels + i) + j]);
+		for (uint8_t j = 0; j < channels; ++j) {
+			sprintf((char*)buffer, "%d,", data[(channels + i) + j]);
 		}
 	}
 	HAL_UART_Transmit(huart, (uint8_t *)buffer, sizeof(buffer), 50);
+
+	char *end = "P";
+	HAL_UART_Transmit(huart, (uint8_t *)end, sizeof(end), 50);
 }
 
 

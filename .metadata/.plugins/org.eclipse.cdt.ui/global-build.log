@@ -2749,3 +2749,1703 @@ Finished building: science_nucleo.list
 make -j8 clean 
 rm -rf *
  
+00:47:24 **** Build of configuration Debug for project science_nucleo ****
+make -j8 all 
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc_ex.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc_ex.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_adc_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_cortex.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_cortex.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_cortex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_cortex.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_dma.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_dma.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_dma.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_dma.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_exti.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_exti.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_exti.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_exti.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_flash.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_flash.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_flash.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_flash.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_flash_ex.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_flash_ex.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_flash_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_flash_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_gpio.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_gpio.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_gpio.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_gpio.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_i2c_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pwr.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pwr.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pwr.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pwr.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pwr_ex.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pwr_ex.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pwr_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_pwr_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rcc.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rcc.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rcc.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rcc.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rcc_ex.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rcc_ex.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rcc_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_rcc_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim_ex.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim_ex.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_tim_ex.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart.o"
+arm-none-eabi-gcc "../Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart_ex.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart_ex.d" -MT"Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart_ex.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Drivers/STM32F3xx_HAL_Driver/Src/stm32f3xx_hal_uart_ex.o"
+arm-none-eabi-gcc -mcpu=cortex-m4 -g3 -c -x assembler-with-cpp --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Startup/startup_stm32f303retx.o" "../Core/Startup/startup_stm32f303retx.s"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/mosfet.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/mosfet.d" -MT"Core/Src/mosfet.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mosfet.o"
+arm-none-eabi-gcc "../Core/Src/mux.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/mux.d" -MT"Core/Src/mux.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mux.o"
+arm-none-eabi-gcc "../Core/Src/smbus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/smbus.d" -MT"Core/Src/smbus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/smbus.o"
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableRled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:4:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:4:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableGled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:7:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:7:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableBled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:10:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:10:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableHeater':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:13:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:13:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesciUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:16:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:16:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesaUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:19:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:19:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableWhiteled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:22:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:22:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: At top level:
+arm-none-eabi-gcc "../Core/Src/spectral.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/spectral.d" -MT"Core/Src/spectral.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/spectral.o"
+../Core/Src/mosfet.c:25:6: error: conflicting types for 'enablePin'
+ void enablePin(int enable, GPIO_TypeDef *port,uint16_t pin){
+      ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: previous declaration of 'enablePin' was here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: In function 'enablePin':
+../Core/Src/mosfet.c:27:36: error: expected ')' before 'GPIO_PIN_RESET'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+                                    ^~~~~~~~~~~~~~
+../Core/Src/mosfet.c:27:9: error: too few arguments to function 'HAL_GPIO_WritePin'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+         ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:202:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_gpio.h:268:19: note: declared here
+ void              HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
+                   ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h: In function 'send_spectral_data':
+../Core/Inc/bridge.h:21:23: warning: pointer targets in initialization differ in signedness [-Wpointer-sign]
+  uint8_t *identifer = "$RSTUVW,";
+                       ^~~~~~~~~~
+make: *** [Core/Src/subdir.mk:47: Core/Src/mosfet.o] Error 1
+make: *** Waiting for unfinished jobs....
+../Core/Inc/bridge.h:22:28: error: 'identifier' undeclared (first use in this function); did you mean 'identifer'?
+  HAL_UART_Transmit(&huart, identifier, sizeof(identifier), 50);
+                            ^~~~~~~~~~
+                            identifer
+../Core/Inc/bridge.h:22:28: note: each undeclared identifier is reported only once for each function it appears in
+../Core/Inc/bridge.h:22:20: warning: passing argument 1 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+  HAL_UART_Transmit(&huart, identifier, sizeof(identifier), 50);
+                    ^
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'UART_HandleTypeDef * {aka struct __UART_HandleTypeDef *}' but argument is of type 'UART_HandleTypeDef ** {aka struct __UART_HandleTypeDef **}'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h:31:16: error: expected identifier or '(' before '=' token
+   for (uint8_t = 0; j < channels; ++j) {
+                ^
+../Core/Inc/bridge.h:31:21: error: 'j' undeclared (first use in this function)
+   for (uint8_t = 0; j < channels; ++j) {
+                     ^
+../Core/Inc/bridge.h:32:12: error: 'spectral_data' undeclared (first use in this function); did you mean 'get_spectral_data'?
+    sprintf(spectral_data, "%d,", data[(channels + i) + j]);
+            ^~~~~~~~~~~~~
+            get_spectral_data
+../Core/Inc/bridge.h:37:27: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(huart, "P", sizeof("P"), 50);
+                           ^~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h:21:11: warning: unused variable 'identifer' [-Wunused-variable]
+  uint8_t *identifer = "$RSTUVW,";
+           ^~~~~~~~~
+make: *** [Core/Src/subdir.mk:45: Core/Src/main.o] Error 1
+../Core/Src/spectral.c: In function 'get_spectral_data':
+../Core/Src/spectral.c:28:5: warning: implicit declaration of function 'get_data'; did you mean 'get_val'? [-Wimplicit-function-declaration]
+     get_data(spectral);
+     ^~~~~~~~
+     get_val
+../Core/Src/spectral.c:30:17: warning: assignment makes integer from pointer without a cast [-Wint-conversion]
+         data[i] = spectral->channels[i];
+                 ^
+../Core/Src/spectral.c: In function 'get_channel_data':
+../Core/Src/spectral.c:95:28: warning: implicit declaration of function 'get_decimal'; did you mean 'get_val'? [-Wimplicit-function-declaration]
+         temp->color_data = get_decimal(temp->lsb_register, temp->msb_register);
+                            ^~~~~~~~~~~
+                            get_val
+../Core/Src/spectral.c: In function 'get_val':
+../Core/Src/spectral.c:116:34: warning: passing argument 1 of 'virtual_read' from incompatible pointer type [-Wincompatible-pointer-types]
+     uint16_t high = virtual_read(spectral->i2cBus, virtual_reg_h) << 8;
+                                  ^~~~~~~~
+../Core/Src/spectral.c:61:9: note: expected 'Spectral * {aka struct <anonymous> *}' but argument is of type 'SMBus * {aka struct <anonymous> *}'
+ uint8_t virtual_read(Spectral *spectral, uint8_t v_reg) {
+         ^~~~~~~~~~~~
+../Core/Src/spectral.c:117:30: warning: passing argument 1 of 'virtual_read' from incompatible pointer type [-Wincompatible-pointer-types]
+  return high | (virtual_read(spectral->i2cBus ,virtual_reg_l) & 0xFF);
+                              ^~~~~~~~
+../Core/Src/spectral.c:61:9: note: expected 'Spectral * {aka struct <anonymous> *}' but argument is of type 'SMBus * {aka struct <anonymous> *}'
+ uint8_t virtual_read(Spectral *spectral, uint8_t v_reg) {
+         ^~~~~~~~~~~~
+../Core/Src/spectral.c: In function 'read_channel':
+../Core/Src/spectral.c:113:1: warning: control reaches end of non-void function [-Wreturn-type]
+ }
+ ^
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
+00:50:40 **** Incremental Build of configuration Debug for project science_nucleo ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/mosfet.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/mosfet.d" -MT"Core/Src/mosfet.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mosfet.o"
+arm-none-eabi-gcc "../Core/Src/stm32f3xx_hal_msp.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/stm32f3xx_hal_msp.d" -MT"Core/Src/stm32f3xx_hal_msp.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/stm32f3xx_hal_msp.o"
+arm-none-eabi-gcc "../Core/Src/stm32f3xx_it.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/stm32f3xx_it.d" -MT"Core/Src/stm32f3xx_it.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/stm32f3xx_it.o"
+arm-none-eabi-gcc "../Core/Src/syscalls.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/syscalls.d" -MT"Core/Src/syscalls.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/syscalls.o"
+arm-none-eabi-gcc "../Core/Src/sysmem.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/sysmem.d" -MT"Core/Src/sysmem.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/sysmem.o"
+arm-none-eabi-gcc "../Core/Src/system_stm32f3xx.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/system_stm32f3xx.d" -MT"Core/Src/system_stm32f3xx.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/system_stm32f3xx.o"
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableRled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:4:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:4:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableGled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:7:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:7:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableBled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:10:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:10:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableHeater':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:13:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:13:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesciUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:16:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:16:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesaUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:19:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:19:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableWhiteled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:22:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:22:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: At top level:
+../Core/Src/mosfet.c:25:6: error: conflicting types for 'enablePin'
+ void enablePin(int enable, GPIO_TypeDef *port,uint16_t pin){
+      ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: previous declaration of 'enablePin' was here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: In function 'enablePin':
+../Core/Src/mosfet.c:27:36: error: expected ')' before 'GPIO_PIN_RESET'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+                                    ^~~~~~~~~~~~~~
+../Core/Src/mosfet.c:27:9: error: too few arguments to function 'HAL_GPIO_WritePin'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+         ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:202:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_gpio.h:268:19: note: declared here
+ void              HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
+                   ^~~~~~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:47: Core/Src/mosfet.o] Error 1
+make: *** Waiting for unfinished jobs....
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h: In function 'send_spectral_data':
+../Core/Inc/bridge.h:22:20: warning: passing argument 1 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+  HAL_UART_Transmit(&huart, (char*)identifier, sizeof(identifier), 50);
+                    ^
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'UART_HandleTypeDef * {aka struct __UART_HandleTypeDef *}' but argument is of type 'UART_HandleTypeDef ** {aka struct __UART_HandleTypeDef **}'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h:22:28: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart, (char*)identifier, sizeof(identifier), 50);
+                            ^
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h:31:16: error: expected identifier or '(' before '=' token
+   for (uint8_t = 0; j < channels; ++j) {
+                ^
+../Core/Inc/bridge.h:31:21: error: 'j' undeclared (first use in this function)
+   for (uint8_t = 0; j < channels; ++j) {
+                     ^
+../Core/Inc/bridge.h:31:21: note: each undeclared identifier is reported only once for each function it appears in
+../Core/Inc/bridge.h:38:27: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(huart, (char*)end, sizeof(end), 50);
+                           ^
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:45: Core/Src/main.o] Error 1
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
+00:50:56 **** Incremental Build of configuration Debug for project science_nucleo ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/mosfet.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/mosfet.d" -MT"Core/Src/mosfet.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mosfet.o"
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableRled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:4:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:4:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableGled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:7:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:7:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableBled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:10:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:10:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableHeater':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:13:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:13:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesciUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:16:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:16:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesaUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:19:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:19:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableWhiteled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:22:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:22:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: At top level:
+../Core/Src/mosfet.c:25:6: error: conflicting types for 'enablePin'
+ void enablePin(int enable, GPIO_TypeDef *port,uint16_t pin){
+      ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: previous declaration of 'enablePin' was here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: In function 'enablePin':
+../Core/Src/mosfet.c:27:36: error: expected ')' before 'GPIO_PIN_RESET'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+                                    ^~~~~~~~~~~~~~
+../Core/Src/mosfet.c:27:9: error: too few arguments to function 'HAL_GPIO_WritePin'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+         ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:202:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_gpio.h:268:19: note: declared here
+ void              HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
+                   ^~~~~~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:47: Core/Src/mosfet.o] Error 1
+make: *** Waiting for unfinished jobs....
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h: In function 'send_spectral_data':
+../Core/Inc/bridge.h:22:20: warning: passing argument 1 of 'HAL_UART_Transmit' from incompatible pointer type [-Wincompatible-pointer-types]
+  HAL_UART_Transmit(&huart, (char*)identifier, sizeof(identifier), 50);
+                    ^
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'UART_HandleTypeDef * {aka struct __UART_HandleTypeDef *}' but argument is of type 'UART_HandleTypeDef ** {aka struct __UART_HandleTypeDef **}'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h:22:28: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(&huart, (char*)identifier, sizeof(identifier), 50);
+                            ^
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h:38:27: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(huart, (char*)end, sizeof(end), 50);
+                           ^
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
+00:54:13 **** Incremental Build of configuration Debug for project science_nucleo ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/mosfet.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/mosfet.d" -MT"Core/Src/mosfet.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mosfet.o"
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableRled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:4:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:4:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableGled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:7:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:7:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableBled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:10:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:10:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableHeater':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:13:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:13:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesciUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:16:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:16:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesaUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:19:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:19:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableWhiteled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:22:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:22:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: At top level:
+../Core/Src/mosfet.c:25:6: error: conflicting types for 'enablePin'
+ void enablePin(int enable, GPIO_TypeDef *port,uint16_t pin){
+      ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: previous declaration of 'enablePin' was here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: In function 'enablePin':
+../Core/Src/mosfet.c:27:36: error: expected ')' before 'GPIO_PIN_RESET'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+                                    ^~~~~~~~~~~~~~
+../Core/Src/mosfet.c:27:9: error: too few arguments to function 'HAL_GPIO_WritePin'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+         ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:202:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_gpio.h:268:19: note: declared here
+ void              HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
+                   ^~~~~~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:47: Core/Src/mosfet.o] Error 1
+make: *** Waiting for unfinished jobs....
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h: In function 'send_spectral_data':
+../Core/Inc/bridge.h:22:27: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(huart, identifier, 50);
+                           ^~~~~~~~~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h:22:2: error: too few arguments to function 'HAL_UART_Transmit'
+  HAL_UART_Transmit(huart, identifier, 50);
+  ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: declared here
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h:38:27: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(huart, end, 50);
+                           ^~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h:38:2: error: too few arguments to function 'HAL_UART_Transmit'
+  HAL_UART_Transmit(huart, end, 50);
+  ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: declared here
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:45: Core/Src/main.o] Error 1
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
+00:55:18 **** Incremental Build of configuration Debug for project science_nucleo ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/mosfet.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/mosfet.d" -MT"Core/Src/mosfet.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mosfet.o"
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableRled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:4:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:4:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableGled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:7:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:7:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableBled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:10:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:10:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableHeater':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:13:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:13:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesciUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:16:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:16:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesaUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:19:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:19:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableWhiteled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:22:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:22:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: At top level:
+../Core/Src/mosfet.c:25:6: error: conflicting types for 'enablePin'
+ void enablePin(int enable, GPIO_TypeDef *port,uint16_t pin){
+      ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: previous declaration of 'enablePin' was here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: In function 'enablePin':
+../Core/Src/mosfet.c:27:36: error: expected ')' before 'GPIO_PIN_RESET'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+                                    ^~~~~~~~~~~~~~
+../Core/Src/mosfet.c:27:9: error: too few arguments to function 'HAL_GPIO_WritePin'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+         ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:202:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_gpio.h:268:19: note: declared here
+ void              HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
+                   ^~~~~~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:47: Core/Src/mosfet.o] Error 1
+make: *** Waiting for unfinished jobs....
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h: In function 'send_spectral_data':
+../Core/Inc/bridge.h:22:27: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(huart, identifier, sizeof(identifier), 50);
+                           ^~~~~~~~~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h:38:27: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(huart, end, sizeof(end), 50);
+                           ^~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
+00:56:38 **** Incremental Build of configuration Debug for project science_nucleo ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/mosfet.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/mosfet.d" -MT"Core/Src/mosfet.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mosfet.o"
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableRled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:4:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:4:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableGled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:7:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:7:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableBled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:10:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:10:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableHeater':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:13:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:13:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesciUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:16:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:16:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesaUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:19:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:19:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableWhiteled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:22:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:22:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: At top level:
+../Core/Src/mosfet.c:25:6: error: conflicting types for 'enablePin'
+ void enablePin(int enable, GPIO_TypeDef *port,uint16_t pin){
+      ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: previous declaration of 'enablePin' was here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: In function 'enablePin':
+../Core/Src/mosfet.c:27:36: error: expected ')' before 'GPIO_PIN_RESET'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+                                    ^~~~~~~~~~~~~~
+../Core/Src/mosfet.c:27:9: error: too few arguments to function 'HAL_GPIO_WritePin'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+         ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:202:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_gpio.h:268:19: note: declared here
+ void              HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
+                   ^~~~~~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:47: Core/Src/mosfet.o] Error 1
+make: *** Waiting for unfinished jobs....
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h: In function 'send_spectral_data':
+../Core/Inc/bridge.h:22:27: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(huart, (char*)identifier, sizeof(identifier), 50);
+                           ^
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:29:0:
+../Core/Inc/bridge.h:38:27: warning: pointer targets in passing argument 2 of 'HAL_UART_Transmit' differ in signedness [-Wpointer-sign]
+  HAL_UART_Transmit(huart, (char*)end, sizeof(end), 50);
+                           ^
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:326:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/main.h:31,
+                 from ../Core/Src/main.c:22:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_uart.h:1402:19: note: expected 'uint8_t * {aka unsigned char *}' but argument is of type 'char *'
+ HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout);
+                   ^~~~~~~~~~~~~~~~~
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
+00:58:02 **** Incremental Build of configuration Debug for project science_nucleo ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/mosfet.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/mosfet.d" -MT"Core/Src/mosfet.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mosfet.o"
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableRled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:4:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:4:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableGled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:7:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:7:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableBled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:10:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:10:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableHeater':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:13:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:13:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesciUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:16:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:16:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enablesaUV':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:19:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:19:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_rcc.h:29,
+                 from ../Core/Inc/stm32f3xx_hal_conf.h:198,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Core/Src/mosfet.c: In function 'enableWhiteled':
+../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xe.h:979:29: warning: passing argument 2 of 'enablePin' makes integer from pointer without a cast [-Wint-conversion]
+ #define GPIOA               ((GPIO_TypeDef *) GPIOA_BASE)
+                             ^
+../Core/Src/mosfet.c:22:23: note: in expansion of macro 'GPIOA'
+     enablePin(enable, GPIOA,2);
+                       ^~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: expected 'int' but argument is of type 'GPIO_TypeDef * {aka struct <anonymous> *}'
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c:22:5: error: too many arguments to function 'enablePin'
+     enablePin(enable, GPIOA,2);
+     ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: declared here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: At top level:
+../Core/Src/mosfet.c:25:6: error: conflicting types for 'enablePin'
+ void enablePin(int enable, GPIO_TypeDef *port,uint16_t pin){
+      ^~~~~~~~~
+In file included from ../Core/Src/mosfet.c:1:0:
+../Core/Inc/mosfet.h:22:6: note: previous declaration of 'enablePin' was here
+ void enablePin(int enable, int mosfetdevice);
+      ^~~~~~~~~
+../Core/Src/mosfet.c: In function 'enablePin':
+../Core/Src/mosfet.c:27:36: error: expected ')' before 'GPIO_PIN_RESET'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+                                    ^~~~~~~~~~~~~~
+../Core/Src/mosfet.c:27:9: error: too few arguments to function 'HAL_GPIO_WritePin'
+         HAL_GPIO_WritePin(port,pin GPIO_PIN_RESET);
+         ^~~~~~~~~~~~~~~~~
+In file included from ../Core/Inc/stm32f3xx_hal_conf.h:202:0,
+                 from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:30,
+                 from ../Core/Inc/mosfet.h:4,
+                 from ../Core/Src/mosfet.c:1:
+../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_gpio.h:268:19: note: declared here
+ void              HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
+                   ^~~~~~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:47: Core/Src/mosfet.o] Error 1
+make: *** Waiting for unfinished jobs....
+"make -j8 all" terminated with exit code 2. Build might be incomplete.
