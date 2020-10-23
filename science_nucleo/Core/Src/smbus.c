@@ -126,3 +126,10 @@ void reset(SMBus *smbus) {
     HAL_I2C_DeInit(smbus->i2c);
     HAL_I2C_Init(smbus->i2c);
 }
+
+void del_smbus(SMBus *smbus) {
+	free(smbus->buf);
+	free(smbus->i2c);
+	free(smbus->uart);
+	free(smbus);
+}

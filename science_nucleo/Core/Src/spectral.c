@@ -31,6 +31,14 @@ void get_spectral_data(Spectral *spectral, uint16_t *data) {
     }
 }
 
+void del_spectral(Spectral *spectral) {
+	for (int i = 0; i < CHANNELS; ++i) {
+		del_channel(spectral->channels[i]);
+	}
+	del_smbus(spectral->i2cBus);
+	free(spectral);
+}
+
 
 /*private interface*/
 
@@ -113,5 +121,10 @@ uint16_t read_channel(Spectral *spectral, int channel) {
 
 uint16_t get_val(Spectral *spectral, uint8_t virtual_reg_l, uint8_t virtual_reg_h) {
     uint16_t high = virtual_read(spectral, virtual_reg_h) << 8;
-	return high | (virtual_read(spectral,virtual_reg_l) & 0xFF);
+    return high | (virtual_read(spectral, virtual_reg_l) & 0xFF);
 }
+
+void del_channel(Channel *channel) {
+	free(channel);
+}
+

@@ -1,6 +1,7 @@
-15:00:18 **** Incremental Build of configuration Debug for project science_nucleo ****
+15:21:13 **** Incremental Build of configuration Debug for project science_nucleo ****
 make -j8 all 
 arm-none-eabi-gcc "../Core/Src/mosfet.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/mosfet.d" -MT"Core/Src/mosfet.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mosfet.o"
+arm-none-eabi-gcc "../Core/Src/smbus.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/smbus.d" -MT"Core/Src/smbus.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/smbus.o"
 arm-none-eabi-gcc "../Core/Src/spectral.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/spectral.d" -MT"Core/Src/spectral.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/spectral.o"
 In file included from ../Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f3xx.h:138:0,
                  from ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h:30,
@@ -203,5 +204,5 @@ make: *** [Core/Src/subdir.mk:47: Core/Src/mosfet.o] Error 1
 make: *** Waiting for unfinished jobs....
 "make -j8 all" terminated with exit code 2. Build might be incomplete.
 
-15:00:19 Build Failed. 12 errors, 7 warnings. (took 1s.322ms)
+15:21:15 Build Failed. 12 errors, 7 warnings. (took 1s.325ms)
 

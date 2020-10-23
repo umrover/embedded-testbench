@@ -73,6 +73,8 @@ void get_channel_data(Spectral *spectral);
 
 Channel* new_channel(uint8_t lsb_r, uint8_t msb_r);
 
+void del_channel(Channel *channel);
+
 //public function interface
 
 // initalizes spectral object, adds bus to it
@@ -84,6 +86,8 @@ void enable_spectral(Spectral *spectral);
 // gets the data as an array of 16 bit integers
 // channels RSTUVW
 void get_spectral_data(Spectral *spectral, uint16_t *data);
+
+void del_spectral(Spectral *spectral);
 
 #endif
 
