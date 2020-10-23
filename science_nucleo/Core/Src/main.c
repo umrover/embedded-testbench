@@ -311,19 +311,10 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	  /* spectral code */
-
-    char spectral_data[62];
-    sprintf(spectral_data, "$RSTUVW,");
-
 	  for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-      channel_select(mux, mux->channel_list[spectral_channels[i]]);
-      uint16_t data = get_spectral_data(spectral);
-
-      sprintf(spectral_data, "%d", i);
-      for (int j = 0; j < CHANNELS; ++j) {
-        sprintf(spectral_data, "%d, ", data[j]);
-      }
-      /*transmit over data over uart here*/
+		  channel_select(mux, mux->channel_list[spectral_channels[i]]);
+		  uint16_t data = get_spectral_data(spectral);
+		  /*transmit over data over uart here*/
 	  }
 	  /* thermistor code
 	   *
