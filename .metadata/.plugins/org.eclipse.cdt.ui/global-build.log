@@ -2745,3 +2745,7 @@ Finished building: science_nucleo.bin
  
 Finished building: science_nucleo.list
  
+21:07:44 **** Clean-only build of configuration Debug for project science_nucleo ****
+make -j8 clean 
+rm -rf *
+ 

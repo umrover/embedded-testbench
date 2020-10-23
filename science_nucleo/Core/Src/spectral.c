@@ -24,13 +24,11 @@ void enable_spectral(Spectral *spectral) {
 
 
 // gets the data as an array of 16 bit integers
-uint16_t *get_spectral_data(Spectral *spectral) {
+void get_spectral_data(Spectral *spectral, uint16_t *data) {
     get_data(spectral);
-    static uint16_t data[6];
     for (uint8_t i = 0; i < CHANNELS; ++i) {
         data[i] = spectral->channels[i];
     }
-    return data;
 }
 
 

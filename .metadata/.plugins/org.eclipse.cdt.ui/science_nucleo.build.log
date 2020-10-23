@@ -1,21 +1,7 @@
-16:34:51 **** Incremental Build of configuration Debug for project science_nucleo ****
-make -j8 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
-arm-none-eabi-gcc "../Core/Src/mux.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/CMSIS/Include -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/mux.d" -MT"Core/Src/mux.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/mux.o"
-arm-none-eabi-gcc -o "science_nucleo.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\STM32F303RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="science_nucleo.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
-Finished building target: science_nucleo.elf
- 
-arm-none-eabi-objdump -h -S  science_nucleo.elf  > "science_nucleo.list"
-arm-none-eabi-objcopy  -O binary  science_nucleo.elf  "science_nucleo.bin"
-arm-none-eabi-size   science_nucleo.elf 
-   text	   data	    bss	    dec	    hex	filename
-  22828	    164	   1868	  24860	   611c	science_nucleo.elf
-Finished building: default.size.stdout
- 
-Finished building: science_nucleo.bin
- 
-Finished building: science_nucleo.list
+21:07:44 **** Clean-only build of configuration Debug for project science_nucleo ****
+make -j8 clean 
+rm -rf *
  
 
-16:34:53 Build Finished. 0 errors, 0 warnings. (took 2s.107ms)
+21:07:45 Build Finished. 0 errors, 0 warnings. (took 921ms)
 
