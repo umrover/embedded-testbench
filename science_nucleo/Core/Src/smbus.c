@@ -129,7 +129,5 @@ void reset(SMBus *smbus) {
 
 void del_smbus(SMBus *smbus) {
 	free(smbus->buf);
-	free(smbus->i2c);
-	free(smbus->uart);
 	free(smbus);
 }
