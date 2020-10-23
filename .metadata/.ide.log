@@ -1483,3 +1483,12 @@
 2020-10-23 11:37:55,468 [INFO] ProjectBuilder:2894 - Time for Generating toolchain IDE Files: 1619mS.
 2020-10-23 11:37:55,469 [INFO] ProjectBuilder:1878 - Time for Copy CMSIS : 1mS.
 2020-10-23 11:37:55,472 [INFO] ProjectBuilder:1878 - Time for Copy CMSIS : 0mS.
+2020-10-23 13:43:33,193 [INFO] I2cTimingTraitement:320 - 0x2000090E
+2020-10-23 13:43:33,290 [INFO] I2cTimingTraitement:320 - 0x2000090E
+2020-10-23 13:43:52,094 [INFO] I2cTimingTraitement:320 - 0x2000090E
+2020-10-23 13:43:52,144 [INFO] I2cTimingTraitement:320 - 0x2000090E
+2020-10-23 13:44:48,639 [INFO] I2cTimingTraitement:320 - 0x2000090E
+2020-10-23 13:44:48,664 [INFO] I2cTimingTraitement:320 - 0x2000090E
+2020-10-23 13:44:55,595 [INFO] NvicIntPanel:88 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,450x420,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2020-10-23 13:54:08,074 [INFO] I2cTimingTraitement:320 - 0x2000090E
+2020-10-23 13:54:08,100 [INFO] I2cTimingTraitement:320 - 0x2000090E

@@ -26,7 +26,6 @@
 #include "smbus.h"
 #include "mux.h"
 #include "spectral.h"
-#include "bridge.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -37,11 +36,8 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 /*spectral code*/
-#define SPECTRAL_DEVICES 3
 
-#define SPECTRAL_0_CHANNEL 0
-#define  SPECTRAL_1_CHANNEL 1
-#define  SPECTRAL_2_CHANNEL 2
+#define SPECTRAL_ENABLE 1
 
 /* thermistor code
  *
@@ -49,11 +45,15 @@
  *
  */
 
+#define THERMISTOR_ENABLE 0
+
 /* mosfet code
  *
  *
  *
  */
+
+#define MOSFET_ENABLE 0
 
 /* ammonia motor code
  *
@@ -61,12 +61,15 @@
  *
  */
 
+#define AMMONIA_MOTOR_ENABLE 0
+
 /* peristaltic pump code
  *
  *
  *
  */
 
+#define PUMP_ENABLE 0
 
 
 /* USER CODE END PD */
@@ -92,10 +95,17 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 /* spectral code */
-SMBus *i2cBus;
-Spectral *spectral;
+enum {
+	SPECTRAL_0_CHANNEL = 0,
+	SPECTRAL_1_CHANNEL = 1,
+	SPECTRAL_2_CHANNEL = 2,
+	SPECTRAL_DEVICES = 3
+};
 
 int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
+
+SMBus *i2cBus;
+Spectral *spectral;
 
 Mux *mux;
 
@@ -138,6 +148,9 @@ static void MX_USART2_UART_Init(void);
 static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 /* spectral code */
+//transmits the spectral data as a sentance
+//$SPECTRAL,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,P
+void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart);
 
 /* thermistor code
  *
@@ -168,6 +181,28 @@ static void MX_I2C1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 /* spectral code */
+
+void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
+	//indicate start of sequence with spectral identifier
+	char *identifier = "$SPECTRAL,";
+	HAL_UART_Transmit(huart, (uint8_t *)identifier, sizeof(identifier), 50);
+
+	int channels = 6;
+	int devices = 3;
+
+	char buffer[sizeof(data)]; // Create a char buffer of right size
+
+	// Copy the data to buffer
+	for (uint8_t i = 0; i < devices; ++i) {
+		for (uint8_t j = 0; j < channels; ++j) {
+			sprintf((char*)buffer, "%d,", data[(channels * i) + j]);
+		}
+	}
+	HAL_UART_Transmit(huart, (uint8_t *)buffer, sizeof(buffer), 50);
+
+	char *end = "P";
+	HAL_UART_Transmit(huart, (uint8_t *)end, sizeof(end), 50);
+}
 
 /* thermistor code
  *
@@ -211,35 +246,43 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+#ifdef SPECTRAL_ENABLE
+	i2cBus = new_smbus(&hi2c1, &huart2);
+	mux = new_mux(i2cBus);
+	spectral = new_spectral(i2cBus);
+#endif
 
-  /* spectral code */
-  i2cBus = new_smbus(&hi2c1, &huart2);
-  mux = new_mux(i2cBus);
-  spectral = new_spectral(i2cBus);
-
+#ifdef THERMISTOR_ENABLE
   /* thermistor code
    *
    *
    *
    */
+#endif
 
+#ifdef MOSFET_ENABLE
   /* mosfet code
    *
    *
    *
    */
+#endif
 
+#ifdef AMMONIA_MOTOR_ENABLE
   /* ammonia motor code
    *
    *
    *
    */
+#endif
 
+#ifdef PUMP_ENABLE
   /* peristaltic pump code
    *
    *
    *
    */
+#endif
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -260,42 +303,51 @@ int main(void)
   MX_USART2_UART_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  /* spectral code */
-  // adds all the spectral channels
-  for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-    add_channel(mux, spectral_channels[i]);
-  }
 
-  // opens all channels on the mux to listen
-  channel_select(mux, mux->channel_list[SPECTRAL_0_CHANNEL] +
-        mux->channel_list[SPECTRAL_1_CHANNEL] +
-        mux->channel_list[SPECTRAL_2_CHANNEL]);
-  enable_spectral(spectral);
+#ifdef SPECTRAL_ENABLE
+	// adds all the spectral channels
+	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+		add_channel(mux, spectral_channels[i]);
+	}
 
+	// opens all channels on the mux to listen
+	channel_select(mux, mux->channel_list[SPECTRAL_0_CHANNEL] +
+		mux->channel_list[SPECTRAL_1_CHANNEL] +
+		mux->channel_list[SPECTRAL_2_CHANNEL]);
+	enable_spectral(spectral);
+#endif
+
+#ifdef THERMISTOR_ENABLE
   /* thermistor code
-    *
-    *
-    *
-    */
+   *
+   *
+   *
+   */
+#endif
 
+#ifdef MOSFET_ENABLE
   /* mosfet code
-    *
-    *
-    *
-    */
+   *
+   *
+   *
+   */
+#endif
 
+#ifdef AMMONIA_MOTOR_ENABLE
   /* ammonia motor code
-    *
-    *
-    *
-    */
+   *
+   *
+   *
+   */
+#endif
 
+#ifdef PUMP_ENABLE
   /* peristaltic pump code
-    *
-    *
-    *
-    */
-
+   *
+   *
+   *
+   */
+#endif
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -305,37 +357,48 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  /* spectral code */
-	  uint16_t spectral_data[SPECTRAL_DEVICES * CHANNELS];
-	  for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-		  channel_select(mux, mux->channel_list[spectral_channels[i]]);
-		  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
-	  }
-	  send_spectral_data(spectral_data, &huart1);
+#ifdef SPECTRAL_ENABLE
+	uint16_t spectral_data[SPECTRAL_DEVICES * CHANNELS];
 
-	  /* thermistor code
-	   *
-	   *
-	   *
-	   */
+	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
+	  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
+	}
 
-	  /* mosfet code
-	   *
-	   *
-	   *
-	   */
+	send_spectral_data(spectral_data, &huart1);
+#endif
 
-	  /* ammonia motor code
-	   *
-	   *
-	   *
-	   */
+#ifdef THERMISTOR_ENABLE
+  /* thermistor code
+   *
+   *
+   *
+   */
+#endif
 
-	  /* peristaltic pump code
-	   *
-	   *
-	   *
-	   */
+#ifdef MOSFET_ENABLE
+  /* mosfet code
+   *
+   *
+   *
+   */
+#endif
+
+#ifdef AMMONIA_MOTOR_ENABLE
+  /* ammonia motor code
+   *
+   *
+   *
+   */
+#endif
+
+#ifdef PUMP_ENABLE
+  /* peristaltic pump code
+   *
+   *
+   *
+   */
+#endif
   }
   /* USER CODE END 3 */
 }
