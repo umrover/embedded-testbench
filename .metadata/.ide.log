@@ -1413,3 +1413,73 @@
 2020-10-23 00:09:36,612 [INFO] ProjectBuilder:2894 - Time for Generating toolchain IDE Files: 3517mS.
 2020-10-23 00:09:36,613 [INFO] ProjectBuilder:1878 - Time for Copy CMSIS : 1mS.
 2020-10-23 00:09:36,618 [INFO] ProjectBuilder:1878 - Time for Copy CMSIS : 1mS.
+2020-10-23 11:36:53,795 [INFO] I2cTimingTraitement:320 - 0x2000090E
+2020-10-23 11:37:08,868 [INFO] I2cTimingTraitement:320 - 0x2000090E
+2020-10-23 11:37:18,183 [INFO] I2cTimingTraitement:320 - 0x2000090E
+2020-10-23 11:37:25,145 [INFO] I2cTimingTraitement:320 - 0x2000090E
+2020-10-23 11:37:34,703 [INFO] I2cTimingTraitement:320 - 0x2000090E
+2020-10-23 11:37:45,723 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 572507352 Bytes (745537536)
+2020-10-23 11:37:49,377 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 582813392 Bytes (745537536)
+2020-10-23 11:37:49,594 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 359346792 Bytes (745537536)
+2020-10-23 11:37:49,931 [INFO] BlockDiagram:2671 - set Specific Code input for plugin: TIM1_8F3
+2020-10-23 11:37:49,931 [INFO] BlockDiagram:2671 - set Specific Code input for plugin: ADC
+2020-10-23 11:37:49,931 [INFO] BlockDiagram:2671 - set Specific Code input for plugin: ADC
+2020-10-23 11:37:49,931 [INFO] BlockDiagram:2671 - set Specific Code input for plugin: SYS
+2020-10-23 11:37:49,932 [INFO] BlockDiagram:2671 - set Specific Code input for plugin: ADC
+2020-10-23 11:37:49,932 [INFO] BlockDiagram:2671 - set Specific Code input for plugin: I2C
+2020-10-23 11:37:49,932 [INFO] BlockDiagram:2671 - set Specific Code input for plugin: NVIC
+2020-10-23 11:37:49,932 [INFO] BlockDiagram:2671 - set Specific Code input for plugin: USART
+2020-10-23 11:37:49,932 [INFO] BlockDiagram:2671 - set Specific Code input for plugin: USART
+2020-10-23 11:37:49,932 [INFO] BlockDiagram:2671 - set Specific Code input for plugin: DMA
+2020-10-23 11:37:49,932 [INFO] BlockDiagram:2671 - set Specific Code input for plugin: GPIO
+2020-10-23 11:37:49,933 [INFO] CodeGenerator:603 - code generatio: config db path: C:\ST\STM32CubeIDE_1.3.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_5.6.0.202002181639\\db\
+2020-10-23 11:37:50,203 [INFO] CodeEngine:188 - oldGeneratedFile, C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\MXTmpFiles\license.tmp_save
+2020-10-23 11:37:50,273 [INFO] CodeEngine:206 - Generated code: C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\MXTmpFiles\license.tmp
+2020-10-23 11:37:50,373 [INFO] CodeEngine:188 - oldGeneratedFile, C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\MXTmpFiles\gpio.tmp_save
+2020-10-23 11:37:50,518 [INFO] CodeEngine:206 - Generated code: C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\MXTmpFiles\gpio.tmp
+2020-10-23 11:37:50,877 [ERROR] IPConfigManager:1272 - ERROR: the RefConfig I2CEnableFastModePlus is not available in your config.xml file
+2020-10-23 11:37:51,328 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2020-10-23 11:37:51,329 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Debug : prepare data for ADC
+2020-10-23 11:37:51,330 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line test
+2020-10-23 11:37:51,331 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2020-10-23 11:37:51,332 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Debug : prepare data for DMA
+2020-10-23 11:37:51,333 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line test
+2020-10-23 11:37:51,428 [INFO] CodeEngine:188 - oldGeneratedFile, C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\MXTmpFiles\dma.tmp_save
+2020-10-23 11:37:51,501 [INFO] CodeEngine:206 - Generated code: C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\MXTmpFiles\dma.tmp
+2020-10-23 11:37:51,526 [INFO] CodeEngine:188 - oldGeneratedFile, C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\MXTmpFiles\dma_GV.tmp_save
+2020-10-23 11:37:51,581 [INFO] CodeEngine:206 - Generated code: C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\MXTmpFiles\dma_GV.tmp
+2020-10-23 11:37:51,583 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2020-10-23 11:37:51,584 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Debug : prepare data for I2C
+2020-10-23 11:37:51,585 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line test
+2020-10-23 11:37:51,586 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2020-10-23 11:37:51,587 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Debug : prepare data for TIM
+2020-10-23 11:37:51,588 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line test
+2020-10-23 11:37:51,589 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line
+2020-10-23 11:37:51,590 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Debug : prepare data for USART
+2020-10-23 11:37:51,591 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line test
+2020-10-23 11:37:51,592 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Debug : prepare data for NVIC
+2020-10-23 11:37:51,593 [INFO] LogOutputStream:76 - [STDOUT_REDIRECT] Command line test
+2020-10-23 11:37:51,656 [INFO] CodeEngine:188 - oldGeneratedFile, C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\Core\Src\stm32f3xx_it.c_save
+2020-10-23 11:37:51,829 [INFO] CodeEngine:206 - Generated code: C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\Core\Src\stm32f3xx_it.c
+2020-10-23 11:37:51,878 [INFO] CodeEngine:188 - oldGeneratedFile, C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\Core\Inc\stm32f3xx_it.h_save
+2020-10-23 11:37:51,976 [INFO] CodeEngine:206 - Generated code: C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\Core\Inc\stm32f3xx_it.h
+2020-10-23 11:37:52,035 [INFO] CodeEngine:188 - oldGeneratedFile, C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\Core\Src\stm32f3xx_hal_msp.c_save
+2020-10-23 11:37:52,272 [INFO] CodeEngine:206 - Generated code: C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\Core\Src\stm32f3xx_hal_msp.c
+2020-10-23 11:37:52,304 [INFO] CodeEngine:188 - oldGeneratedFile, C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\MXTmpFiles\system.tmp_save
+2020-10-23 11:37:52,395 [INFO] CodeEngine:206 - Generated code: C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\MXTmpFiles\system.tmp
+2020-10-23 11:37:52,436 [INFO] CodeEngine:188 - oldGeneratedFile, C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\Core\Inc\stm32f3xx_hal_conf.h_save
+2020-10-23 11:37:52,543 [INFO] CodeEngine:206 - Generated code: C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\Core\Inc\stm32f3xx_hal_conf.h
+2020-10-23 11:37:52,560 [WARN] IPConfigManager:2701 - IP not found : TIM
+2020-10-23 11:37:52,560 [WARN] IPConfigManager:2701 - IP not found : gpio
+2020-10-23 11:37:52,561 [WARN] CodeGenerator:2649 - IP not found : TIM
+2020-10-23 11:37:52,562 [WARN] CodeGenerator:2649 - IP not found : gpio
+2020-10-23 11:37:52,614 [INFO] CodeEngine:188 - oldGeneratedFile, C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\Core\Inc\main.h_save
+2020-10-23 11:37:52,733 [INFO] CodeEngine:206 - Generated code: C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\Core\Inc\main.h
+2020-10-23 11:37:52,796 [INFO] CodeEngine:188 - oldGeneratedFile, C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\Core\Src\main.c_save
+2020-10-23 11:37:53,155 [INFO] CodeEngine:206 - Generated code: C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\Core\Src\main.c
+2020-10-23 11:37:53,845 [INFO] ProjectBuilder:2002 - Time for Copy HAL[1] : 173mS.
+2020-10-23 11:37:53,849 [INFO] ProjectBuilder:2727 - Project Generator version: 3.7.1
+2020-10-23 11:37:54,043 [INFO] ConfigFileManager:1066 - The Die is : DIE446
+2020-10-23 11:37:55,468 [INFO] ProjectBuilder:2894 - Time for Generating toolchain IDE Files: 1619mS.
+2020-10-23 11:37:55,469 [INFO] ProjectBuilder:1878 - Time for Copy CMSIS : 1mS.
+2020-10-23 11:37:55,472 [INFO] ProjectBuilder:1878 - Time for Copy CMSIS : 0mS.
