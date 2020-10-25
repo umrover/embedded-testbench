@@ -1,25 +1,22 @@
 #include "mosfet.h"
 
 void enableRled(int enable){
-    enablePin(enable, GPIOA,2);
+    enablePin(enable, GPIOC,7);
 }
 void enableGled(int enable){
-    enablePin(enable, GPIOA,2);
+    enablePin(enable, GPIOA,9);
 }
 void enableBled(int enable){
-    enablePin(enable, GPIOA,2);
-}
-void enableHeater(int enable){
-    enablePin(enable, GPIOA,2);
+    enablePin(enable, GPIOA,8);
 }
 void enablesciUV(int enable){
-    enablePin(enable, GPIOA,2);
+    enablePin(enable, GPIOC,9);
 }
 void enablesaUV(int enable){
-    enablePin(enable, GPIOA,2);
+    enablePin(enable, GPIOA,10);
 }
 void enableWhiteled(int enable){
-    enablePin(enable, GPIOA,2);
+    enablePin(enable, GPIOA,13);
 }
 
 void enablePin(int enable, GPIO_TypeDef *port,uint16_t pin){

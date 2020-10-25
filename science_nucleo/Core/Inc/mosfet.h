@@ -10,7 +10,6 @@
 void enableRled(int enable);
 void enableGled(int enable);
 void enableBled(int enable);
-void enableHeater(int enable);
 void enablesciUV(int enable);
 void enablesaUV(int enable);
 void enableWhiteled(int enable);
