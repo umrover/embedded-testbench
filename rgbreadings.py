@@ -17,16 +17,16 @@ B_LS = 0x1A
 # The following lines powers the TCS34725 device on
 
 # Enable Register (0x00) PON bit.
-bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x86, 0x01)
+bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x80, 0x01)
 
 # Enable Register (0x00) AEN bit.
-bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x86, 0x03)
+bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x80, 0x03)
 
 # Enable Register (0x00) WEN bit.
-bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x86, 0x0B)
+bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x80, 0x0B)
 
 # Sets the RGBC Gain value to 1xgain
-bus.write_byte_data(I2C_ADDRESS, 0x0F | 0x86, 0x00)
+bus.write_byte_data(I2C_ADDRESS, 0x0F | 0x80, 0x00)
 
 # Prints data and saves to a file
 File_object = open(r"rgb_data.txt","w")
