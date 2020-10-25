@@ -25,9 +25,6 @@ bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x80, 0x03)
 # Enable Register (0x00) WEN bit.
 bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x80, 0x0B)
 
-# Sets the RGBC Gain value to 1xgain
-bus.write_byte_data(I2C_ADDRESS, 0x0F | 0x80, 0x00)
-
 # Prints data and saves to a file
 File_object = open(r"rgb_data.txt","w")
 while(True):
