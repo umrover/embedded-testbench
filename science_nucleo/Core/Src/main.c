@@ -377,6 +377,14 @@ int main(void)
 #endif
 
 #ifdef THERMISTOR_ENABLE
+  /* thermistor code
+   *
+   *
+   *
+   */
+#endif
+
+#ifdef MOSFET_ENABLE
   int *device;
   int *enable;
   receive_mosfet_cmd(&huart2,device,enable);
@@ -400,14 +408,6 @@ int main(void)
       enableWhiteled(*enable);
       break;  
   }
-#endif
-
-#ifdef MOSFET_ENABLE
-  /* mosfet code
-   *
-   *
-   *
-   */
 #endif
 
 #ifdef AMMONIA_MOTOR_ENABLE
