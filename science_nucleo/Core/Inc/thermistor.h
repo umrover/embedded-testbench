@@ -12,6 +12,8 @@
 
 #include "stm32f3xx_hal.h"
 #include "stdint.h"
+#include "stdlib.h"
+#include "math.h"
 
 
 ///////////////////
@@ -24,21 +26,21 @@
 typedef struct {
 
     // These are given by the data sheet for calculating temp depending on resistance
-    const float constantArray[4][4];
+    float constantArray[4][4];
+    
+    // Stores the three adcPins
+    ADC_HandleTypeDef* adcPins[3]; 
 
     // Values of R1
-    const int R1vals[3];
+    int R1vals[3];
 
     // This should be 5V for the nucleos
-    const float V1;
+    float V1;
 
     // R25 is the resistance of the thermistor at 25C
-    const int R25;
+    int R25;
 
-    // Stores the three adcPins
-    const ADC_HandleTypeDef* adcPins; 
-    
-}Thermistors;
+} Thermistors;
 
 
 ///////////////////
@@ -52,9 +54,11 @@ Thermistors* newThermistors(const ADC_HandleTypeDef*,
                             const ADC_HandleTypeDef*,
                             const ADC_HandleTypeDef*);
 
-// Returns temp as a float in K given which thermistor you want
+// Returns temp as a float in K given which thermistor you want (0 1 or 2)
 float getTemp(const uint8_t, const Thermistors*);
 
+// Deletes the thermistor object
+void deleteThermistors(Thermistors*);
 
 ///////////////////
 //
@@ -64,6 +68,6 @@ float getTemp(const uint8_t, const Thermistors*);
 ///////////////////
 
 // Reads raw voltage from ADC pin given
-uint32_t readVoltage(ADC_HandleTypeDef*);
+uint16_t readVoltage(const ADC_HandleTypeDef*);
 
 #endif
