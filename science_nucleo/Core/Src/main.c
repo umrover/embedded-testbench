@@ -26,6 +26,7 @@
 #include "smbus.h"
 #include "mux.h"
 #include "spectral.h"
+#include "mosfet.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -158,11 +159,8 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart);
  *
  */
 
-/* mosfet code
- *
- *
- *
- */
+/* mosfet code */
+void receive_mosfet_cmd(UART_HandleTypeDef * huart);
 
 /* ammonia motor code
  *
@@ -210,11 +208,21 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
  *
  */
 
-/* mosfet code
- *
- *
- *
- */
+/* mosfet code */
+void receive_mosfet_cmd(UART_HandleTypeDef * huart,int *device,int*enable){
+  uint8_t *cmd;
+  
+  //Receive the bytes through Uart
+  uint16_t cmdsize;
+  HAL_UART_Receive(huart,cmd,cmdsize);
+
+  //Change to string
+  char *cmdstring;
+  // Expected $Mosfet,<devicenum>,<enablenum>
+  char *identifier = sprintf(cmdstring,cmd);
+  device = atoi(strtok(NULL,","));
+  enable = atoi(strtok(NULL,","));
+}
 
 /* ammonia motor code
  *
@@ -369,11 +377,29 @@ int main(void)
 #endif
 
 #ifdef THERMISTOR_ENABLE
-  /* thermistor code
-   *
-   *
-   *
-   */
+  int *device;
+  int *enable;
+  receive_mosfet_cmd(&huart2,device,enable);
+  switch(device){
+    case 1:
+      enableRled(*enable);
+      break;
+    case 2:
+      enableGled(*enable);
+      break;
+    case 3:
+      enableBled(*enable);
+      break;
+    case 4:
+      enablesciUV(*enable);
+      break;
+    case 5:
+      enablesaUV(*enable);
+      break;
+    case 6:
+      enableWhiteled(*enable);
+      break;  
+  }
 #endif
 
 #ifdef MOSFET_ENABLE
