@@ -57,7 +57,7 @@ float getTemp(const uint8_t whichTherm, const Thermistors* therms){
     float currVolt = (float)rawData * therms->V1 / (float)4095; // 2^12 - 1= 4095 (12 bit string btw)
 
     // Circuit math to get temperature from voltage
-    float Rt = ((float)therms->R1vals[whichTherm] * therms->V1) / (currVolt - therms->R1vals[whichTherm]);
+    float Rt = (((float)therms->R1vals[whichTherm] * therms->V1) / currVolt) - therms->R1vals[whichTherm];
 
     uint8_t constSet;
     if(Rt < 69200 && Rt >= 32770){
