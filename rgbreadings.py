@@ -29,9 +29,9 @@ bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x80, 0x0B)
 File_object = open(r"rgb_data.txt","w")
 while(True):
     # TODO
-    rdecimal = bus.read_word_data(I2C_ADDRESS, R_LS | 0xA6)
-    gdecimal = bus.read_word_data(I2C_ADDRESS, G_LS | 0xA6)
-    bdecimal = bus.read_word_data(I2C_ADDRESS, B_LS | 0xA6)
+    rdecimal = bus.read_word_data(I2C_ADDRESS, R_LS | 0xA0)
+    gdecimal = bus.read_word_data(I2C_ADDRESS, G_LS | 0xA0)
+    bdecimal = bus.read_word_data(I2C_ADDRESS, B_LS | 0xA0)
     print("R: " + str(rdecimal) +
           " G: " + str(gdecimal) +
           " B: " + str(bdecimal))
