@@ -1,3 +1,4 @@
+#ifdef MOSFET_ENABLE
 #include "mosfet.h"
 
 void enableRled(int enable){
@@ -27,3 +28,5 @@ void enablePin(int enable, GPIO_TypeDef *port,uint16_t pin){
         HAL_GPIO_WritePin(port,pin,GPIO_PIN_RESET);
     }
 }
+
+#endif

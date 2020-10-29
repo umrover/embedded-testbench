@@ -26,7 +26,7 @@
 #include "smbus.h"
 #include "mux.h"
 #include "spectral.h"
-#include "mosfet.h"
+//#include "mosfet.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -36,47 +36,19 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-/*spectral code*/
-
-#define SPECTRAL_ENABLE 1
-
-/* thermistor code
- *
- *
- *
- */
-
-#define THERMISTOR_ENABLE 0
-
-/* mosfet code
- *
- *
- *
- */
-
-#define MOSFET_ENABLE 0
-
-/* ammonia motor code
- *
- *
- *
- */
-
-#define AMMONIA_MOTOR_ENABLE 0
-
-/* peristaltic pump code
- *
- *
- *
- */
-
-#define PUMP_ENABLE 0
-
 
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+
+/*spectral code*/
+
+#define SPECTRAL_ENABLE
+//#define THERMISTOR_ENABLE
+//#define MOSFET_ENABLE
+//#define AMMONIA_MOTOR_ENABLE
+//#define PUMP_ENABLE
 
 /* USER CODE END PM */
 
@@ -100,11 +72,11 @@ enum {
 	SPECTRAL_0_CHANNEL = 0,
 	SPECTRAL_1_CHANNEL = 1,
 	SPECTRAL_2_CHANNEL = 2,
-	SPECTRAL_DEVICES = 3
+	SPECTRAL_DEVICES = 1
 };
 
-int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
-
+//int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
+int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL };
 SMBus *i2cBus;
 Spectral *spectral;
 
@@ -178,37 +150,46 @@ void receive_mosfet_cmd(UART_HandleTypeDef * huart);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+
+#ifdef SPECTRAL_ENABLE
 /* spectral code */
+
 
 void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 	//indicate start of sequence with spectral identifier
 	char *identifier = "$SPECTRAL,";
-	HAL_UART_Transmit(huart, (uint8_t *)identifier, sizeof(identifier), 50);
+	HAL_UART_Transmit(huart, (uint8_t *)identifier, 10, 50);
 
 	int channels = 6;
 	int devices = 3;
 
-	char buffer[sizeof(data)]; // Create a char buffer of right size
-
-	// Copy the data to buffer
-	for (uint8_t i = 0; i < devices; ++i) {
-		for (uint8_t j = 0; j < channels; ++j) {
-			sprintf((char*)buffer, "%d,", data[(channels * i) + j]);
-		}
-	}
-	HAL_UART_Transmit(huart, (uint8_t *)buffer, sizeof(buffer), 50);
-
-	char *end = "P";
-	HAL_UART_Transmit(huart, (uint8_t *)end, sizeof(end), 50);
+//	char buffer[sizeof(data)]; // Create a char buffer of right size
+//
+//	// Copy the data to buffer
+//	for (uint8_t i = 0; i < devices; ++i) {
+//		for (uint8_t j = 0; j < channels; ++j) {
+//			sprintf((char*)buffer, "%d,", data[(channels * i) + j]);
+//		}
+//	}
+//	HAL_UART_Transmit(huart, (uint8_t *)buffer, sizeof(buffer), 50);
+//
+//	char *end = "P";
+//	HAL_UART_Transmit(huart, (uint8_t *)end, sizeof(end), 50);
 }
 
-/* thermistor code
- *
- *
- *
- */
+#endif
 
-/* mosfet code */
+#ifdef THERMISTOR_ENABLE
+  /* thermistor code
+   *
+   *
+   *
+   */
+#endif
+
+#ifdef MOSFET_ENABLE
+  /* mosfet code */
 void receive_mosfet_cmd(UART_HandleTypeDef * huart,int *device,int*enable){
   uint8_t *cmd;
   
@@ -224,17 +205,23 @@ void receive_mosfet_cmd(UART_HandleTypeDef * huart,int *device,int*enable){
   enable = atoi(strtok(NULL,","));
 }
 
-/* ammonia motor code
- *
- *
- *
- */
+#endif
 
-/* peristaltic pump code
- *
- *
- *
- */
+#ifdef AMMONIA_MOTOR_ENABLE
+  /* ammonia motor code
+   *
+   *
+   *
+   */
+#endif
+
+#ifdef PUMP_ENABLE
+  /* peristaltic pump code
+   *
+   *
+   *
+   */
+#endif
 
 /* USER CODE END 0 */
 
@@ -322,7 +309,12 @@ int main(void)
 	channel_select(mux, mux->channel_list[SPECTRAL_0_CHANNEL] +
 		mux->channel_list[SPECTRAL_1_CHANNEL] +
 		mux->channel_list[SPECTRAL_2_CHANNEL]);
-	enable_spectral(spectral);
+	uint8_t *buf[30];
+    strcpy((char*)buf, "success? \r\n");
+
+    HAL_UART_Transmit(&huart2, (uint8_t *)buf, strlen((char*)buf), HAL_MAX_DELAY);
+
+	//enable_spectral(spectral);
 #endif
 
 #ifdef THERMISTOR_ENABLE
@@ -366,14 +358,14 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 #ifdef SPECTRAL_ENABLE
-	uint16_t spectral_data[SPECTRAL_DEVICES * CHANNELS];
-
-	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
-	  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
-	}
-
-	send_spectral_data(spectral_data, &huart1);
+    uint16_t spectral_data[SPECTRAL_DEVICES * CHANNELS];
+//
+//	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+//	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
+//	  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
+//	}
+//
+//	send_spectral_data(spectral_data, &huart2);
 #endif
 
 #ifdef THERMISTOR_ENABLE
@@ -847,19 +839,26 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13|GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8|GPIO_PIN_9|GPIO_PIN_10|GPIO_PIN_11 
                           |GPIO_PIN_12|GPIO_PIN_13, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : PC13 PC6 PC7 PC8 */
+  GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PB15 */
   GPIO_InitStruct.Pin = GPIO_PIN_15;
@@ -867,13 +866,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PC6 PC7 PC8 PC9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_9;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pins : PA8 PA9 PA10 PA11 
                            PA12 PA13 */
