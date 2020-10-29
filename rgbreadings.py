@@ -1,5 +1,6 @@
 import smbus
 import numpy as np
+import time
 from math import ceil
 
 # bus initialization
@@ -10,6 +11,7 @@ bus = smbus.SMBus(2)
 I2C_ADDRESS = 0x29
 
 # Relevant registers.
+C_LS = 0x14
 R_LS = 0x16
 G_LS = 0x18
 B_LS = 0x1A
@@ -20,20 +22,39 @@ B_LS = 0x1A
 bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x80, 0x01)
 
 # Enable Register (0x00) AEN bit.
+time.sleep(3)
 bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x80, 0x03)
 
 # Enable Register (0x00) WEN bit.
+time.sleep(3)
 bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x80, 0x0B)
+
+# The configuration register sets the wait time
+bus.write_byte_data(I2C_ADDRESS, 0x0D | 0x80, 0x02)
+
+# Change Wait Time to 0.029 sec
+bus.write_byte_data(I2C_ADDRESS, 0x03 | 0x80, 0xFF)
 
 # Prints data and saves to a file
 File_object = open(r"rgb_data.txt","w")
 while(True):
-    # TODO
+
+    cdecimal = bus.read_word_data(I2C_ADDRESS, C_LS | 0xA0)
     rdecimal = bus.read_word_data(I2C_ADDRESS, R_LS | 0xA0)
     gdecimal = bus.read_word_data(I2C_ADDRESS, G_LS | 0xA0)
     bdecimal = bus.read_word_data(I2C_ADDRESS, B_LS | 0xA0)
-    print("R: " + str(rdecimal) +
-          " G: " + str(gdecimal) +
-          " B: " + str(bdecimal))
-    L = [str(rdecimal) + "," + str(gdecimal) + "," + str(bdecimal)]
+    
+    if cdecimal == 0:
+        r = 0
+        g = 0
+        b = 0
+    else:
+        r = rdecimal*255.0/cdecimal
+        g = gdecimal*255.0/cdecimal
+        b = bdecimal*255.0/cdecimal
+
+    print("R: " + str(r) +
+          " G: " + str(g) +
+          " B: " + str(b))
+    L = [str(r) + "," + str(g) + "," + str(b)]
     File_object.writelines(L)
