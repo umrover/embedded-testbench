@@ -36,14 +36,17 @@ bus.write_byte_data(I2C_ADDRESS, 0x0D | 0x80, 0x02)
 bus.write_byte_data(I2C_ADDRESS, 0x03 | 0x80, 0xFF)
 
 # Prints data and saves to a file
-File_object = open(r"rgb_data.txt","w")
+# File_object = open(r"rgb_data.txt","w")
 while(True):
-
+    # let it rest
+    time.sleep(1)
+    # read the raw data
     cdecimal = bus.read_word_data(I2C_ADDRESS, C_LS | 0xA0)
     rdecimal = bus.read_word_data(I2C_ADDRESS, R_LS | 0xA0)
     gdecimal = bus.read_word_data(I2C_ADDRESS, G_LS | 0xA0)
     bdecimal = bus.read_word_data(I2C_ADDRESS, B_LS | 0xA0)
-    
+
+    # change the raw data into numbers from 0 to 255
     if cdecimal == 0:
         r = 0
         g = 0
@@ -56,5 +59,5 @@ while(True):
     print("R: " + str(r) +
           " G: " + str(g) +
           " B: " + str(b))
-    L = [str(r) + "," + str(g) + "," + str(b)]
-    File_object.writelines(L)
+    # L = [str(r) + "," + str(g) + "," + str(b)]
+    # File_object.writelines(L)
