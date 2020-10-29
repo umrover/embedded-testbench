@@ -67,7 +67,7 @@ void deleteThermistors(Thermistors*);
 //
 ///////////////////
 
-// Reads raw voltage from ADC pin given
+// Returns raw data from the ADC pin given in a 12 bit string - DATA NOT FORMATTED
 uint16_t readVoltage(const ADC_HandleTypeDef*);
 
 #endif
