@@ -17,7 +17,7 @@
 ///////////////////
 
 
-Thermistors* newThermistors(const ADC_HandleTypeDef* adc0, const ADC_HandleTypeDef* adc1, const ADC_HandleTypeDef* adc2){
+Thermistors* newThermistors(ADC_HandleTypeDef* adc0, ADC_HandleTypeDef* adc1, ADC_HandleTypeDef* adc2){
     Thermistors* therms = (Thermistors*) malloc(sizeof(Thermistors));
 
     float tempConstArray[4][4] = {{3.3570420E-03, 2.5214848E-04, 3.3743283E-06, -6.4957311E-08},
@@ -94,7 +94,7 @@ void deleteThermistors(Thermistors* thermistors){
 ///////////////////
 
 
-uint16_t readVoltage(const ADC_HandleTypeDef* adcObject){
+uint16_t readVoltage(ADC_HandleTypeDef* adcObject){
     HAL_ADC_Start(adcObject);
     HAL_ADC_PollForConversion(adcObject, HAL_MAX_DELAY);
     uint16_t raw = HAL_ADC_GetValue(adcObject);
