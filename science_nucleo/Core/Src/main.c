@@ -139,8 +139,9 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart);
 
 /* mosfet code */
 #ifdef MOSFET_ENABLE
-void receive_mosfet_cmd(UART_HandleTypeDef * huart);
+void receive_mosfet_cmd(UART_HandleTypeDef * huart,int *device,int*enable);
 #endif
+
 /* ammonia motor code
  *
  *
@@ -212,12 +213,13 @@ void receive_mosfet_cmd(UART_HandleTypeDef * huart,int *device,int*enable){
   
   //Receive the bytes through Uart
   uint16_t cmdsize;
-  HAL_UART_Receive(huart,cmd,cmdsize);
+  HAL_UART_Receive(huart,cmd,cmdsize,HAL_MAX_DELAY);
 
   //Change to string
-  char *cmdstring;
+  char *cmdstring= "";
   // Expected $Mosfet,<devicenum>,<enablenum>
-  char *identifier = sprintf(cmdstring,cmd);
+  sprintf(cmdstring,*cmd);
+  char *identifier = strtok(cmdstring,"");
   device = atoi(strtok(NULL,","));
   enable = atoi(strtok(NULL,","));
 }
@@ -273,9 +275,6 @@ int main(void)
 
 #ifdef MOSFET_ENABLE
   /* mosfet code
-   *
-   *
-   *
    */
 #endif
 
@@ -395,7 +394,8 @@ int main(void)
   int *device;
   int *enable;
   receive_mosfet_cmd(&huart2,device,enable);
-  switch(device){
+  int d = *device;
+  switch(d){
     case 1:
       enableRled(*enable);
       break;
