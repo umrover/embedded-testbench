@@ -198,7 +198,7 @@ void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
 
   sprintf(string, "$THERMISTOR,%f,%f,%f", currTemps[0], currTemps[1], currTemps[2]);
 
-  HAL_UART_Transmit(huart, (uint8_t *)string, 10, 50);
+  HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 50);
 
 }
 
@@ -267,9 +267,8 @@ int main(void)
 #ifdef THERMISTOR_ENABLE
   thermistors = newThermistors(&hadc2, &hadc3, &hadc4);
 
-  sendThermistorData(thermistors, &huart2);
+  
 
-  deleteThermistors(thermistors);
 #endif
 
 #ifdef MOSFET_ENABLE
@@ -371,6 +370,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    // Read and send all thermistor data over huart2
+    sendThermistorData(thermistors, &huart2);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -386,11 +388,7 @@ int main(void)
 #endif
 
 #ifdef THERMISTOR_ENABLE
-  /* thermistor code
-   *
-   *
-   *
-   */
+    deleteThermistors(thermistors);
 #endif
 
 #ifdef MOSFET_ENABLE

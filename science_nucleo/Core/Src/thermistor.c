@@ -36,11 +36,16 @@ Thermistors* newThermistors(ADC_HandleTypeDef* adc0, ADC_HandleTypeDef* adc1, AD
 
     // FIXME unsure if this will be correct value.  This is source Voltage
     // TODO might be able to set V1 to Vref+ for more accuracy
-    therms->V1 = 5;
+    therms->V1 = 3.3;
 
     therms->R25 = 10000;
 
     therms->adcPins[0] = adc0; therms->adcPins[1] = adc1; therms->adcPins[2] = adc2;
+
+    for(int i = 0; i < 3; i++){
+    	//therms->adcPins[i]->Init.EOCSelection = DISABLE;
+    	//HAL_ADC_Start(therms->adcPins[i]);
+    }
 
     return therms;
 }
@@ -50,11 +55,11 @@ Thermistors* newThermistors(ADC_HandleTypeDef* adc0, ADC_HandleTypeDef* adc1, AD
 
 float getTemp(const uint8_t whichTherm, const Thermistors* therms){
     
-    uint16_t rawData = readVoltage(therms->adcPins[whichTherm]);
+    uint32_t rawData = readVoltage(therms->adcPins[whichTherm]);
 
     // Logic to get actual Voltage from 12 bit string
     // NOTE pretty sure it is 12 bit that's what HAL says in documentation, but could be wrong
-    float currVolt = (float)rawData * therms->V1 / (float)4095; // 2^12 - 1= 4095 (12 bit string btw)
+    float currVolt = (rawData * therms->V1) / (float)4095; // 2^12 - 1= 4095 (12 bit string  )
 
     // Circuit math to get temperature from voltage
     float Rt = (((float)therms->R1vals[whichTherm] * therms->V1) / currVolt) - therms->R1vals[whichTherm];
@@ -83,6 +88,9 @@ float getTemp(const uint8_t whichTherm, const Thermistors* therms){
 
 
 void deleteThermistors(Thermistors* thermistors){
+	for(int i = 0; i < 3; i++){
+		//HAL_ADC_Stop(thermistors->adcPins[i]);
+	}
     free(thermistors);
 }
 
@@ -94,10 +102,10 @@ void deleteThermistors(Thermistors* thermistors){
 ///////////////////
 
 
-uint16_t readVoltage(ADC_HandleTypeDef* adcObject){
-    HAL_ADC_Start(adcObject);
-    HAL_ADC_PollForConversion(adcObject, HAL_MAX_DELAY);
-    uint16_t raw = HAL_ADC_GetValue(adcObject);
+uint32_t readVoltage(ADC_HandleTypeDef* adcObject){
+	HAL_ADC_Start(adcObject);
+	HAL_ADC_PollForConversion(adcObject, HAL_MAX_DELAY);
+    uint32_t raw = HAL_ADC_GetValue(adcObject);
     HAL_ADC_Stop(adcObject);
     return raw;
 }
