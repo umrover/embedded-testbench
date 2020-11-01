@@ -13,6 +13,7 @@
 #include "stm32f3xx_hal.h"
 #include "stdint.h"
 #include "stdlib.h"
+#include "stdio.h"
 #include "math.h"
 
 
@@ -49,10 +50,10 @@ typedef struct {
 //
 ///////////////////
 
-// Inits constants Struct
-Thermistors* newThermistors(const ADC_HandleTypeDef*,
-                            const ADC_HandleTypeDef*,
-                            const ADC_HandleTypeDef*);
+// creates a new Thermistors struct in dynamic memory, inits the values, then returns a pointer to that struct
+Thermistors* newThermistors(ADC_HandleTypeDef*,
+                            ADC_HandleTypeDef*,
+                            ADC_HandleTypeDef*);
 
 // Returns temp as a float in K given which thermistor you want (0 1 or 2)
 float getTemp(const uint8_t, const Thermistors*);
@@ -68,6 +69,6 @@ void deleteThermistors(Thermistors*);
 ///////////////////
 
 // Returns raw data from the ADC pin given in a 12 bit string - DATA NOT FORMATTED
-uint16_t readVoltage(const ADC_HandleTypeDef*);
+uint16_t readVoltage(ADC_HandleTypeDef*);
 
 #endif

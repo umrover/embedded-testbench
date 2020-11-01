@@ -26,7 +26,8 @@
 #include "smbus.h"
 #include "mux.h"
 #include "spectral.h"
-#include "mosfet.h"
+#include "thermistor.h"
+//#include "mosfet.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -45,8 +46,8 @@
 /*spectral code*/
 
 //#define SPECTRAL_ENABLE
-//#define THERMISTOR_ENABLE
-#define MOSFET_ENABLE
+#define THERMISTOR_ENABLE
+//#define MOSFET_ENABLE
 //#define AMMONIA_MOTOR_ENABLE
 //#define PUMP_ENABLE
 
@@ -76,17 +77,20 @@ enum {
 };
 
 //int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
+
+#ifdef SPECTRAL_ENABLE
 int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL };
 SMBus *i2cBus;
 Spectral *spectral;
 
 Mux *mux;
+#endif
+/* thermistor code */
 
-/* thermistor code
- *
- *
- *
- */
+#ifdef THERMISTOR_ENABLE
+Thermistors* thermistors;
+float currTemps[3];
+#endif
 
 /* mosfet code
  *
@@ -123,16 +127,20 @@ static void MX_I2C1_Init(void);
 /* spectral code */
 //transmits the spectral data as a sentance
 //$SPECTRAL,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,P
+#ifdef SPECTRAL_ENABLE
 void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart);
+#endif
 
-/* thermistor code
- *
- *
- *
- */
+
+/* thermistor code*/
+
+#ifdef THERMISTOR_ENABLE
+#endif
 
 /* mosfet code */
+#ifdef MOSFET_ENABLE
 void receive_mosfet_cmd(UART_HandleTypeDef * huart,int *device,int*enable);
+#endif
 
 /* ammonia motor code
  *
@@ -181,11 +189,21 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 #endif
 
 #ifdef THERMISTOR_ENABLE
-  /* thermistor code
-   *
-   *
-   *
-   */
+
+void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
+  for(int t = 0; t  < 3; t++){
+    currTemps[t] = getTemp(t, therms);
+  }
+
+  char *string = "";
+
+  sprintf(string, "$THERMISTOR,%f,%f,%f", currTemps[0], currTemps[1], currTemps[2]);
+
+  HAL_UART_Transmit(huart, (uint8_t *)string, 10, 50);
+
+}
+
+
 #endif
 
 #ifdef MOSFET_ENABLE
@@ -249,11 +267,11 @@ int main(void)
 #endif
 
 #ifdef THERMISTOR_ENABLE
-  /* thermistor code
-   *
-   *
-   *
-   */
+  thermistors = newThermistors(&hadc2, &hadc3, &hadc4);
+
+  sendThermistorData(thermistors, &huart2);
+
+  deleteThermistors(thermistors);
 #endif
 
 #ifdef MOSFET_ENABLE
