@@ -22,15 +22,15 @@ B_LS = 0x1A
 bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x80, 0x01)
 
 # Enable Register (0x00) AEN bit.
-time.sleep(3)
+time.sleep(0.5)
 bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x80, 0x03)
 
 # Enable Register (0x00) WEN bit.
-time.sleep(3)
+time.sleep(0.5)
 bus.write_byte_data(I2C_ADDRESS, 0x00 | 0x80, 0x0B)
 
-# The configuration register sets the wait time
-bus.write_byte_data(I2C_ADDRESS, 0x0D | 0x80, 0x02)
+# The configuration register sets the wait time (not WLONG)
+bus.write_byte_data(I2C_ADDRESS, 0x0D | 0x80, 0x00)
 
 # Change Wait Time to 0.029 sec
 bus.write_byte_data(I2C_ADDRESS, 0x03 | 0x80, 0xFF)
@@ -39,11 +39,14 @@ bus.write_byte_data(I2C_ADDRESS, 0x03 | 0x80, 0xFF)
 # File_object = open(r"rgb_data.txt","w")
 while(True):
     # let it rest
-    time.sleep(1)
     # read the raw data
+    time.sleep(0.003)
     cdecimal = bus.read_word_data(I2C_ADDRESS, C_LS | 0xA0)
+    time.sleep(0.003)
     rdecimal = bus.read_word_data(I2C_ADDRESS, R_LS | 0xA0)
+    time.sleep(0.003)
     gdecimal = bus.read_word_data(I2C_ADDRESS, G_LS | 0xA0)
+    time.sleep(0.003)
     bdecimal = bus.read_word_data(I2C_ADDRESS, B_LS | 0xA0)
 
     # change the raw data into numbers from 0 to 255
