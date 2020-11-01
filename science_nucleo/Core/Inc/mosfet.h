@@ -18,7 +18,7 @@ void enableWhiteled(int enable);
 
 // Private Interface
 // Enable or disable a certain pin
-void enablePin(int enable, int mosfetdevice);
+void enablePin(int enable, GPIO_TypeDef *port, uint16_t pin);
 
 
 
