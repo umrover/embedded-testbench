@@ -37,4 +37,6 @@ void reset(SMBus *smbus);
 
 void disable_DMA(SMBus *smbus);
 
+void del_smbus(SMBus *smbus);
+
 #endif
