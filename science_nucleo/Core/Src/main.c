@@ -197,7 +197,7 @@ void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
 
   char *string = "";
 
-  sprintf(string, "$THERMISTOR,%f,%f,%f", currTemps[0], currTemps[1], currTemps[2]);
+  sprintf((char *)string, "$THERMISTOR,%f,%f,%f\r\n", currTemps[0], currTemps[1], currTemps[2]);
 
   HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 50);
 
@@ -369,9 +369,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    // Read and send all thermistor data over huart2
-    sendThermistorData(thermistors, &huart2);
-
+    // Read and send all thermistor data over huart1
+#ifdef THERMISTOR_ENABLE
+    sendThermistorData(thermistors, &huart1);
+#endif
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

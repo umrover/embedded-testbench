@@ -34,18 +34,11 @@ Thermistors* newThermistors(ADC_HandleTypeDef* adc0, ADC_HandleTypeDef* adc1, AD
     // NOTE make sure you set these to whatever your resistor values are
     therms->R1vals[0] = 9820; therms->R1vals[1] = 10020; therms->R1vals[2] = 9830;
 
-    // FIXME unsure if this will be correct value.  This is source Voltage
-    // TODO might be able to set V1 to Vref+ for more accuracy
     therms->V1 = 3.3;
 
     therms->R25 = 10000;
 
     therms->adcPins[0] = adc0; therms->adcPins[1] = adc1; therms->adcPins[2] = adc2;
-
-    for(int i = 0; i < 3; i++){
-    	//therms->adcPins[i]->Init.EOCSelection = DISABLE;
-    	//HAL_ADC_Start(therms->adcPins[i]);
-    }
 
     return therms;
 }
@@ -88,9 +81,6 @@ float getTemp(const uint8_t whichTherm, const Thermistors* therms){
 
 
 void deleteThermistors(Thermistors* thermistors){
-	for(int i = 0; i < 3; i++){
-		//HAL_ADC_Stop(thermistors->adcPins[i]);
-	}
     free(thermistors);
 }
 
