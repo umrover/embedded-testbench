@@ -17,10 +17,14 @@ bus = smbus.SMBus(2)
 # I2C Slave Address of AS5048A/AS5048B
 I2C_ADDRESS = 0x15
 
-# Relevant registers.
+# Relevant register
 AngleReg = 0x3FFF
+
+# These registers are not being used 
 MagnitudeReg = 0x3FFE
-ClrErrorReg = 0x0001 #Clear error flag
+ClrErrorReg = 0x0001
+
+# This value is represents 180 degrees
 MaxValue = 8190.0
 
 # bus.read_byte_data(I2C_ADDRESS, register)
