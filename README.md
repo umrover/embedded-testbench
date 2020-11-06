@@ -9,11 +9,22 @@ Science Nucleo 😀
 ### UART data string
 
 - Format of the data string
-  - `$THERMISTOR,[temp0],[temp1],[temp2]`
+  - `$THERMISTOR,<temp0>,<temp1>,<temp2>`
   - String is 50 characters long
 
-### Public Functions 😁
+### Public Members 😁
 
+- Thermistor Struct Variables
+  - `float constantArray[4][4]`
+    - Stores all the constants need to convert from resistance to temperatuer
+  - `ADC_HandleTypeDef* adcPins[3]`
+    - Stores references to the three adc Objects
+  - `int R1vals[3]`
+    - Stores the resistor values for the three different 10kOhms resistors in the circuit
+  - `float V1`
+    - Stores the reference voltage of the circuit, normally 3.3V
+  - `int R25`
+    - Stores the resistance of the thermistor at 25C, normally 10kOhms
 - `Thermistors* newThermistors(ADC_HandleTypeDef*, ADC_HandleTypeDef*, ADC_HandleTypeDef*);`
   - Returns a pointer to a block in memory of size Thermistors that contains a thermistors object, given the three ADC references you want to use for reading temperature values
   - C++ equivalent: constructor
@@ -24,7 +35,7 @@ Science Nucleo 😀
     - Make sure you call this before you exit your program to avoid leaking memory
     - C++ equivalent: destructor
 
-### Private Functions 😈
+### Private Members 😈
 
 - `uint32_t readVoltage(ADC_HandleTypeDef*);`
   - Returns a completely unformated string from the ADC type given.
