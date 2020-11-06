@@ -24,7 +24,7 @@ AngleReg = 0x3FFF
 MagnitudeReg = 0x3FFE
 ClrErrorReg = 0x0001
 
-# This value is represents 180 degrees
+# This value represents 180 degrees
 MaxValue = 8190.0
 
 # bus.read_byte_data(I2C_ADDRESS, register)
