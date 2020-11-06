@@ -3,16 +3,16 @@ Science Nucleo 😀
 
 ## Table of Contents
 
-- [Thermistor](#Thermistor-😫)
+- [Thermistor](#Thermistor)
 
-## Thermistor 😫
+## Thermistor
 ### UART data string
 
 - Format of the data string
   - `$THERMISTOR,[temp0],[temp1],[temp2]`
   - String is 50 characters long
 
-### Public Functions
+### Public Functions 😁
 
 - `Thermistors* newThermistors(ADC_HandleTypeDef*, ADC_HandleTypeDef*, ADC_HandleTypeDef*);`
   - Returns a pointer to a block in memory of size Thermistors that contains a thermistors object, given the three ADC references you want to use for reading temperature values
@@ -24,7 +24,7 @@ Science Nucleo 😀
     - Make sure you call this before you exit your program to avoid leaking memory
     - C++ equivalent: destructor
 
-### Private Functions
+### Private Functions 😈
 
 - `uint32_t readVoltage(ADC_HandleTypeDef*);`
   - Returns a completely unformated string from the ADC type given.
