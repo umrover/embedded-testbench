@@ -139,7 +139,7 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart);
 
 /* mosfet code */
 #ifdef MOSFET_ENABLE
-void receive_mosfet_cmd(UART_HandleTypeDef * huart,int *device,int*enable);
+void receive_mosfet_cmd(uint8_t *buffer,int *device,int*enable);
 #endif
 
 /* ammonia motor code
@@ -208,21 +208,17 @@ void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
 
 #ifdef MOSFET_ENABLE
   /* mosfet code */
-void receive_mosfet_cmd(UART_HandleTypeDef * huart,int *device,int*enable){
-  uint8_t *cmd;
-  
-  //Receive the bytes through Uart
-  uint16_t cmdsize;
-  HAL_UART_Receive(huart,cmd,cmdsize,HAL_MAX_DELAY);
-
+void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable){
   //Change to string
-  char *cmdstring= "";
-  // Expected $Mosfet,<devicenum>,<enablenum>
-  sprintf(cmdstring,*cmd);
-  char *identifier = strtok(cmdstring,"");
-  device = atoi(strtok(NULL,","));
-  enable = atoi(strtok(NULL,","));
+  char delim[] = ",";
+  //Expected $Mosfet,<devicenum>,<enablenum>
+  char *identifier = strtok(buffer,delim);
+  if (!strcmp(identifier,"$Mosfet")){
+	  *device = atoi(strtok(NULL,delim));
+	  *enable = atoi(strtok(NULL,delim));
+  }
 }
+
 
 #endif
 
@@ -392,30 +388,37 @@ int main(void)
 #endif
 
 #ifdef MOSFET_ENABLE
-  int *device;
-  int *enable;
-  receive_mosfet_cmd(&huart2,device,enable);
-  int d = *device;
+    uint8_t *buffer;
+
+  //Receive the bytes through Uart
+  uint16_t cmdsize = 30;
+  HAL_UART_Receive(&huart2,buffer,cmdsize,HAL_MAX_DELAY);
+  int device = 0;
+  int enable = 0;
+  receive_mosfet_cmd(buffer,&device,&enable);
+
+  int d = device;
   switch(d){
-    case 1:
-      enableRled(*enable);
-      break;
-    case 2:
-      enableGled(*enable);
-      break;
-    case 3:
-      enableBled(*enable);
-      break;
-    case 4:
-      enablesciUV(*enable);
-      break;
-    case 5:
-      enablesaUV(*enable);
-      break;
-    case 6:
-      enableWhiteled(*enable);
-      break;  
-  }
+	case 1 :
+	  enableRled(enable);
+	  break;
+	case 2 :
+	  enableGled(enable);
+	  break;
+	case 3:
+	  enableBled(enable);
+	  break;
+	case 4:
+	  enablesciUV(enable);
+	  break;
+	case 5:
+	  enablesaUV(enable);
+	  break;
+	case 6:
+	  enableWhiteled(enable);
+	  break;
+}
+
 #endif
 
 #ifdef AMMONIA_MOTOR_ENABLE
