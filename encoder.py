@@ -18,11 +18,8 @@ bus = smbus.SMBus(2)
 I2C_ADDRESS = 0x15
 
 # Relevant register
-AngleReg = 0x3FFF
-
-# These registers are not being used 
-MagnitudeReg = 0x3FFE
-ClrErrorReg = 0x0001
+AngleLow = 0xFE
+AngleHigh = 0xFF
 
 # This value represents 180 degrees
 MaxValue = 8190.0
@@ -32,15 +29,24 @@ MaxValue = 8190.0
 while(True):
 
     # read the raw data
-    # two transmission sequences are necessary
-    bus.read_byte_data(I2C_ADDRESS, AngleReg | 0x80)
-    AngleData = bus.read_byte_data(I2C_ADDRESS, AngleReg | 0x80)
+
+    AngleLowByte = bus.read_byte_data(I2C_ADDRESS, AngleLow)
+    AngleHighByte = bus.read_byte_data(I2C_ADDRESS, AngleHigh)
+    AngleWord = bus.read_word_data(I2C_ADDRESS, AngleLow)
+    madeupData = ( AngleHighByte << 8 ) || AngleLowByte
+    print("Low: " + str(AngleLowByte) + ", High: " + str(AngleHighByte) + ", Word1: " + str(AngleWord)  ", Word2: " + str(madeupData))
+    print("Calc1: " + str(AngleLowByte/MaxValue) + ", Calc2: " + str(AngleHighByte/MaxValue))
+
+
+
+    # use this code in the future
 
     # change the value of Angle Data if angle is over 180
-    if AngleData > MaxValue:
-        AngleData = -AngleData
+    # if AngleData > MaxValue:
+    #    AngleData = -AngleData
 
-    Degrees = 180 * (MaxValue + AngleData) / (MaxValue)
-    Degrees180 = Degrees - 180
-    print("Angle in Degrees: " + str(Degrees) + "; Degrees w/out 180:" + str(Degrees180) + "; Raw Angle Data: " + str(AngleData))
+    # Degrees = 180 * (MaxValue + AngleData) / (MaxValue)
+    # Degrees180 = Degrees - 180
+    # print("Angle in Degrees: " + str(Degrees) + "; Degrees w/out 180:" +
+    # str(Degrees180) + "; Raw Angle Data: " + str(AngleData))
 
