@@ -15,7 +15,7 @@ from math import ceil
 bus = smbus.SMBus(2)
 
 # I2C Slave Address of AS5048A/AS5048B
-I2C_ADDRESS = 0x15
+I2C_ADDRESS = 0x40
 
 # Relevant register
 AngleLow = 0xFE
