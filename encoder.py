@@ -34,7 +34,7 @@ while(True):
     AngleHighByte = bus.read_byte_data(I2C_ADDRESS, AngleHigh)
     AngleWord = bus.read_word_data(I2C_ADDRESS, AngleLow)
     madeupData = ( AngleHighByte << 8 ) | AngleLowByte
-    print("Low: " + AngleLowByte + ", High: " + AngleHighByte + ", Word1: " + AngleWord  ", Word2: " + madeupData)
+    print("Low: " + AngleLowByte + ", High: " + AngleHighByte + ", Word1: " + AngleWord + ", Word2: " + madeupData)
     print("Calc1: " + str(AngleLowByte/MaxValue) + ", Calc2: " + str(AngleHighByte/MaxValue))
 
 
