@@ -48,7 +48,7 @@ Science Nucleo 😀
 ### UART Data String
 None
 
-### Public Members 
+### Public Members 😁 
 - Mux Struct Variables 
   - `i2cBus`
     - SMBus Data structure for abstracting i2c smbus transactions 
@@ -62,14 +62,14 @@ None
   - initalizes a channel on the mux 
 - `void del_mux(Mux *mux)`
   - c++ style destructor 
-### Private Members
+### Private Members 😈
 None 
 
 
 ## Spectral 
 ### UART Data String 
 - `$SPECTRAL, d0_msb_ch0, d0_lsb_ch0, d0_msb_ch1, d0_lsb_ch1, d0_msb_ch2, d0_lsb_ch2, d0_msb_ch3, d0_lsb_ch3, d0_msb_ch4, d0_lsb_ch4, d0_msb_ch5, d0_lsb_ch5, d1_msb_ch0, d1_lsb_ch0, d1_msb_ch1, d1_lsb_ch1, d1_msb_ch2, d1_lsb_ch2, d1_msb_ch3, d1_lsb_ch3, d1_msb_ch4, d1_lsb_ch4, d1_msb_ch5, d1_lsb_ch5,  d2_msb_ch0, d2_lsb_ch0, d2_msb_ch1, d2_lsb_ch1, d2_msb_ch2, d2_lsb_ch2, d2_msb_ch3, d2_lsb_ch3, d2_msb_ch4, d2_lsb_ch4, d2_msb_ch5, d2_lsb_ch5,`
-### Public Members
+### Public Members 😁
 - Spectral Struct
   - `i2cBus`
     - SMBus object to abstract away HAL i2c transactions 
@@ -83,7 +83,7 @@ None
   - Gets data of all 6 spectral channels 
 - `del_spectral(Spectral *spectral)`
   - c++ style destructor 
-### Private Members 
+### Private Members 😈 
 - Channel Struct
   - the spectral data is split into two 8 bit registers 
   - `uint8_t lsb_register`
