@@ -209,6 +209,7 @@ void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
 #ifdef MOSFET_ENABLE
   /* mosfet code */
 void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable){
+
   //Change to string
   char delim[] = ",";
   //Expected $Mosfet,<devicenum>,<enablenum>
@@ -218,6 +219,7 @@ void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable){
 	  *enable = atoi(strtok(NULL,delim));
   }
 }
+
 
 
 #endif
@@ -388,17 +390,15 @@ int main(void)
 #endif
 
 #ifdef MOSFET_ENABLE
-    uint8_t *buffer;
+    const uint8_t cmd[30];
+	uint16_t cmdsize = 30;
+	HAL_UART_Receive(&huart2,cmd,cmdsize,HAL_MAX_DELAY);
+	int device = 0;
+	int enable = 0;
+	receive_mosfet_cmd(cmd,&device,&enable);
 
-  //Receive the bytes through Uart
-  uint16_t cmdsize = 30;
-  HAL_UART_Receive(&huart2,buffer,cmdsize,HAL_MAX_DELAY);
-  int device = 0;
-  int enable = 0;
-  receive_mosfet_cmd(buffer,&device,&enable);
-
-  int d = device;
-  switch(d){
+	int d = device;
+	switch(d){
 	case 1 :
 	  enableRled(enable);
 	  break;
@@ -417,7 +417,8 @@ int main(void)
 	case 6:
 	  enableWhiteled(enable);
 	  break;
-}
+	}
+
 
 #endif
 
