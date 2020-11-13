@@ -12,12 +12,12 @@
 #ifndef THERMISTOR_H_
 #define THERMISTOR_H_
 
-#include "stm32f3xx_hal.h"
+#include "stm32f3xx.h"
 #include "stdint.h"
 #include "stdlib.h"
 #include "stdio.h"
 #include "math.h"
-
+#include "string.h"
 
 ///////////////////
 //
@@ -71,7 +71,7 @@ void deleteThermistors(Thermistors*);
 ///////////////////
 
 // Returns raw data from the ADC pin given in a 12 bit string - DATA NOT FORMATTED
-uint16_t readVoltage(ADC_HandleTypeDef*);
+uint32_t readVoltage(ADC_HandleTypeDef*);
 
 #endif
 #endif
