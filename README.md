@@ -44,23 +44,23 @@ Science Nucleo 😀
   - Data is between 0 and 4095 and is relative to the reference voltage given, defaults to 3.3V
   
   
-  ## Mux 
-  ### UART Data String
-  None
-  
-  ### Public Members 
-  - Mux Struct Variables 
-    - `i2cBus`
-      - SMBus Data structure for abstracting i2c smbus transactions 
-    - `channel_list` 
-      - list of the active channels of the mux in hex. Channels 0-7 are open 
-    - `channels active`
-      - The number of active channels on the mux 
-  - `Mux *new_mux(SMBus *i2cBus)` 
-    - c++ style constructor. Takes an SMBus pointer and returns a Mux pointer
-  - `void add_channel(Mux *mux, int channel)`
-    - initalizes a channel on the mux 
-  - `void del_mux(Mux *mux)`
-    - c++ style destructor 
-  ### Private Members
-  None 
+## Mux 
+### UART Data String
+None
+
+### Public Members 
+- Mux Struct Variables 
+  - `i2cBus`
+    - SMBus Data structure for abstracting i2c smbus transactions 
+  - `channel_list` 
+    - list of the active channels of the mux in hex. Channels 0-7 are open 
+  - `channels active`
+    - The number of active channels on the mux 
+- `Mux *new_mux(SMBus *i2cBus)` 
+  - c++ style constructor. Takes an SMBus pointer and returns a Mux pointer
+- `void add_channel(Mux *mux, int channel)`
+  - initalizes a channel on the mux 
+- `void del_mux(Mux *mux)`
+  - c++ style destructor 
+### Private Members
+None 
