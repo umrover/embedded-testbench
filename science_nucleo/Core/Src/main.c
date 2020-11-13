@@ -43,8 +43,6 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-/*spectral code*/
-
 //#define SPECTRAL_ENABLE
 //#define THERMISTOR_ENABLE
 //#define MOSFET_ENABLE
