@@ -67,6 +67,8 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 /* spectral code */
+
+#ifdef SPECTRAL_ENABLE
 enum {
 	SPECTRAL_0_CHANNEL = 0,
 	SPECTRAL_1_CHANNEL = 1,
@@ -75,8 +77,6 @@ enum {
 };
 
 //int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
-
-#ifdef SPECTRAL_ENABLE
 int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL };
 SMBus *i2cBus;
 Spectral *spectral;
