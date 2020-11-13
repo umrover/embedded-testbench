@@ -15,12 +15,6 @@ RM := rm -rf
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
-ifneq ($(strip $(S_DEPS)),)
--include $(S_DEPS)
-endif
-ifneq ($(strip $(S_UPPER_DEPS)),)
--include $(S_UPPER_DEPS)
-endif
 ifneq ($(strip $(C_DEPS)),)
 -include $(C_DEPS)
 endif
@@ -46,8 +40,8 @@ science_nucleo.bin \
 all: science_nucleo.elf secondary-outputs
 
 # Tool invocations
-science_nucleo.elf: $(OBJS) $(USER_OBJS) \\WSL$\Ubuntu-20.04\home\nkr\embedded-testbench\science_nucleo\STM32F303RETX_FLASH.ld
-	arm-none-eabi-gcc -o "science_nucleo.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"\\WSL$\Ubuntu-20.04\home\nkr\embedded-testbench\science_nucleo\STM32F303RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="science_nucleo.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+science_nucleo.elf: $(OBJS) $(USER_OBJS) C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\STM32F303RETX_FLASH.ld
+	arm-none-eabi-gcc -o "science_nucleo.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\cgige\STM32CubeIDE\workspace_1.3.0\embedded-testbench\science_nucleo\STM32F303RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="science_nucleo.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

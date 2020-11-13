@@ -1,3 +1,5 @@
+//#ifdef SPECTRAL_ENABLE
+
 #ifndef SPECTRAL_H_
 #define SPECTRAL_H_
 
@@ -91,4 +93,4 @@ void del_spectral(Spectral *spectral);
 
 #endif
 
-
+//#endif

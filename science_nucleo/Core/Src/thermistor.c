@@ -7,6 +7,8 @@
 //
 //////////////////////////////////////
 
+#ifdef THERMISTOR_ENABLE
+
 #include "thermistor.h"
 
 
@@ -101,3 +103,5 @@ uint16_t readVoltage(ADC_HandleTypeDef* adcObject){
     HAL_ADC_Stop(adcObject);
     return raw;
 }
+
+#endif

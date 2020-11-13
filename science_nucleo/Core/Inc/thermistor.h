@@ -7,6 +7,8 @@
 //
 //////////////////////////////////////
 
+#ifdef THERMISTOR_ENABLE
+
 #ifndef THERMISTOR_H_
 #define THERMISTOR_H_
 
@@ -71,4 +73,5 @@ void deleteThermistors(Thermistors*);
 // Returns raw data from the ADC pin given in a 12 bit string - DATA NOT FORMATTED
 uint16_t readVoltage(ADC_HandleTypeDef*);
 
+#endif
 #endif
