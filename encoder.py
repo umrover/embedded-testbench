@@ -14,8 +14,22 @@ from math import ceil
 # We initialize bus 2 because that is the only free on on the beaglebone.
 bus = smbus.SMBus(2)
 
-# I2C Slave Address of AS5048A/AS5048B
-I2C_ADDRESS = 0x15
+# I2C Address
+OLD_I2C_ADDRESS = 0x40
+
+# Set new I2C slave address to 0x44
+bus.write_byte_data(OLD_I2C_ADDRESS, 0x15, 0x01)
+
+I2C_ADDRESS = 0x44
+
+# Set new I2C slave address to 0x44
+# bus.write_byte_data(0x40, 0x15, 0x01)
+# Enable special programming mode
+# bus.write_byte_data(I2C_ADDRESS_REGISTER, 0x03, 0xFD)
+# Enable automatic programming procedure
+# bus.write_byte_data(I2C_ADDRESS_REGISTER, 0x03, 0x08)
+# Enable automatic programming procedure
+# bus.write_byte_data(I2C_ADDRESS_REGISTER, 0x03, 0x00)
 
 # Relevant register
 AngleLow = 0xFE
