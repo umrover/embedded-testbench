@@ -111,8 +111,8 @@ def main():
             else:
                 print("unknown input")
         else:
-            f.write("time: " + str(time.clock() - t) + " current: " +  str(get_current_draw()))
-            g.write("time: " + str(time.clock() - t) + "speed: " + str(get_speed_estimate()))
+            f.write("time: " + str(time.clock() - t) + " current: " +  str(get_current_draw()) + '\n')
+            g.write("time: " + str(time.clock() - t) + "speed: " + str(get_speed_estimate()) + '\n')
 
 if __name__=="__main__":
     main()
