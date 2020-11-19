@@ -6,7 +6,7 @@ from math import ceil
 # Assuming using AS5048B
 # Connect to BLANK : TSSOP14 Pin  to Beaglebone Pin
 # Connect to GND : 13 to Cape P9 1
-# Connec to A1: Cape P9 2
+# Connect to A1: Cape P9 2
 # Connect to A2: Cape P9 43
 # Connect to PWR/5V: Cape P9 7 or 8 
 # Connect to PWR/3V: Cape P9 3 or 4
