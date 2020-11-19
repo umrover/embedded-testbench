@@ -51,8 +51,9 @@ while(True):
     AngleHighByte = bus.read_byte_data(I2C_ADDRESS, AngleHigh)
     AngleWord = bus.read_word_data(I2C_ADDRESS, AngleLow)
     madeupData = ( AngleHighByte << 8 ) | AngleLowByte
-    print("Low: " + str(AngleLowByte) + ", High: " + str(AngleHighByte) + ", Word1: " + str(AngleWord) + ", Word2: " + str(madeupData))
-    print("Calc1: " + str(AngleLowByte/MaxValue) + ", Calc2: " + str(AngleHighByte/MaxValue))
+    # print("Low: " + str(AngleLowByte) + ", High: " + str(AngleHighByte) + ", Word1: " + str(AngleWord) + ", Word2: " + str(madeupData))
+    # not sure what read_word_data does for the encoder :( big sad
+    print("Calc1: " + str(AngleWord/MaxValue) + ", Calc2: " + str(madeupData/MaxValue))
 
 
 
