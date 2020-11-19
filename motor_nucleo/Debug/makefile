@@ -32,13 +32,16 @@ default.size.stdout \
 OBJDUMP_LIST += \
 motor_nucleo.list \
 
+OBJCOPY_BIN += \
+motor_nucleo.bin \
+
 
 # All Target
 all: motor_nucleo.elf secondary-outputs
 
 # Tool invocations
-motor_nucleo.elf: $(OBJS) $(USER_OBJS) E:\Desync\MRover\embedded-testbench\motor_nucleo\STM32F303RETX_FLASH.ld
-	arm-none-eabi-gcc -o "motor_nucleo.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"E:\Desync\MRover\embedded-testbench\motor_nucleo\STM32F303RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="motor_nucleo.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+motor_nucleo.elf: $(OBJS) $(USER_OBJS) C:\Users\cgige\workspace\embedded-testbench\motor_nucleo\STM32F303RETX_FLASH.ld
+	arm-none-eabi-gcc -o "motor_nucleo.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\cgige\workspace\embedded-testbench\motor_nucleo\STM32F303RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="motor_nucleo.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -52,12 +55,17 @@ motor_nucleo.list: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+motor_nucleo.bin: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "motor_nucleo.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
 	-$(RM) *
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
 
 .PHONY: all clean dependents
 .SECONDARY:
