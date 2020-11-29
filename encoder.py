@@ -56,9 +56,7 @@ while(True):
 
 
     Degrees = 180 *(MaxValue + AngleData) / (MaxValue)
-    Degrees180 = Degrees - 180
 
     RoundDegrees = round(Degrees, 2)
-    RoundDegrees180 = round(Degrees180, 2)
     print("Angle in Degrees: " + str(RoundDegrees) + "; Raw Angle Data: " + str(AngleData))
 
