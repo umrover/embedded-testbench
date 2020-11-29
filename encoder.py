@@ -55,7 +55,7 @@ while(True):
     AngleData = ( AngleMostByte << 6 ) | LSBmodified
 
 
-    Degrees = 180 *(MaxValue + AngleData) / (MaxValue)
+    Degrees = 180 * AngleData / (MaxValue)
 
     RoundDegrees = round(Degrees, 2)
     print("Angle in Degrees: " + str(RoundDegrees) + "; Raw Angle Data: " + str(AngleData))
