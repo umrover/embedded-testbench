@@ -36,8 +36,8 @@ I2C_ADDRESS = OLD_I2C_ADDRESS
 # bus.write_byte_data(I2C_ADDRESS_REGISTER, 0x03, 0x00)
 
 # Relevant register
-AngleLow = 0xFE
-AngleHigh = 0xFF
+AngleMost = 0xFE
+AngleLeast = 0xFF
 
 # This value represents 180 degrees
 MaxValue = 8190.0
@@ -47,21 +47,18 @@ MaxValue = 8190.0
 while(True):
 
     # read the raw data
+    AngleMostByte = bus.read_byte_data(I2C_ADDRESS, AngleMost)
+    AngleLeastByte = bus.read_byte_data(I2C_ADDRESS, AngleLeast)
 
-    AngleLowByte = bus.read_byte_data(I2C_ADDRESS, AngleLow)
-    AngleHighByte = bus.read_byte_data(I2C_ADDRESS, AngleHigh)
-    AngleData = ( AngleHighByte << 8 ) | AngleLowByte
+    LSBmodified = AngleLeastByte & 0x3F
+
+    AngleData = ( AngleMostByte << 6 ) | LSBmodified
 
 
-
-    # use this code in the future
-
-    # change the value of Angle Data if angle is over 180
-    if AngleData > MaxValue:
-        AngleData = -AngleData
-
-    Degrees = 180 * (MaxValue + AngleData) / (MaxValue)
+    Degrees = 180 *(MaxValue + AngleData) / (MaxValue)
     Degrees180 = Degrees - 180
-    print("Angle in Degrees: " + str(Degrees) + "; Degrees w/out 180:" +
-    str(Degrees180) + "; Raw Angle Data: " + str(AngleData))
+
+    RoundDegrees = round(Degrees, 2)
+    RoundDegrees180 = round(Degrees180, 2)
+    print("Angle in Degrees: " + str(RoundDegrees) + "; Raw Angle Data: " + str(AngleData))
 
