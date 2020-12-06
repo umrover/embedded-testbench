@@ -43,6 +43,8 @@ AngleLeast = 0xFF
 MaxValue = 8190.0
 
 # bus.read_byte_data(I2C_ADDRESS, register)
+LowDegrees = 50
+HighDegrees = 50
 
 while(True):
 
@@ -58,5 +60,11 @@ while(True):
     Degrees = 180 * AngleData / (MaxValue)
 
     RoundDegrees = round(Degrees, 2)
-    print("Angle in Degrees: " + str(RoundDegrees) + "; Raw Angle Data: " + str(AngleData))
+
+    if Degrees < LowDegrees:
+        LowDegrees = Degrees
+    elif Degrees > HighDegrees:
+        HighDegrees = Degrees
+    
+    print("Angle in Degrees: " + str(RoundDegrees) + "; L: " + str(LowDegrees) + "; " + str(HighDegrees))
 
