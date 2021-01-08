@@ -368,25 +368,32 @@ int main(void)
 
 	int d = device;
 	switch(d){
-	case 1 :
+	case 0 :
 	  enableRled(enable);
 	  break;
-	case 2 :
+	case 1 :
 	  enableGled(enable);
 	  break;
-	case 3:
+	case 2:
 	  enableBled(enable);
 	  break;
-	case 4:
+	case 3:
 	  enablesciUV(enable);
 	  break;
-	case 5:
+	case 4:
 	  enablesaUV(enable);
 	  break;
-	case 6:
+	case 5:
 	  enableWhiteled(enable);
 	  break;
-	}
+	case 6:
+	  enablePerPump0(enable);
+	  break;
+ 	case 7:
+ 	  enablePerPump1(enable);
+ 	  break;
+ 	}
+
 
 
 #endif
