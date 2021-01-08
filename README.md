@@ -16,7 +16,7 @@ The center of magnet must be aligned within displacement radius of 0.25mm from t
 
 #### Commands
 To get readings from the sensor: \
-```$ scp encoder.py debian@192.168.7.2:/home/debian/(file path)``` \
+```$ scp encoder.py debian@192.168.7.2:/home/debian/``` \
 ```$ ssh debian@192.168.7.2``` \
 ```$ python3 encoder.py```
 
