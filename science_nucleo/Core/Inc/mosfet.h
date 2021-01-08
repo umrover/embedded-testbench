@@ -13,7 +13,8 @@ void enableBled(int enable);
 void enablesciUV(int enable);
 void enablesaUV(int enable);
 void enableWhiteled(int enable);
-
+void enablePerPump0(int enable);
+void enablePerPump1(int enable);
 
 
 // Private Interface
@@ -23,3 +24,4 @@ void enablePin(int enable, GPIO_TypeDef *port, uint16_t pin);
 
 
 #endif
+

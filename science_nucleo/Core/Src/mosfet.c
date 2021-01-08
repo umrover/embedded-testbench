@@ -19,6 +19,12 @@ void enablesaUV(int enable){
 void enableWhiteled(int enable){
     enablePin(enable, GPIOC,GPIO_PIN_15);
 }
+void enablePerPump0(int enable){
+	enablePin(enable, GPIOB,GPIO_PIN_9);
+}
+void enablePerPump1(int enable){
+	enablePin(enable, GPIOB,GPIO_PIN_8);
+}
 
 void enablePin(int enable, GPIO_TypeDef *port, uint16_t pin){
     if (enable){
@@ -30,3 +36,4 @@ void enablePin(int enable, GPIO_TypeDef *port, uint16_t pin){
 }
 
 //#endif
+
