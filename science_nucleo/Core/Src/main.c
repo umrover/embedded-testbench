@@ -47,7 +47,7 @@
 //#define SPECTRAL_ENABLE
 //#define THERMISTOR_ENABLE
 //#define MOSFET_ENABLE
-//#define AMMONIA_MOTOR_ENABLE
+#define AMMONIA_MOTOR_ENABLE
 //#define PUMP_ENABLE
 
 /* USER CODE END PM */
@@ -135,21 +135,13 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart);
 
 /* mosfet code */
 #ifdef MOSFET_ENABLE
-void receive_mosfet_cmd(uint8_t *buffer,int *device,int*enable);
+void receive_mosfet_cmd(uint8_t *buffer,int *device, int*enable);
 #endif
 
-/* ammonia motor code
- *
- *
- *
- */
-
-/* peristaltic pump code
- *
- *
- *
- */
-
+/* ammonia motor code */
+#ifdef AMMONIA_MOTOR_ENABLE
+void receive_ammonia_motor_cmd(uint8_t *buffer, double *pos);
+#endif
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -187,7 +179,7 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 #ifdef THERMISTOR_ENABLE
 
 void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
-  for(int t = 0; t  < 3; t++){
+  for(int t = 0; t < 3; t++){
     currTemps[t] = getTemp(t, therms);
   }
 
@@ -221,20 +213,18 @@ void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable){
 #endif
 
 #ifdef AMMONIA_MOTOR_ENABLE
-  /* ammonia motor code
-   *
-   *
-   *
-   */
+  /* ammonia motor code */
+
+void receive_ammonia_motor_cmd(uint8_t *buffer, double *pos) {
+	// expects $AMMONIA, <position of motor in degrees>
+	char delim[] = ",";
+	const char *identifier =  strtok(buffer, delim);
+	if (!strcmp(identifier, "$AMMONIA")) {
+		*pos = atoi(strtok(NULL, delim));
+	}
+}
 #endif
 
-#ifdef PUMP_ENABLE
-  /* peristaltic pump code
-   *
-   *
-   *
-   */
-#endif
 
 /* USER CODE END 0 */
 
@@ -274,16 +264,9 @@ int main(void)
 #endif
 
 #ifdef AMMONIA_MOTOR_ENABLE
-  ammonia_motor = new_ammonia_motor(GPIOC, GPIO_PIN_14, GPIOB, GPIO_PIN_10, htim3);
+  ammonia_motor = new_ammonia_motor(GPIOC, GPIO_PIN_14, GPIOB, GPIO_PIN_10, TIM3);
 #endif
 
-#ifdef PUMP_ENABLE
-  /* peristaltic pump code
-   *
-   *
-   *
-   */
-#endif
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -341,26 +324,22 @@ int main(void)
 #endif
 
 #ifdef AMMONIA_MOTOR_ENABLE
-  /* ammonia motor code
-   *
-   *
-   *
-   */
+  /* ammonia motor code */
+	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+	double pos = 0.0;
 #endif
 
-#ifdef PUMP_ENABLE
-  /* peristaltic pump code
-   *
-   *
-   *
-   */
-#endif
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	// receive the UART data string
+	uint8_t cmd[30];
+	uint16_t cmdsize = 30;
+	HAL_UART_Receive(&huart2, cmd, cmdsize, 1000);
+
     // Read and send all thermistor data over huart1
 #ifdef THERMISTOR_ENABLE
     sendThermistorData(thermistors, &huart1);
@@ -383,9 +362,6 @@ int main(void)
 #endif
 
 #ifdef MOSFET_ENABLE
-    const uint8_t cmd[30];
-	uint16_t cmdsize = 30;
-	HAL_UART_Receive(&huart2,cmd,cmdsize,HAL_MAX_DELAY);
 	int device = 0;
 	int enable = 0;
 	receive_mosfet_cmd(cmd,&device,&enable);
@@ -416,20 +392,13 @@ int main(void)
 #endif
 
 #ifdef AMMONIA_MOTOR_ENABLE
-  /* ammonia motor code
-   *
-   *
-   *
-   */
+  /* ammonia motor code */
+	receive_ammonia_motor_cmd(cmd, &pos);
+	set_pos(ammonia_motor, pos);
+
 #endif
 
-#ifdef PUMP_ENABLE
-  /* peristaltic pump code
-   *
-   *
-   *
-   */
-#endif
+
   }
   /* USER CODE END 3 */
 }
@@ -725,7 +694,7 @@ static void MX_TIM3_Init(void)
   htim3.Instance = TIM3;
   htim3.Init.Prescaler = 7;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 0;
+  htim3.Init.Period = 15;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
@@ -739,7 +708,7 @@ static void MX_TIM3_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
+  sConfigOC.Pulse = 3;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
