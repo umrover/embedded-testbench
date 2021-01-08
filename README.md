@@ -1,7 +1,7 @@
 Code for the AS5048B Magnetic Rotary Encoder
 ======================================================================================
 ### About
-This is the code for running the AS5048B magnetic rotary encoder. It is connected to the TSSOP-14 breakout board. i2c is used. It will output the angle position of the 14-bit angular position sensor as a number between 0 and 360. The slave address is determined by whether or not the A1 or A2 pins are connected to ground. This code assumes that A1 and A2 are connected to ground.
+This is the code for running the AS5048B magnetic rotary encoder. It is connected to the TSSOP-14 breakout board. i2c is used. It will output the angle position of the 14-bit angular position sensor as a number between 0 and 360. The slave address is determined by whether or not the A1 or A2 pins are connected to ground. This code assumes that A1 and A2 are connected to power or ground.
 
 [Datasheet](https://ams.com/documents/20143/36005/AS5048_DS000298_4-00.pdf/910aef1f-6cd3-cbda-9d09-41f152104832)
 
