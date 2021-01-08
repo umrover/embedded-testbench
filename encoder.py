@@ -66,5 +66,5 @@ while(True):
     elif Degrees > HighDegrees:
         HighDegrees = Degrees
     
-    print("Angle in Degrees: " + str(RoundDegrees) + "; L: " + str(LowDegrees) + "; " + str(HighDegrees))
+    print("Angle in Degrees: " + str(RoundDegrees))
 
