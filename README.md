@@ -11,7 +11,15 @@ Required electrical components: \
 1 TSSOP-14 breakout board \
 1 beaglebone green/back board 
 
-Connect to ground, SDA, SCL, power to 3.3V, and power to 5V on beaglebone. A1 and A2 are connected to ground. i2c is used.
+Connect the ground, SDA, SCL, 3.3V power, and 5V power pins to the respective pins on the beaglebone. A1 and A2 are connected to ground. i2c is used.\
+The center of magnet must be aligned within displacement radius of 0.25mm from the center of the chip.
+
+#### Commands
+To get readings from the sensor: \
+```$ scp encoder.py debian@192.168.7.2:/home/debian/(file path)``` \
+```$ ssh debian@192.168.7.2``` \
+```$ python3 encoder.py```
 
 ### Notes
+This is a testing script. \
 This code has been tested with python 3.6 on a beaglebone black. Make sure to use the AS5048B encoder since i2c is being used. spi will require the usage of the AS5048A encoder.
