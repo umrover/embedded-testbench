@@ -6,6 +6,7 @@ Science Nucleo 😀
 - [Thermistor](#Thermistor)
 - [Mux](#Mux)
 - [Spectral](#Spectral)
+- [Mosfet](#Mosfet)
 
 ## Thermistor
 ### UART data string
@@ -106,3 +107,24 @@ None
   - i2c byte write as according to the virtual i2c protocol  
 - `void del_channel(Channel *channel)`
   - c++ style destructor 
+
+## Mosfet
+### UART data string
+
+- Format of the UART NMEA command
+  - `$Mosfet,<device>,<enable>,<extra padding>`
+  - String is 30 characters long
+
+### Public Members 😁
+
+- `void enableX(int enable)`
+  - Turns on or off the gpio port linked to device x based on enable.
+  - X is replaced with the appropriate device. i.e. enableRled
+  - This includes the r/g/b leds, science UV, SA UV, white science led and the 2 peristaltic pumps
+
+
+### Private Members 😈
+
+- `void enablePin(int enable, GPIO_TypeDef *port, uint16_t pin)`
+  - Writes to a certain gpio port given the port and a specific pin number
+  - i.e. enablePin(1, GPIOC,GPIO_PIN_8) if you wanted to enable the C8 port.
