@@ -1,5 +1,11 @@
 Science Nucleo 😀
 ---
+## About 
+Code for controlling all of the science sensors for the 2021 Rover. \
+For each respective hardware type there is a design file, with their function names and usages specified \
+in the this README. \
+The code is written in C and data is transmitted/received over UART. \
+[Here](https://docs.google.com/spreadsheets/d/1bnmS1VDOZzItH4A75VZc1xltQRsbM6IUoubj1wVaauA/edit#gid=0) is a link to the pinout of this nucleo. 
 
 ## Table of Contents
 
