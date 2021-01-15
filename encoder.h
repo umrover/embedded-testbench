@@ -1,10 +1,5 @@
 //#ifdef ENCODER_ENABLE
 
-///////////////////////////////////
-///////////////////////////////////
-// delete comments after
-// not too sure how the ifndef and define functions work
-
 #ifndef ENCODER_H_
 #define ENCODER_H_
 
@@ -17,15 +12,15 @@
 
 
 enum {
-	ANGLE_HIGH = 0xFE,
-	ANGLE_LOW = 0xFF,
+	angle_high = 0xFE,
+	angle_low = 0xFF,
 
-	DEVICE_SLAVE_ADDRESS_NONE_POWER = 0x40,
-	DEVICE_SLAVE_ADDRESS_A1_POWER = 0x41,
-	DEVICE_SLAVE_ADDRESS_A2_POWER = 0x42,
-	DEVICE_SLAVE_ADDRESS_BOTH_POWER = 0x43,
+	device_slave_address_none_power = 0x40,
+	device_slave_address_a1_power = 0x41,
+	device_slave_address_a2_power = 0x42,
+	device_slave_address_both_power = 0x43,
 
-	RAW_TO_180_DEGREES_CONVERSION_FACTOR = 8190
+	raw_to_180_degrees_conversion_factor = 8190
 };
 
 // public data members
@@ -44,6 +39,7 @@ uint16_t read_raw_angle(Encoder* encoder);
 double get_angle_degrees(Encoder* encoder);
 
 // Deletes the encoder object
+
 void deleteEncoder(Encoder*);
 
 #endif
