@@ -140,7 +140,7 @@ void receive_mosfet_cmd(uint8_t *buffer,int *device, int*enable);
 
 /* ammonia motor code */
 #ifdef AMMONIA_MOTOR_ENABLE
-void receive_ammonia_motor_cmd(uint8_t *buffer, double *pos);
+void receive_ammonia_motor_cmd(uint8_t *buffer, double *speed);
 #endif
 /* USER CODE END PFP */
 
@@ -215,12 +215,17 @@ void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable){
 #ifdef AMMONIA_MOTOR_ENABLE
   /* ammonia motor code */
 
-void receive_ammonia_motor_cmd(uint8_t *buffer, double *pos) {
+void receive_ammonia_motor_cmd(uint8_t *buffer, double *speed) {
 	// expects $AMMONIA, <position of motor in degrees>
 	char delim[] = ",";
-	const char *identifier =  strtok(buffer, delim);
+	char *copy = (char *)malloc(strlen(buffer) + 1);
+	if (copy == NULL) {
+	  return;
+	}
+	strcpy(copy, buffer);
+	const char *identifier =  strtok(copy, delim);
 	if (!strcmp(identifier, "$AMMONIA")) {
-		*pos = atoi(strtok(NULL, delim));
+		*speed = atoi(strtok(NULL, delim));
 	}
 }
 #endif
@@ -264,7 +269,7 @@ int main(void)
 #endif
 
 #ifdef AMMONIA_MOTOR_ENABLE
-  ammonia_motor = new_ammonia_motor(GPIOC, GPIO_PIN_14, GPIOB, GPIO_PIN_10, TIM3);
+  //ammonia_motor = new_ammonia_motor(GPIOC, GPIO_PIN_14, GPIOB, GPIO_PIN_10, TIM3);
 #endif
 
   /* USER CODE END Init */
@@ -326,19 +331,27 @@ int main(void)
 #ifdef AMMONIA_MOTOR_ENABLE
   /* ammonia motor code */
 	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
-	double pos = 0.0;
+	double speed = 0.0;
 #endif
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+  uint8_t Rx_data[20];
   while (1)
   {
 	// receive the UART data string
-	uint8_t cmd[30];
-	uint16_t cmdsize = 30;
-	HAL_UART_Receive(&huart2, cmd, cmdsize, 1000);
+	HAL_UART_Receive(&huart1, Rx_data, 12, 1000);
+	HAL_Delay(250);
+	__HAL_UART_CLEAR_OREFLAG(&huart1);
+	__HAL_UART_CLEAR_NEFLAG(&huart1);
+	// sprintf((char*)buf , "channel %u : %f, \r\n", 1, 1.4);
+
+	HAL_UART_Transmit(&huart2, Rx_data, 12, 1000);
+
+	HAL_Delay(250);
 
     // Read and send all thermistor data over huart1
 #ifdef THERMISTOR_ENABLE
@@ -400,8 +413,15 @@ int main(void)
 
 #ifdef AMMONIA_MOTOR_ENABLE
   /* ammonia motor code */
-	receive_ammonia_motor_cmd(cmd, &pos);
-	set_pos(ammonia_motor, pos);
+	receive_ammonia_motor_cmd(Rx_data, &speed);
+
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, (speed > 0) | (speed == 0));
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, (speed < 0) | (speed == 0));
+
+	TIM3->CCR1 = speed * 40;
+	HAL_Delay(1);
+
+	//set_pos(ammonia_motor, speed);
 
 #endif
 
@@ -692,6 +712,7 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 0 */
 
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
 
@@ -699,11 +720,20 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 7;
+  htim3.Init.Prescaler = 799;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim3.Init.Period = 15;
+  htim3.Init.Period = 200;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   if (HAL_TIM_PWM_Init(&htim3) != HAL_OK)
   {
     Error_Handler();
@@ -715,7 +745,7 @@ static void MX_TIM3_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 3;
+  sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim3, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
@@ -810,41 +840,30 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, Ammonia_FWD_Pin|White_LEDs_Pin|Heater_2_Pin|Green_LED_Pin 
-                          |Blue_LED_Pin|Red_LED_Pin|Sci_UV_LEDs_Pin|SA_UV_LED_Pin 
-                          |Peristaltic_Pump_2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_6 
+                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_10|GPIO_PIN_11 
+                          |GPIO_PIN_12, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOF, Heater_0_Pin|Heater_1_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10|GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, Ammonia_BWD_Pin|Peristaltic_Pump_1_Pin|Peristaltic_Pump_0_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pins : Ammonia_FWD_Pin White_LEDs_Pin Heater_2_Pin Green_LED_Pin 
-                           Blue_LED_Pin Red_LED_Pin Sci_UV_LEDs_Pin SA_UV_LED_Pin 
-                           Peristaltic_Pump_2_Pin */
-  GPIO_InitStruct.Pin = Ammonia_FWD_Pin|White_LEDs_Pin|Heater_2_Pin|Green_LED_Pin 
-                          |Blue_LED_Pin|Red_LED_Pin|Sci_UV_LEDs_Pin|SA_UV_LED_Pin 
-                          |Peristaltic_Pump_2_Pin;
+  /*Configure GPIO pins : PC14 PC15 PC0 PC6 
+                           PC7 PC8 PC10 PC11 
+                           PC12 */
+  GPIO_InitStruct.Pin = GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_6 
+                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_10|GPIO_PIN_11 
+                          |GPIO_PIN_12;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Heater_0_Pin Heater_1_Pin */
-  GPIO_InitStruct.Pin = Heater_0_Pin|Heater_1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : Ammonia_BWD_Pin Peristaltic_Pump_1_Pin Peristaltic_Pump_0_Pin */
-  GPIO_InitStruct.Pin = Ammonia_BWD_Pin|Peristaltic_Pump_1_Pin|Peristaltic_Pump_0_Pin;
+  /*Configure GPIO pins : PB10 PB8 PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_8|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

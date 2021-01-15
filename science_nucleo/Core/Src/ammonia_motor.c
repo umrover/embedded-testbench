@@ -6,6 +6,7 @@
  */
 
 #include "ammonia_motor.h"
+#include <math.h>
 
 AmmoniaMotor *new_ammonia_motor(GPIO_TypeDef *fwd_port, uint16_t fwd_pin, GPIO_TypeDef *bwd_port,
 												uint16_t bwd_pin, TIM_TypeDef *timer) {
@@ -19,24 +20,19 @@ AmmoniaMotor *new_ammonia_motor(GPIO_TypeDef *fwd_port, uint16_t fwd_pin, GPIO_T
 	return ammonia_motor;
 }
 
-// pre scaler is 7
-// pwm clk freq = 8/(7 + 1) = 1 MHz
-// ARR = 15 us period = 67 KHz
+// pre scaler is 799
+// pwm clk freq = 8/(799 + 1) = 10 KHz
+// ARR =  200 for a 20 ms period = 20 KHz
 // for LA max duty cycle is 20%
-// CRR = 3 us max
-//position ranges from -1 to 1
-void set_pos(AmmoniaMotor *ammonia_motor, double pos) {
-	ammonia_motor->timer->CCR1 = pos/100 * max;
-	if (pos > 0) {
-		HAL_GPIO_WritePin(ammonia_motor->fwd_port, ammonia_motor->fwd_pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(ammonia_motor->bwd_port, ammonia_motor->bwd_pin, GPIO_PIN_RESET);
+// CRR = 20 us max
+// speed ranges from -1 to 1
+void set_pos(AmmoniaMotor *ammonia_motor, double speed) {
+	if (fabs(speed) > 1) {
+		speed = fabs(speed) / speed;
 	}
-	else if (pos < 0) {
-		HAL_GPIO_WritePin(ammonia_motor->bwd_port, ammonia_motor->fwd_pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(ammonia_motor->fwd_port, ammonia_motor->bwd_pin, GPIO_PIN_RESET);
-	}
-	else {
-		HAL_GPIO_WritePin(ammonia_motor->bwd_port, ammonia_motor->fwd_pin, GPIO_PIN_SET);
-		HAL_GPIO_WritePin(ammonia_motor->fwd_port, ammonia_motor->bwd_pin, GPIO_PIN_SET);
-	}
+	ammonia_motor->timer->CCR1 = fabs(speed) * max;
+
+	HAL_GPIO_WritePin(ammonia_motor->fwd_port, ammonia_motor->fwd_pin, (speed > 0) | (speed == 0));
+	HAL_GPIO_WritePin(ammonia_motor->bwd_port, ammonia_motor->bwd_pin, (speed < 0) | (speed == 0));
+
 }

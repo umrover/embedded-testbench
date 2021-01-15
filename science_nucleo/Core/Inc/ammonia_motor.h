@@ -13,8 +13,8 @@
 #include <stdlib.h>
 
 enum {
-	ARR = 15,
-	max = 3
+	ARR = 200,
+	max = 20
 };
 
 typedef struct {
