@@ -4,9 +4,7 @@
 
 #include "encoder.h"
 
-///////////////////
-
-Encoder* new_encoder(bool A1_power, bool A2_power){
+Encoder* new_encoder(SMBus* i2cBus, bool A1_power, bool A2_power){
     Encoder* encoder = (Encoder*) malloc(sizeof(Encoder));
 
     if (A1_power & A2_power) {
@@ -22,29 +20,31 @@ Encoder* new_encoder(bool A1_power, bool A2_power){
         encoder->address = DEVICE_SLAVE_ADDRESS_NONE_POWER;
     }
 
+    encoder->i2cBus = i2cBus;
+
     return encoder;
 }
 
-uint16_t get_val_angle(Encoder* encoder) {
+uint16_t read_raw_angle(Encoder* encoder) {
+
+    uint8_t AngleHighData = read_byte_data(i2cBus, encoder->address, ANGLE_HIGH);
+    uint8_t AngleLowData = read_byte_data(i2cBus, encoder->address, ANGLE_LOW);
     
-    uint32_t rawData = readVoltage(therms->adcPins[whichTherm]);
+    uint8_t LSBmodified = AngleLowData & 0x3F;
 
+    uint16_t AngleData = (AngleMostByte << 6) | LSBmodified;
 
-    ///////////////////////////////////
-    ///////////////////////////////////
-    // delete comments after
-
-    AngleHighData = read_byte(i2cBus, encoder->address); // ? not sure how to read data
-    AngleLowData = read_byte(i2cBus, encoder->address); // 
-    
-    LSBmodified = AngleLowData & 0x3F;
-
-    AngleData = (AngleMostByte << 6) | LSBmodified;
-
-    Degrees = 180 * AngleData / (RAW_TO_180_DEGREES_CONVERSION_FACTOR);
-
-    return Degrees;
+    return AngleData;
 }
+
+double get_angle_degrees(Encoder* encoder) {
+
+    uint16_t AngleRaw = get_raw_val_angle(encoder);
+    double Degrees = 180 * AngleRaw / (RAW_TO_180_DEGREES_CONVERSION_FACTOR);
+
+    return Degrees
+}
+
 
 void deleteEncoder(Encoder* encoder){
     free(encoder);
