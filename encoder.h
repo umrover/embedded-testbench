@@ -1,5 +1,8 @@
 //#ifdef ENCODER_ENABLE
 
+///////////////////////////////////
+///////////////////////////////////
+// delete comments after
 // not too sure how the ifndef and define functions work
 
 #ifndef ENCODER_H_
@@ -29,13 +32,16 @@ enum {
 
 typedef struct {
 	int address;
+	SMBus* i2cBus;
 } Encoder;
 
 // functions
 
-Encoder* new_encoder(bool A1_power, bool A2_power); // 1 if pin connected to power, 0 if pin connected to ground
+Encoder* new_encoder(SMBus* i2cBus, bool A1_power, bool A2_power); // 1 if pin connected to power, 0 if pin connected to ground
 
-uint16_t get_val_angle(Encoder* encoder);
+uint16_t read_raw_angle(Encoder* encoder);
+
+double get_angle_degrees(Encoder* encoder);
 
 // Deletes the encoder object
 void deleteEncoder(Encoder*);
