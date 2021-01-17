@@ -1,11 +1,18 @@
 Science Nucleo 😀
 ---
+## About 
+Code for controlling all of the science sensors for the 2021 Rover. \
+For each respective hardware type there is a design file, with their function names and usages specified \
+in the this README. \
+The code is written in C and data is transmitted/received over UART. \
+[Here](https://docs.google.com/spreadsheets/d/1bnmS1VDOZzItH4A75VZc1xltQRsbM6IUoubj1wVaauA/edit#gid=0) is a link to the pinout of this nucleo. 
 
 ## Table of Contents
 
 - [Thermistor](#Thermistor)
 - [Mux](#Mux)
 - [Spectral](#Spectral)
+- [Mosfet](#Mosfet)
 
 ## Thermistor
 ### UART data string
@@ -106,3 +113,24 @@ None
   - i2c byte write as according to the virtual i2c protocol  
 - `void del_channel(Channel *channel)`
   - c++ style destructor 
+
+## Mosfet
+### UART data string
+
+- Format of the UART NMEA command
+  - `$Mosfet,<device>,<enable>,<extra padding>`
+  - String is 30 characters long
+
+### Public Members 😁
+
+- `void enableX(int enable)`
+  - Turns on or off the gpio port linked to device x based on enable.
+  - X is replaced with the appropriate device. i.e. enableRled
+  - This includes the r/g/b leds, science UV, SA UV, white science led and the 2 peristaltic pumps
+
+
+### Private Members 😈
+
+- `void enablePin(int enable, GPIO_TypeDef *port, uint16_t pin)`
+  - Writes to a certain gpio port given the port and a specific pin number
+  - i.e. enablePin(1, GPIOC,GPIO_PIN_8) if you wanted to enable the C8 port.
