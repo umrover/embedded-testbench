@@ -225,7 +225,7 @@ void receive_ammonia_motor_cmd(uint8_t *buffer, double *speed) {
 	strcpy(copy, buffer);
 	const char *identifier =  strtok(copy, delim);
 	if (!strcmp(identifier, "$AMMONIA")) {
-		*speed = atoi(strtok(NULL, delim));
+		*speed = atof(strtok(NULL, delim));
 	}
 }
 #endif
