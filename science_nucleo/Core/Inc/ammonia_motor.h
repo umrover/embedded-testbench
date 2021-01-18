@@ -13,21 +13,21 @@
 #include <stdlib.h>
 
 enum {
-	ARR = 200,
-	max = 20
+	max = 40
 };
 
 typedef struct {
 	GPIO_TypeDef *fwd_port;
 	GPIO_TypeDef *bwd_port;
-	TIM_TypeDef *timer;
+	TIM_HandleTypeDef *timer;
 	uint16_t fwd_pin;
 	uint16_t bwd_pin;
-} AmmoniaMotor;
+} Motor;
 
-AmmoniaMotor *new_ammonia_motor(GPIO_TypeDef *fwd_port, uint16_t fwd_pin, GPIO_TypeDef *bwd_port,
-														uint16_t bwd_pin, TIM_TypeDef *timer);
+Motor *new_motor(GPIO_TypeDef *fwd_port, uint16_t fwd_pin, GPIO_TypeDef *bwd_port,
+														uint16_t bwd_pin, TIM_HandleTypeDef *timer);
+void start(Motor *motor, int channel);
 
-void set_pos(AmmoniaMotor *, double);
+void set_speed(Motor *motor, double speed);
 
 #endif /* SRC_AMMONIA_MOTOR_H_ */

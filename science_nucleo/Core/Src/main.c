@@ -29,6 +29,7 @@
 #include "thermistor.h"
 #include "mosfet.h"
 #include "ammonia_motor.h"
+#include <math.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -98,7 +99,7 @@ float currTemps[3];
 /* ammonia motor code */
 
 #ifdef AMMONIA_MOTOR_ENABLE
-AmmoniaMotor *ammonia_motor;
+Motor *ammonia_motor;
 #endif
 
 /* peristaltic pump code
@@ -269,7 +270,7 @@ int main(void)
 #endif
 
 #ifdef AMMONIA_MOTOR_ENABLE
-  //ammonia_motor = new_ammonia_motor(GPIOC, GPIO_PIN_14, GPIOB, GPIO_PIN_10, TIM3);
+  ammonia_motor = new_motor(GPIOB, GPIO_PIN_9, GPIOB, GPIO_PIN_10, &htim3);
 #endif
 
   /* USER CODE END Init */
@@ -330,7 +331,8 @@ int main(void)
 
 #ifdef AMMONIA_MOTOR_ENABLE
   /* ammonia motor code */
-	HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+	start(ammonia_motor, TIM_CHANNEL_1);
+	//HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	double speed = 0.0;
 #endif
 
@@ -343,13 +345,12 @@ int main(void)
   while (1)
   {
 	// receive the UART data string
-	HAL_UART_Receive(&huart1, Rx_data, 12, 1000);
+	HAL_UART_Receive(&huart1, Rx_data, 13, 1000);
 	HAL_Delay(250);
 	__HAL_UART_CLEAR_OREFLAG(&huart1);
 	__HAL_UART_CLEAR_NEFLAG(&huart1);
-	// sprintf((char*)buf , "channel %u : %f, \r\n", 1, 1.4);
 
-	HAL_UART_Transmit(&huart2, Rx_data, 12, 1000);
+	HAL_UART_Transmit(&huart2, Rx_data, 13, 1000);
 
 	HAL_Delay(250);
 
@@ -414,14 +415,7 @@ int main(void)
 #ifdef AMMONIA_MOTOR_ENABLE
   /* ammonia motor code */
 	receive_ammonia_motor_cmd(Rx_data, &speed);
-
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14, (speed > 0) | (speed == 0));
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10, (speed < 0) | (speed == 0));
-
-	TIM3->CCR1 = speed * 40;
-	HAL_Delay(1);
-
-	//set_pos(ammonia_motor, speed);
+	set_speed(ammonia_motor, speed);
 
 #endif
 
