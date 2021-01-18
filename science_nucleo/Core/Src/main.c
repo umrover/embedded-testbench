@@ -331,7 +331,6 @@ int main(void)
 #ifdef AMMONIA_MOTOR_ENABLE
   /* ammonia motor code */
 	start(ammonia_motor, TIM_CHANNEL_1);
-	//HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
 	double speed = 0.0;
 #endif
 
