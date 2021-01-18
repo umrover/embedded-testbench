@@ -216,7 +216,7 @@ void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable){
   /* ammonia motor code */
 
 void receive_ammonia_motor_cmd(uint8_t *buffer, double *speed) {
-	// expects $AMMONIA, <position of motor in degrees>
+	// expects $AMMONIA, <speed>, <comma padding>
 	char delim[] = ",";
 	char *copy = (char *)malloc(strlen(buffer) + 1);
 	if (copy == NULL) {
@@ -269,6 +269,8 @@ int main(void)
 #endif
 
 #ifdef AMMONIA_MOTOR_ENABLE
+  // pin B9 is only being used here because one of the GPIO pins on the testing
+  // nucleo broke --> for SAR it will be pin C14
   ammonia_motor = new_motor(GPIOB, GPIO_PIN_9, GPIOB, GPIO_PIN_10, &htim3);
 #endif
 
