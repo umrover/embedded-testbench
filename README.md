@@ -13,7 +13,7 @@ The code is written in C and data is transmitted/received over UART. \
 - [Mux](#Mux)
 - [Spectral](#Spectral)
 - [Mosfet](#Mosfet)
-- [Ammonia Motor](#Ammonia Motor)
+- [Ammonia Motor](#AmmoniaMotor)
 
 ## Thermistor
 ### UART data string
