@@ -13,6 +13,7 @@ The code is written in C and data is transmitted/received over UART. \
 - [Mux](#Mux)
 - [Spectral](#Spectral)
 - [Mosfet](#Mosfet)
+- [Ammonia Motor](#AmmoniaMotor)
 
 ## Thermistor
 ### UART data string
@@ -134,3 +135,34 @@ None
 - `void enablePin(int enable, GPIO_TypeDef *port, uint16_t pin)`
   - Writes to a certain gpio port given the port and a specific pin number
   - i.e. enablePin(1, GPIOC,GPIO_PIN_8) if you wanted to enable the C8 port.
+
+
+## AmmoniaMotor
+### UART data string
+
+- Format of the UART NMEA command
+  - `$AMMONIA,<speed>,<padding commas>`
+  - String is 13 characters long
+  - Speed can range from -1 to 1 & is capped at those two points 
+
+### Public Members 😁
+- Motor Struct 
+  - `fwd_port`
+    - gpio pin series for forward signal 
+  - `bwd_port`
+    - gpio pin series for backwards signal 
+	- `timer`
+    - pwm timer object
+  - `fwd_pin`
+    - pin number in series for forward port
+  - `bwd_pin`
+    - pin number in series for backward port
+- `Motor *new_motor(GPIO_TypeDef *fwd_port, uint16_t fwd_pin, GPIO_TypeDef *bwd_port, uint16_t bwd_pin, TIM_HandleTypeDef *timer)`
+  - c++ style constructor, takes the gpio pins & pwm timer to control the motor 
+- `void start(Motor *motor, int channel)`
+  - enables the PWM timer
+- `void set_speed(Motor *motor, double speed)`
+  - sets the speed of the PWM, can be beteween -1 and 1
+
+### Private Members 😈
+none!
