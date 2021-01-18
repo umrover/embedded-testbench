@@ -49,7 +49,6 @@
 //#define THERMISTOR_ENABLE
 //#define MOSFET_ENABLE
 #define AMMONIA_MOTOR_ENABLE
-//#define PUMP_ENABLE
 
 /* USER CODE END PM */
 
