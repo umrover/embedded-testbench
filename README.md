@@ -137,7 +137,7 @@ None
   - i.e. enablePin(1, GPIOC,GPIO_PIN_8) if you wanted to enable the C8 port.
 
 
-## Ammonia Motor
+## AmmoniaMotor
 ### UART data string
 
 - Format of the UART NMEA command
