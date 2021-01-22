@@ -38,10 +38,10 @@ uint16_t read_raw_angle(Encoder* encoder) {
     return angle_data;
 }
 
-double get_angle_degrees(Encoder* encoder) {
+uint8_t get_angle_degrees(Encoder* encoder) {
 
     uint16_t angle_raw = read_raw_angle(encoder);
-    double degrees = 180 * angle_raw / (raw_to_180_degrees_conversion_factor);
+    uint8_t degrees = 180 * angle_raw / (raw_to_180_degrees_conversion_factor);
 
     return degrees;
 }
