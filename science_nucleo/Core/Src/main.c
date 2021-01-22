@@ -183,11 +183,14 @@ void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
     currTemps[t] = getTemp(t, therms);
   }
 
-  char *string = "";
+  char *string[50] = "";
 
   sprintf((char *)string, "$THERMISTOR,%f,%f,%f\r\n", currTemps[0], currTemps[1], currTemps[2]);
-
   HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 50);
+  // Delay before Clearing flags so beaglebone can successfully read the 
+  HAL_Delay(250);
+  __HAL_UART_CLEAR_OREFLAG(&huart);
+  __HAL_UART_CLEAR_NEFLAG(&huart);
 
 }
 
