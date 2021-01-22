@@ -203,8 +203,13 @@ void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable){
 
   //Change to string
   char delim[] = ",";
+  char *copy = (char *)malloc(strlen(buffer) + 1);
+  if (copy == NULL) {
+  	return;
+  }
+  strcpy(copy, buffer);
   //Expected $Mosfet,<devicenum>,<enablenum>
-  char *identifier = strtok(buffer,delim);
+  char *identifier = strtok(copy,delim);
   if (!strcmp(identifier,"$Mosfet")){
 	  *device = atoi(strtok(NULL,delim));
 	  *enable = atoi(strtok(NULL,delim));
