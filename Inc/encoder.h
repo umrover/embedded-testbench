@@ -3,11 +3,7 @@
 #ifndef ENCODER_H_
 #define ENCODER_H_
 
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include "stdint.h"
-#include "stm32f3xx_hal.h"
 #include "smbus.h"
 
 
@@ -32,7 +28,7 @@ typedef struct {
 
 // functions
 
-Encoder* new_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power); // 1 if pin connected to power, 0 if pin connected to ground
+Encoder* new_encoder(SMBus* i2cBus, int A1_power, int A2_power); // 1 if pin connected to power, 0 if pin connected to ground
 
 uint16_t read_raw_angle(Encoder* encoder);
 
