@@ -32,7 +32,7 @@ Encoder* new_encoder(SMBus* i2cBus, int A1_power, int A2_power); // 1 if pin con
 
 uint16_t read_raw_angle(Encoder* encoder);
 
-double get_angle_degrees(Encoder* encoder);
+uint8_t get_angle_degrees(Encoder* encoder);
 
 // Deletes the encoder object
 
