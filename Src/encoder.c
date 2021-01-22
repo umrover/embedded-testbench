@@ -1,19 +1,20 @@
-// Encoder 
+// Encoder
 
-#ifdef ENCODER_ENABLE
+// #ifdef ENCODER_ENABLE
 
 #include "encoder.h"
+#include "smbus.h"
 
-Encoder* new_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power){
+Encoder* new_encoder(SMBus* i2cBus, int A1_power, int A2_power){
     Encoder* encoder = (Encoder*) malloc(sizeof(Encoder));
 
-    if (A1_power & A2_power) {
+    if ((A1_power == 1) & (A2_power == 1)) {
         encoder->address = device_slave_address_both_power;
     }
-    else if (A1_power) {
+    else if (A1_power == 1) {
         encoder->address = device_slave_address_a1_power;
     }
-    else if (A2_power) {
+    else if (A2_power == 1) {
         encoder->address = device_slave_address_a2_power;
     }
     else {
@@ -27,8 +28,8 @@ Encoder* new_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power){
 
 uint16_t read_raw_angle(Encoder* encoder) {
 
-    uint8_t angle_high_data = read_byte_data(i2cBus, encoder->address, angle_high);
-    uint8_t angle_low_data = read_byte_data(i2cBus, encoder->address, angle_low);
+    uint8_t angle_high_data = read_byte_data(encoder->i2cBus, encoder->address, angle_high);
+    uint8_t angle_low_data = read_byte_data(encoder->i2cBus, encoder->address, angle_low);
     
     uint8_t angle_low_data_modified = angle_low_data & 0x3F;
 
@@ -39,7 +40,7 @@ uint16_t read_raw_angle(Encoder* encoder) {
 
 double get_angle_degrees(Encoder* encoder) {
 
-    uint16_t angle_raw = get_raw_val_angle(encoder);
+    uint16_t angle_raw = read_raw_angle(encoder);
     double degrees = 180 * angle_raw / (raw_to_180_degrees_conversion_factor);
 
     return degrees;
@@ -50,4 +51,4 @@ void deleteEncoder(Encoder* encoder){
     free(encoder);
 }
 
-#endif
+// #endif
