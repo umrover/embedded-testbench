@@ -104,10 +104,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  HAL_Delay(10);
-	  double angle_degrees = get_angle_degrees(encoder);
-	  printf("angle: %lf", angle_degrees);
-	  printf("\n");
+	  HAL_Delay(250);
+	  uint8_t angle_degrees = get_angle_degrees(encoder);
+	  HAL_UART_Transmit(&huart2, &angle_degrees, 8, 1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
