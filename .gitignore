@@ -1,0 +1,12 @@
+*.*
+!.gitignore
+!*.c
+!*.s
+!.project
+!.cproject
+!.mxproject
+!*.ioc
+!*.h
+!*.ld
+!README.md
+
