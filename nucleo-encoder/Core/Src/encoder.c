@@ -8,7 +8,7 @@
 Encoder* new_encoder(SMBus* i2cBus, int A1_power, int A2_power){
     Encoder* encoder = (Encoder*) malloc(sizeof(Encoder));
 
-    if ((A1_power == 1) & (A2_power == 1)) {
+    if ((A1_power == 1) && (A2_power == 1)) {
         encoder->address = device_slave_address_both_power;
     }
     else if (A1_power == 1) {
