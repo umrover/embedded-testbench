@@ -10,9 +10,8 @@ ser = serial.Serial(
     baudrate=115200,
 )
 ser.isOpen()
-while(1){
+while 1 :
     while ser.inWaiting() > 0:
         s = ser.read()
         print ">>" + s
-}
 
