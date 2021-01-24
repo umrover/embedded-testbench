@@ -1,7 +1,7 @@
 
 void setup() {
   // put your setup code here, to run once:
-  int baudrate = 9600;
+  int baudrate = 115200;
   Serial.begin(baudrate);
 }
 
