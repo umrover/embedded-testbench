@@ -386,7 +386,7 @@ int main(void)
 #ifdef MOSFET_ENABLE
 	int device = 0;
 	int enable = 0;
-	receive_mosfet_cmd(cmd,&device,&enable);
+	receive_mosfet_cmd(Rx_data,&device,&enable);
 
 	int d = device;
 	switch(d){
