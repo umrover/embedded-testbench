@@ -189,8 +189,7 @@ void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
   HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 50);
   // Delay before Clearing flags so beaglebone can successfully read the 
   HAL_Delay(250);
-  __HAL_UART_CLEAR_OREFLAG(&huart);
-  __HAL_UART_CLEAR_NEFLAG(&huart);
+
 
 }
 
@@ -365,6 +364,8 @@ int main(void)
     // Read and send all thermistor data over huart1
 #ifdef THERMISTOR_ENABLE
     sendThermistorData(thermistors, &huart1);
+      __HAL_UART_CLEAR_OREFLAG(&huart1);
+  __HAL_UART_CLEAR_NEFLAG(&huart1);
 #endif
     /* USER CODE END WHILE */
 
@@ -379,9 +380,7 @@ int main(void)
 	send_spectral_data(spectral_data, &huart2);
 #endif
 
-#ifdef THERMISTOR_ENABLE
-    deleteThermistors(thermistors);
-#endif
+
 
 #ifdef MOSFET_ENABLE
 	int device = 0;
@@ -429,6 +428,9 @@ int main(void)
 
 
   }
+#ifdef THERMISTOR_ENABLE
+  deleteThermistors(thermistors);
+#endif
   /* USER CODE END 3 */
 }
 
