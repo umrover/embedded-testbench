@@ -5,16 +5,16 @@
 #include "encoder.h"
 #include "smbus.h"
 
-Encoder* new_encoder(SMBus* i2cBus, int A1_power, int A2_power){
+Encoder* new_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power){
     Encoder* encoder = (Encoder*) malloc(sizeof(Encoder));
 
-    if ((A1_power == 1) && (A2_power == 1)) {
+    if ((A1_power) && (A2_power)) {
         encoder->address = device_slave_address_both_power;
     }
-    else if (A1_power == 1) {
+    else if (A1_power) {
         encoder->address = device_slave_address_a1_power;
     }
-    else if (A2_power == 1) {
+    else if (A2_power) {
         encoder->address = device_slave_address_a2_power;
     }
     else {
