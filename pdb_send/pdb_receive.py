@@ -2,7 +2,7 @@ import serial
 
 #defines
 baud = 115200
-uartPort = "/dev/ttyS4"
+uartPort = "/dev/ttyO1"
 
 # configure the serial connections (set port yourself)
 ser = serial.Serial(
@@ -13,5 +13,5 @@ ser.isOpen()
 while 1 :
     while ser.inWaiting() > 0:
         s = ser.read()
-        print ">>" + s
+        print(">>" + s)
 
