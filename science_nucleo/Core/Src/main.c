@@ -47,7 +47,7 @@
 
 //#define SPECTRAL_ENABLE
 //#define THERMISTOR_ENABLE
-//#define MOSFET_ENABLE
+#define MOSFET_ENABLE
 #define AMMONIA_MOTOR_ENABLE
 
 /* USER CODE END PM */
@@ -215,6 +215,11 @@ void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable){
   }
 }
 
+void send_rr_drop(UART_HandleTypeDef* huart){
+	char string[10];
+	sprintf((char *)string, "$REPEATER\n");
+	HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 11);
+}
 
 
 #endif
@@ -352,10 +357,10 @@ int main(void)
   while (1)
   {
 	// receive the UART data string
-	HAL_UART_Receive(&huart1, Rx_data, 13, 1000);
+	HAL_UART_Receive(&huart2, Rx_data, 13, HAL_MAX_DELAY);
 	HAL_Delay(250);
-	__HAL_UART_CLEAR_OREFLAG(&huart1);
-	__HAL_UART_CLEAR_NEFLAG(&huart1);
+	__HAL_UART_CLEAR_OREFLAG(&huart2);
+	__HAL_UART_CLEAR_NEFLAG(&huart2);
 
 	HAL_UART_Transmit(&huart2, Rx_data, 13, 1000);
 
@@ -383,7 +388,7 @@ int main(void)
 
 
 #ifdef MOSFET_ENABLE
-	int device = 0;
+	int device = 8;
 	int enable = 0;
 	receive_mosfet_cmd(Rx_data,&device,&enable);
 
@@ -403,6 +408,7 @@ int main(void)
 	  break;
 	case 4:
 	  enablesaUV(enable);
+	  send_rr_drop(&huart1);
 	  break;
 	case 5:
 	  enableWhiteled(enable);
@@ -413,7 +419,12 @@ int main(void)
  	case 7:
  	  enablePerPump1(enable);
  	  break;
+ 	case 8:
+ 	  break;
  	}
+
+
+
 
 
 
