@@ -45,10 +45,10 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-//#define SPECTRAL_ENABLE
-//#define THERMISTOR_ENABLE
+#define SPECTRAL_ENABLE
+#define THERMISTOR_ENABLE
 //#define MOSFET_ENABLE
-#define AMMONIA_MOTOR_ENABLE
+//#define AMMONIA_MOTOR_ENABLE
 
 /* USER CODE END PM */
 
@@ -171,7 +171,12 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 
 	sprintf((char *)string + 10 + channels*6," \r\n");
 
-	HAL_UART_Transmit(huart, (uint8_t *)string, 50, 50);
+	// testing stuff - use if you don't have a
+	//char test[120];
+	//sprintf((char *)test, "$SPECTRAL,3,4,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,\n");
+
+	HAL_UART_Transmit(huart, (uint8_t *)string, 111, 50);
+	HAL_Delay(100);
 }
 
 #endif
@@ -183,14 +188,13 @@ void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
     currTemps[t] = getTemp(t, therms);
   }
 
-  char *string[50] = "";
+  char string[50] = "";
 
-  sprintf((char *)string, "$THERMISTOR,%f,%f,%f\r\n", currTemps[0], currTemps[1], currTemps[2]);
+  sprintf((char *)string, "$THERMISTOR,%f,%f,%f,\n", currTemps[0], currTemps[1], currTemps[2]);
   HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 50);
   // Delay before Clearing flags so beaglebone can successfully read the 
   HAL_Delay(250);
-  __HAL_UART_CLEAR_OREFLAG(&huart);
-  __HAL_UART_CLEAR_NEFLAG(&huart);
+
 
 }
 
@@ -365,22 +369,20 @@ int main(void)
     // Read and send all thermistor data over huart1
 #ifdef THERMISTOR_ENABLE
     sendThermistorData(thermistors, &huart1);
+    __HAL_UART_CLEAR_OREFLAG(&huart1);
+    __HAL_UART_CLEAR_NEFLAG(&huart1);
 #endif
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 #ifdef SPECTRAL_ENABLE
 
-	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
-	  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
-	}
+//	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+//	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
+//	  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
+//	}
 
-	send_spectral_data(spectral_data, &huart2);
-#endif
-
-#ifdef THERMISTOR_ENABLE
-    deleteThermistors(thermistors);
+	send_spectral_data(spectral_data, &huart1);
 #endif
 
 #ifdef MOSFET_ENABLE
