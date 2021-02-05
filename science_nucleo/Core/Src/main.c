@@ -362,12 +362,19 @@ int main(void)
   while (1)
   {
 	// receive the UART data string
-	HAL_UART_Receive(&huart2, Rx_data, 13, HAL_MAX_DELAY);
+
+	// Jank fix to stop readline from blocking in science_bridge
+	char emp[10];
+	sprintf((char *)emp, "$AAAEATER\n");
+	HAL_UART_Transmit(&huart1, (uint8_t *)emp, sizeof(emp), 11);
+
+	HAL_UART_Receive(&huart2, Rx_data, 13, 1000);
 	HAL_Delay(250);
 	__HAL_UART_CLEAR_OREFLAG(&huart2);
 	__HAL_UART_CLEAR_NEFLAG(&huart2);
 
-	HAL_UART_Transmit(&huart2, Rx_data, 13, 1000);
+	// Jank fix to stop readline from blocking in science_bridge
+	HAL_UART_Transmit(&huart1, (uint8_t *)emp, sizeof(emp), 11);
 
 	HAL_Delay(250);
 
