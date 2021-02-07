@@ -45,9 +45,9 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-#define SPECTRAL_ENABLE
-#define THERMISTOR_ENABLE
-//#define MOSFET_ENABLE
+//#define SPECTRAL_ENABLE
+//#define THERMISTOR_ENABLE
+#define MOSFET_ENABLE
 //#define AMMONIA_MOTOR_ENABLE
 
 /* USER CODE END PM */
@@ -362,21 +362,21 @@ int main(void)
   while (1)
   {
 	// receive the UART data string
-
+	for(int i = 0; i< 20; ++i){
+		Rx_data[i] = 0;
+	}
 	// Jank fix to stop readline from blocking in science_bridge
-	char emp[10];
-	sprintf((char *)emp, "$AAAEATER\n");
-	HAL_UART_Transmit(&huart1, (uint8_t *)emp, sizeof(emp), 11);
+	// Only use if thermistor/spectral is not sending
+//	char emp[7];
+//	sprintf((char *)emp, "$EMPTY\n");
+//	HAL_UART_Transmit(&huart1, (uint8_t *)emp, sizeof(emp), 11);
 
-	HAL_UART_Receive(&huart2, Rx_data, 13, 1000);
+	HAL_UART_Receive(&huart1, Rx_data, 13, 1000);
 	HAL_Delay(250);
-	__HAL_UART_CLEAR_OREFLAG(&huart2);
-	__HAL_UART_CLEAR_NEFLAG(&huart2);
+	__HAL_UART_CLEAR_OREFLAG(&huart1);
+	__HAL_UART_CLEAR_NEFLAG(&huart1);
 
-	// Jank fix to stop readline from blocking in science_bridge
-	HAL_UART_Transmit(&huart1, (uint8_t *)emp, sizeof(emp), 11);
 
-	HAL_Delay(250);
 
     // Read and send all thermistor data over huart1
 #ifdef THERMISTOR_ENABLE
