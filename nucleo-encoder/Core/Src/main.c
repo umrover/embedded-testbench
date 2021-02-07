@@ -107,8 +107,15 @@ int main(void)
   while (1)
   {
 	  HAL_Delay(250);
-	  uint8_t angle_degrees = get_angle_degrees(encoder);
-	  HAL_UART_Transmit(&huart2, &angle_degrees, 8, 1000);
+	  char string[50] = "";
+	  float currAngle = get_angle_degrees(encoder);
+	  sprintf(string, "angle value %f \r \n", (float)currAngle);
+	  // char string[50] = "hello \r \n";
+
+	  HAL_UART_Transmit(&huart2, string, strlen((char*)string), 50);
+	  __HAL_UART_CLEAR_OREFLAG(&huart2);
+	  __HAL_UART_CLEAR_NEFLAG(&huart2);
+	  HAL_Delay(250);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -224,7 +231,7 @@ static void MX_USART2_UART_Init(void)
   huart2.Init.BaudRate = 38400;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
-  huart2.Init.Parity = UART_PARITY_EVEN;
+  huart2.Init.Parity = UART_PARITY_NONE;
   huart2.Init.Mode = UART_MODE_TX_RX;
   huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart2.Init.OverSampling = UART_OVERSAMPLING_16;
