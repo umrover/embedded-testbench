@@ -76,13 +76,17 @@ void CH_process_received() {
 	if (i2c_bus.channel > 6) {return;}
 	Channel *channel = channels + i2c_bus.channel;
 	switch(i2c_bus.operation) {
-	case OFF: channel->pwmIdle = 0x00; return;
-	case ON: channel->pwmIdle = 0xFF; return;
+	case OFF: channel->pwmMax = 0; return;
+	case ON: return;
 	case OPEN:
 	case OPEN_PLUS: channel->mode = 0x00; memcpy(&(channel->open_setpoint), i2c_bus.buffer, 2); return;
 	case CLOSED:
 	case CLOSED_PLUS: channel->mode = 0xFF; memcpy(&(channel->FF), i2c_bus.buffer, 4); memcpy(&(channel->closed_setpoint),i2c_bus.buffer+4,4); return;
-	case CONFIG_PWM: memcpy(&(channel->pwmMin),i2c_bus.buffer,2); memcpy(&(channel->pwmMax),i2c_bus.buffer+2,2); memcpy(&(channel->pwmPeriod),i2c_bus.buffer+4,2); return; //needs to be deprecated
+	case CONFIG_PWM: {
+		int max = 0;
+		memcpy(&(max),i2c_bus.buffer,2);
+		channel->pwmMax = (float)(max)/100; return; //UPDATED
+	}
 	case CONFIG_K: memcpy(&(channel->KP),i2c_bus.buffer,4); memcpy(&(channel->KI),i2c_bus.buffer+4,4); memcpy(&(channel->KD),i2c_bus.buffer+8,4); return;
 	case QUAD_ENC: return;
 	case ADJUST: memcpy(&(channel->quad_enc_value), i2c_bus.buffer, 4);

@@ -43,10 +43,7 @@ Channel channelDefault = {
 	0, //KD
 	0, //spiEnc
 	0, //quadEnc
-	0x00, //pwmIdle
-	0, //pwmMin
 	0, //pwmMax
-	0, //pwmPeriod
 	0, //pwmOutput
 	0, //quadEncRawNow
 	0, //quadEncRawLast
@@ -141,47 +138,52 @@ void updateLogic() {
 			channel->last_error = error;
 
 			output = ((channel->KP * error) + (channel->KI * integratedError) + (channel->KD * derivativeError) + channel->FF);
-			output = output < 1.0 ? output : 1.0;
-			output = output > -1.0 ? output : -1.0;
-			channel->pwmOutput = (uint16_t)(((channel->pwmMax - channel->pwmMin) * ((output + 1.0) / 2.0)) + channel->pwmMin);
+			output = output <  channel->pwmMax ? output : channel->pwmMax;
+			output = output > -channel->pwmMax? output : -channel->pwmMax;
+			channel->pwmOutput = output; //? a bit confused by the scaling
 		}
 		else {
 			channel->pwmOutput = channel->open_setpoint;
 			channel->pwmOutput = channel->pwmOutput > channel->pwmMax ? channel->pwmMax : channel->pwmOutput;
-			channel->pwmOutput = channel->pwmOutput < channel->pwmMin ? channel->pwmMin : channel->pwmOutput;
 		}
 
 	}
 }
 
+void setDir(float speed, GPIO_TypeDef *fwd_port, uint16_t fwd_pin, GPIO_TypeDef *bwd_port,
+		uint16_t bwd_pin) {
+	HAL_GPIO_WritePin(fwd_port, fwd_pin, (speed > 0) | (speed == 0));
+	HAL_GPIO_WritePin(bwd_port, bwd_pin, (speed < 0) | (speed == 0));
+}
+
+float fabs(float i) {
+	return i > 0 ? i * -1 : i;
+}
+
 void updatePWM() {
 	for (uint8_t i = 0; i < 6; i++) {
 		Channel *channel = channels + i;
-		if (channel->limit == 0xFF || channel->pwmIdle != 0xFF){
+		if (channel->limit == 0xFF){
 			channel->pwmOutput = 0;
 		}
 	}
 
-	//needs to be rewritten
-	uint16_t period;
+	TIM1->CCR1 = fabs(channels[0].pwmOutput) * TIM1->ARR;
+	TIM1->CCR2 = fabs(channels[1].pwmOutput) * TIM1->ARR;
+	TIM1->CCR3 = fabs(channels[2].pwmOutput) * TIM1->ARR;
 
-	period = 0;
-	period = (period > channels[0].pwmPeriod) ? period : channels[0].pwmPeriod;
-	period = (period > channels[1].pwmPeriod) ? period : channels[1].pwmPeriod;
-	period = (period > channels[2].pwmPeriod) ? period : channels[2].pwmPeriod;
-	TIM1->ARR = period;
-	TIM1->CCR1 = channels[0].pwmOutput;
-	TIM1->CCR2 = channels[1].pwmOutput;
-	TIM1->CCR3 = channels[2].pwmOutput;
+	setDir(channels[0].pwmOutput, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
+	setDir(channels[1].pwmOutput, M1_DIR_GPIO_Port, M1_DIR_Pin, M1_NDIR_GPIO_Port, M1_NDIR_Pin);
+	setDir(channels[2].pwmOutput, M2_DIR_GPIO_Port, M2_DIR_Pin, M2_NDIR_GPIO_Port, M2_NDIR_Pin);
 
-	period = 0;
-	period = (period > channels[3].pwmPeriod) ? period : channels[3].pwmPeriod;
-	period = (period > channels[4].pwmPeriod) ? period : channels[4].pwmPeriod;
-	period = (period > channels[5].pwmPeriod) ? period : channels[5].pwmPeriod;
-	TIM8->ARR = period;
-	TIM8->CCR1 = channels[3].pwmOutput;
-	TIM8->CCR2 = channels[4].pwmOutput;
-	TIM8->CCR3 = channels[5].pwmOutput;
+	TIM8->CCR1 = fabs(channels[3].pwmOutput) * TIM8->ARR;
+	TIM8->CCR2 = fabs(channels[4].pwmOutput) * TIM8->ARR;
+	TIM8->CCR3 = fabs(channels[5].pwmOutput) * TIM8->ARR;
+
+	//after SAR fix
+	//setDir(channels[3].pwmOutput, M3_DIR_GPIO_Port, M3_DIR_Pin, M3_NDIR_GPIO_Port, M3_NDIR_Pin);
+	//setDir(channels[4].pwmOutput, M4_DIR_GPIO_Port, M4_DIR_Pin, M4_NDIR_GPIO_Port, M4_NDIR_Pin);
+	setDir(channels[5].pwmOutput, M5_DIR_GPIO_Port, M5_DIR_Pin, M5_NDIR_GPIO_Port, M5_NDIR_Pin);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
@@ -204,7 +206,6 @@ int main(void)
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
-  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -256,12 +257,24 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim6);
   HAL_I2C_EnableListen_IT(&hi2c1);
 
+  channels[0].mode = 0xFF;
+  channels[0].closed_setpoint = 90;
+  channels[0].pwmMax = 33;
+  channels[0].KP = 0.1;
+  channels[0].KI = 0.0005;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		updateQuadEnc();
+		updateLimit();
+		updateLogic();
+		updatePWM();
+		CH_tick();
+		channels[0].closed_setpoint = 90;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -279,7 +292,7 @@ void SystemClock_Config(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB busses clocks
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -289,7 +302,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB busses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -345,13 +358,13 @@ static void MX_I2C1_Init(void)
   {
     Error_Handler();
   }
-  /** Configure Analogue filter 
+  /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
-  /** Configure Digital filter 
+  /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
   {
@@ -391,13 +404,13 @@ static void MX_I2C2_Init(void)
   {
     Error_Handler();
   }
-  /** Configure Analogue filter 
+  /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c2, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
-  /** Configure Digital filter 
+  /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c2, 0) != HAL_OK)
   {
@@ -472,7 +485,7 @@ static void MX_TIM1_Init(void)
   htim1.Instance = TIM1;
   htim1.Init.Prescaler = 7;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = PWM_PERIOD;
+  htim1.Init.Period = 100;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -745,7 +758,7 @@ static void MX_TIM8_Init(void)
   htim8.Instance = TIM8;
   htim8.Init.Prescaler = 7;
   htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim8.Init.Period = PWM_PERIOD;
+  htim8.Init.Period = 100;
   htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim8.Init.RepetitionCounter = 0;
   htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -826,19 +839,18 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin 
+  HAL_GPIO_WritePin(GPIOC, M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin
                           |M1_NDIR_Pin|M2_NDIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, M0_SPI_CS_Pin|M1_SPI_CS_Pin|M2_SPI_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin|M3_DIR_Pin 
-                          |M4_DIR_Pin|M5_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin|M5_DIR_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : M3_NDIR_Pin M4_NDIR_Pin M5_NDIR_Pin M0_NDIR_Pin 
+  /*Configure GPIO pins : M3_NDIR_Pin M4_NDIR_Pin M5_NDIR_Pin M0_NDIR_Pin
                            M1_NDIR_Pin M2_NDIR_Pin */
-  GPIO_InitStruct.Pin = M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin 
+  GPIO_InitStruct.Pin = M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin
                           |M1_NDIR_Pin|M2_NDIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
@@ -852,18 +864,16 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : M0_LIMIT_Pin M1_LIMIT_Pin M2_LIMIT_Pin M3_LIMIT_Pin 
+  /*Configure GPIO pins : M0_LIMIT_Pin M1_LIMIT_Pin M2_LIMIT_Pin M3_LIMIT_Pin
                            M4_LIMIT_Pin M5_LIMIT_Pin */
-  GPIO_InitStruct.Pin = M0_LIMIT_Pin|M1_LIMIT_Pin|M2_LIMIT_Pin|M3_LIMIT_Pin 
+  GPIO_InitStruct.Pin = M0_LIMIT_Pin|M1_LIMIT_Pin|M2_LIMIT_Pin|M3_LIMIT_Pin
                           |M4_LIMIT_Pin|M5_LIMIT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : M0_DIR_Pin M1_DIR_Pin M2_DIR_Pin M3_DIR_Pin 
-                           M4_DIR_Pin M5_DIR_Pin */
-  GPIO_InitStruct.Pin = M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin|M3_DIR_Pin 
-                          |M4_DIR_Pin|M5_DIR_Pin;
+  /*Configure GPIO pins : M0_DIR_Pin M1_DIR_Pin M2_DIR_Pin M5_DIR_Pin */
+  GPIO_InitStruct.Pin = M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin|M5_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -896,7 +906,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(char *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

@@ -41,7 +41,7 @@ extern "C" {
 typedef struct{
 	//REGISTERS
 	uint8_t mode;
-	uint16_t open_setpoint;
+	int16_t open_setpoint;
 	int32_t closed_setpoint;
 	float FF;
 	float KP;
@@ -52,13 +52,10 @@ typedef struct{
 	uint16_t abs_enc_value;
 	int32_t quad_enc_value;
 
-	uint8_t pwmIdle; //needs to be deprecated
-	uint16_t pwmMin; //needs to be deprecated
-	uint16_t pwmMax; //needs to be deprecated
-	uint16_t pwmPeriod; //needs to be deprecated
+	float pwmMax; //max percent
 
 	//INTERNAL
-	uint16_t pwmOutput;
+	float pwmOutput; //percent output
 	uint16_t quad_enc_raw_now;
 	uint16_t quad_enc_raw_last;
 	float integrated_error;
@@ -153,10 +150,6 @@ void Error_Handler(void);
 #define M1_DIR_GPIO_Port GPIOA
 #define M2_DIR_Pin GPIO_PIN_12
 #define M2_DIR_GPIO_Port GPIOA
-#define M3_DIR_Pin GPIO_PIN_13
-#define M3_DIR_GPIO_Port GPIOA
-#define M4_DIR_Pin GPIO_PIN_14
-#define M4_DIR_GPIO_Port GPIOA
 #define M5_DIR_Pin GPIO_PIN_15
 #define M5_DIR_GPIO_Port GPIOA
 #define M0_NDIR_Pin GPIO_PIN_10
