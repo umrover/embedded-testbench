@@ -3,6 +3,9 @@
 #ifndef ENCODER_H_
 #define ENCODER_H_
 
+#define RAW_TO_180_DEGREES_CONVERSION_FACTOR 8192.0
+
+
 #include "stdint.h"
 #include "smbus.h"
 
@@ -16,7 +19,6 @@ enum {
 	device_slave_address_a2_power = 0x42,
 	device_slave_address_both_power = 0x43,
 
-	raw_to_180_degrees_conversion_factor = 8190
 };
 
 // public data members
@@ -30,7 +32,7 @@ typedef struct {
 
 Encoder* new_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power); // 1 if pin connected to power, 0 if pin connected to ground
 
-uint16_t read_raw_angle(Encoder* encoder);
+int read_raw_angle(Encoder* encoder);
 
 float get_angle_degrees(Encoder* encoder);
 
