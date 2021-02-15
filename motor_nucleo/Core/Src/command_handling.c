@@ -76,7 +76,7 @@ void CH_process_received() {
 	if (i2c_bus.channel > 6) {return;}
 	Channel *channel = channels + i2c_bus.channel;
 	switch(i2c_bus.operation) {
-	case OFF: channel->pwmMax = 0; return;
+	case OFF: channel->speedMax = 0; return;
 	case ON: return;
 	case OPEN:
 	case OPEN_PLUS: channel->mode = 0x00; memcpy(&(channel->open_setpoint), i2c_bus.buffer, 2); return;
@@ -85,7 +85,7 @@ void CH_process_received() {
 	case CONFIG_PWM: {
 		int max = 0;
 		memcpy(&(max),i2c_bus.buffer,2);
-		channel->pwmMax = (float)(max)/100; return; //UPDATED
+		channel->speedMax = (float)(max)/100; return; //UPDATED
 	}
 	case CONFIG_K: memcpy(&(channel->KP),i2c_bus.buffer,4); memcpy(&(channel->KI),i2c_bus.buffer+4,4); memcpy(&(channel->KD),i2c_bus.buffer+8,4); return;
 	case QUAD_ENC: return;

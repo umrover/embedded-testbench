@@ -52,10 +52,10 @@ typedef struct{
 	uint16_t abs_enc_value;
 	int32_t quad_enc_value;
 
-	float pwmMax; //max percent
+	float speedMax; //max percent
 
 	//INTERNAL
-	float pwmOutput; //percent output
+	float speed; //
 	uint16_t quad_enc_raw_now;
 	uint16_t quad_enc_raw_last;
 	float integrated_error;

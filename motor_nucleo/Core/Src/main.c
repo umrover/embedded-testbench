@@ -138,13 +138,17 @@ void updateLogic() {
 			channel->last_error = error;
 
 			output = ((channel->KP * error) + (channel->KI * integratedError) + (channel->KD * derivativeError) + channel->FF);
-			output = output <  channel->pwmMax ? output : channel->pwmMax;
-			output = output > -channel->pwmMax? output : -channel->pwmMax;
-			channel->pwmOutput = output; //? a bit confused by the scaling
+			output = output <  channel->speedMax ? output : channel->speedMax;
+			output = output > -channel->speedMax ? output : -channel->speedMax;
+			channel->speed = output;
 		}
 		else {
-			channel->pwmOutput = channel->open_setpoint;
-			channel->pwmOutput = channel->pwmOutput > channel->pwmMax ? channel->pwmMax : channel->pwmOutput;
+			if (channel->open_setpoint < 0) {
+				channel->speed = channel->open_setpoint > -channel->speedMax ? channel->open_setpoint : -channel->speedMax;
+			}
+			else {
+				channel->speed = channel->open_setpoint < channel->speedMax ? channel->open_setpoint : channel->speedMax;
+			}
 		}
 
 	}
@@ -157,33 +161,33 @@ void setDir(float speed, GPIO_TypeDef *fwd_port, uint16_t fwd_pin, GPIO_TypeDef 
 }
 
 float fabs(float i) {
-	return i > 0 ? i * -1 : i;
+	return i < 0 ? i * -1 : i;
 }
 
 void updatePWM() {
 	for (uint8_t i = 0; i < 6; i++) {
 		Channel *channel = channels + i;
 		if (channel->limit == 0xFF){
-			channel->pwmOutput = 0;
+			channel->speed = 0;
 		}
 	}
 
-	TIM1->CCR1 = fabs(channels[0].pwmOutput) * TIM1->ARR;
-	TIM1->CCR2 = fabs(channels[1].pwmOutput) * TIM1->ARR;
-	TIM1->CCR3 = fabs(channels[2].pwmOutput) * TIM1->ARR;
+	TIM1->CCR1 = fabs(channels[0].speed) * TIM1->ARR;
+	TIM1->CCR2 = fabs(channels[1].speed) * TIM1->ARR;
+	TIM1->CCR3 = fabs(channels[2].speed) * TIM1->ARR;
 
-	setDir(channels[0].pwmOutput, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
-	setDir(channels[1].pwmOutput, M1_DIR_GPIO_Port, M1_DIR_Pin, M1_NDIR_GPIO_Port, M1_NDIR_Pin);
-	setDir(channels[2].pwmOutput, M2_DIR_GPIO_Port, M2_DIR_Pin, M2_NDIR_GPIO_Port, M2_NDIR_Pin);
+	setDir(channels[0].speed, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
+	setDir(channels[1].speed, M1_DIR_GPIO_Port, M1_DIR_Pin, M1_NDIR_GPIO_Port, M1_NDIR_Pin);
+	setDir(channels[2].speed, M2_DIR_GPIO_Port, M2_DIR_Pin, M2_NDIR_GPIO_Port, M2_NDIR_Pin);
 
-	TIM8->CCR1 = fabs(channels[3].pwmOutput) * TIM8->ARR;
-	TIM8->CCR2 = fabs(channels[4].pwmOutput) * TIM8->ARR;
-	TIM8->CCR3 = fabs(channels[5].pwmOutput) * TIM8->ARR;
+	TIM8->CCR1 = fabs(channels[3].speed) * TIM8->ARR;
+	TIM8->CCR2 = fabs(channels[4].speed) * TIM8->ARR;
+	TIM8->CCR3 = fabs(channels[5].speed) * TIM8->ARR;
 
 	//after SAR fix
 	//setDir(channels[3].pwmOutput, M3_DIR_GPIO_Port, M3_DIR_Pin, M3_NDIR_GPIO_Port, M3_NDIR_Pin);
 	//setDir(channels[4].pwmOutput, M4_DIR_GPIO_Port, M4_DIR_Pin, M4_NDIR_GPIO_Port, M4_NDIR_Pin);
-	setDir(channels[5].pwmOutput, M5_DIR_GPIO_Port, M5_DIR_Pin, M5_NDIR_GPIO_Port, M5_NDIR_Pin);
+	setDir(channels[5].speed, M5_DIR_GPIO_Port, M5_DIR_Pin, M5_NDIR_GPIO_Port, M5_NDIR_Pin);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
@@ -259,7 +263,7 @@ int main(void)
 
   channels[0].mode = 0xFF;
   channels[0].closed_setpoint = 90;
-  channels[0].pwmMax = 33;
+  channels[0].speedMax = .33;
   channels[0].KP = 0.1;
   channels[0].KI = 0.0005;
 
