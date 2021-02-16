@@ -143,12 +143,7 @@ void updateLogic() {
 			channel->speed = output;
 		}
 		else {
-			if (channel->open_setpoint < 0) {
-				channel->speed = channel->open_setpoint > -channel->speedMax ? channel->open_setpoint : -channel->speedMax;
-			}
-			else {
-				channel->speed = channel->open_setpoint < channel->speedMax ? channel->open_setpoint : channel->speedMax;
-			}
+			channel->speed = channel->open_setpoint * channel->speedMax; //scales it
 		}
 
 	}
@@ -161,7 +156,7 @@ void setDir(float speed, GPIO_TypeDef *fwd_port, uint16_t fwd_pin, GPIO_TypeDef 
 }
 
 float fabs(float i) {
-	return i < 0 ? i * -1 : i;
+	return i < 0 ? i * -1.0 : i;
 }
 
 void updatePWM() {
@@ -172,17 +167,17 @@ void updatePWM() {
 		}
 	}
 
-	TIM1->CCR1 = fabs(channels[0].speed) * TIM1->ARR;
-	TIM1->CCR2 = fabs(channels[1].speed) * TIM1->ARR;
-	TIM1->CCR3 = fabs(channels[2].speed) * TIM1->ARR;
+	TIM1->CCR1 = (uint32_t)(fabs(channels[0].speed) * TIM1->ARR);
+	TIM1->CCR2 = (uint32_t)(fabs(channels[1].speed) * TIM1->ARR);
+	TIM1->CCR3 = (uint32_t)(fabs(channels[2].speed) * TIM1->ARR);
 
 	setDir(channels[0].speed, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
 	setDir(channels[1].speed, M1_DIR_GPIO_Port, M1_DIR_Pin, M1_NDIR_GPIO_Port, M1_NDIR_Pin);
 	setDir(channels[2].speed, M2_DIR_GPIO_Port, M2_DIR_Pin, M2_NDIR_GPIO_Port, M2_NDIR_Pin);
 
-	TIM8->CCR1 = fabs(channels[3].speed) * TIM8->ARR;
-	TIM8->CCR2 = fabs(channels[4].speed) * TIM8->ARR;
-	TIM8->CCR3 = fabs(channels[5].speed) * TIM8->ARR;
+	TIM8->CCR1 = (uint32_t)(fabs(channels[3].speed) * TIM8->ARR);
+	TIM8->CCR2 = (uint32_t)(fabs(channels[4].speed) * TIM8->ARR);
+	TIM8->CCR3 = (uint32_t)(fabs(channels[5].speed) * TIM8->ARR);
 
 	//after SAR fix
 	//setDir(channels[3].pwmOutput, M3_DIR_GPIO_Port, M3_DIR_Pin, M3_NDIR_GPIO_Port, M3_NDIR_Pin);
@@ -248,6 +243,7 @@ int main(void)
 //  channels[5] = channelDefault;
 
   i2c_bus = i2c_bus_default;
+  i2c_bus_handle = &hi2c1;
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -261,11 +257,11 @@ int main(void)
   HAL_TIM_Base_Start_IT(&htim6);
   HAL_I2C_EnableListen_IT(&hi2c1);
 
-  channels[0].mode = 0xFF;
-  channels[0].closed_setpoint = 90;
-  channels[0].speedMax = .33;
-  channels[0].KP = 0.1;
-  channels[0].KI = 0.0005;
+//  channels[0].mode = 0xFF;
+//  channels[0].closed_setpoint = 90;
+//  channels[0].speedMax = .33;
+//  channels[0].KP = 0.1;
+//  channels[0].KI = 0.0005;
 
   /* USER CODE END 2 */
 
@@ -273,12 +269,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		updateQuadEnc();
-		updateLimit();
-		updateLogic();
-		updatePWM();
-		CH_tick();
-		channels[0].closed_setpoint = 90;
+//		updateQuadEnc();
+//		updateLimit();
+//		updateLogic();
+//		updatePWM();
+//		CH_tick();
+//		channels[0].closed_setpoint = 90;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -354,7 +350,7 @@ static void MX_I2C1_Init(void)
   hi2c1.Init.OwnAddress1 = 254;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-  hi2c1.Init.OwnAddress2 = 32;
+  hi2c1.Init.OwnAddress2 = 96;
   hi2c1.Init.OwnAddress2Masks = I2C_OA2_MASK04;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
@@ -489,7 +485,7 @@ static void MX_TIM1_Init(void)
   htim1.Instance = TIM1;
   htim1.Init.Prescaler = 7;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 100;
+  htim1.Init.Period = 1000;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;

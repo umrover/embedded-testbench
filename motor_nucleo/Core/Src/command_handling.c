@@ -19,10 +19,10 @@ uint8_t CH_num_receive() {
 	case OFF:
 	case ON: return 0;
 	case OPEN:
-	case OPEN_PLUS: return 2;
+	case OPEN_PLUS: return 4;
 	case CLOSED:
 	case CLOSED_PLUS: return 8;
-	case CONFIG_PWM: return 6;
+	case CONFIG_PWM: return 2;
 	case CONFIG_K: return 12;
 	case QUAD_ENC: return 0;
 	case ADJUST: return 4;
@@ -79,7 +79,7 @@ void CH_process_received() {
 	case OFF: channel->speedMax = 0; return;
 	case ON: return;
 	case OPEN:
-	case OPEN_PLUS: channel->mode = 0x00; memcpy(&(channel->open_setpoint), i2c_bus.buffer, 2); return;
+	case OPEN_PLUS: channel->mode = 0x00; memcpy(&(channel->open_setpoint), i2c_bus.buffer, 4); return;
 	case CLOSED:
 	case CLOSED_PLUS: channel->mode = 0xFF; memcpy(&(channel->FF), i2c_bus.buffer, 4); memcpy(&(channel->closed_setpoint),i2c_bus.buffer+4,4); return;
 	case CONFIG_PWM: {

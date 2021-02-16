@@ -41,7 +41,7 @@ extern "C" {
 typedef struct{
 	//REGISTERS
 	uint8_t mode;
-	int16_t open_setpoint;
+	float open_setpoint;
 	int32_t closed_setpoint;
 	float FF;
 	float KP;
@@ -90,7 +90,7 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define QUADRATURE_FILTER 8
 #define CONTROL_LOOP_PERIOD 1000
-#define I2C_ADDRESS 0x10
+#define I2C_ADDRESS 0x30
 #define PWM_PERIOD 10000
 #define M3_NDIR_Pin GPIO_PIN_13
 #define M3_NDIR_GPIO_Port GPIOC
