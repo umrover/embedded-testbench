@@ -111,6 +111,38 @@ void write_word_data(SMBus *smbus, uint8_t addr, char cmd, uint16_t data) {
     _check_error(smbus);
 }
 
+long *read_block_data(SMBus *smbus, uint8_t addr, char cmd) {
+    smbus->buf[0] = cmd;
+    smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 1, HAL_MAX_DELAY);
+    _check_error(smbus);
+
+    smbus->ret = HAL_I2C_Master_Receive(smbus->i2c, (addr << 1) | 1, smbus->buf, size + 1, HAL_MAX_DELAY);
+    _check_error(smbus);
+
+    return bus->buf + 1 
+}
+
+
+void write_block_data(SMBus *smbus, uint8_t addr, char cmd, uint8_t *data, uint8_t size) {
+    if (size > 28) {
+        strcpy((char*)smbus->buf, "Data too large, increase buffer size \r\n");
+
+        HAL_UART_Transmit(smbus->uart, smbus->buf, strlen((char*)smbus->buf), HAL_MAX_DELAY);
+    }
+
+    smbus->buf[0] = cmd;
+    smbus->buf[1] = size;
+
+    for (uint8_t i = 0; i < size; ++i) {
+        smbus->buf[2 + i] = *data;
+        ++data;
+    } 
+
+    smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, size + 2, HAL_MAX_DELAY);
+    _check_error(smbus);
+}
+
+
 int _check_error(SMBus *smbus) {
     if (smbus->ret != HAL_OK) {
         strcpy((char*)smbus->buf, "Err \r\n");

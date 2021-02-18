@@ -31,6 +31,10 @@ long read_word_data(SMBus *smbus, uint8_t addr, char cmd);
 
 void write_word_data(SMBus *smbus, uint8_t addr, char cmd, uint16_t data);
 
+long *read_block_data(SMBus *smbus, uint8_t addr, char cmd, uint8_t size);
+
+void write_block_data(SMBus *smbus, uint8_t addr, char cmd, uint8_t *data, uint8_t size);
+
 int _check_error(SMBus *smbus);
 
 void reset(SMBus *smbus);
