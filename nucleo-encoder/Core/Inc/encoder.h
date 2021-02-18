@@ -11,8 +11,6 @@
 
 
 enum {
-	angle_high = 0xFE,
-	angle_low = 0xFF,
 
 	device_slave_address_none_power = 0x40,
 	device_slave_address_a1_power = 0x41,

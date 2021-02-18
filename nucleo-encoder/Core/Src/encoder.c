@@ -28,12 +28,12 @@ Encoder* new_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power){
 
 int read_raw_angle(Encoder* encoder) {
 
-    int angle_high_data = read_byte_data(encoder->i2cBus, encoder->address, 0xFE);
-    int angle_low_data = read_byte_data(encoder->i2cBus, encoder->address, 0xFF);
-    
-    int angle_low_data_modified = angle_low_data & 0x3F;
+	int angle_high_data = read_byte_data(encoder->i2cBus, encoder->address, 0xFF);
+	int angle_low_data = read_byte_data(encoder->i2cBus, encoder->address, 0xFE);
 
-    int angle_raw = (angle_high_data << 6) | angle_low_data_modified;
+	int angle_low_data_modified = angle_low_data & 0x3F;
+
+	int angle_raw = (angle_high_data << 6) | angle_low_data_modified;
 
     return angle_raw;
 }
