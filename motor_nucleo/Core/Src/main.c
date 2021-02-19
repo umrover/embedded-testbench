@@ -66,7 +66,6 @@ I2C_HandleTypeDef hi2c2;
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
-TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim8;
 
@@ -82,7 +81,6 @@ static void MX_I2C2_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
-static void MX_TIM4_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM6_Init(void);
 /* USER CODE BEGIN PFP */
@@ -94,7 +92,7 @@ static void MX_TIM6_Init(void);
 void updateQuadEnc() {
 	channels[0].quad_enc_raw_now = TIM2->CNT;
 	channels[1].quad_enc_raw_now = TIM3->CNT;
-	channels[2].quad_enc_raw_now = TIM4->CNT;
+	// channels[2].quad_enc_raw_now = TIM4->CNT;
 
 	for (int i = 0; i < 3; i++){
 		Channel *channel = channels + i;
@@ -226,7 +224,6 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
-  MX_TIM4_Init();
   MX_TIM8_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
@@ -249,7 +246,7 @@ int main(void)
   HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_3);
   HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-  HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
+  // HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
   HAL_TIM_Base_Start_IT(&htim6);
   HAL_I2C_EnableListen_IT(&hi2c1);
 
@@ -605,55 +602,6 @@ static void MX_TIM3_Init(void)
 }
 
 /**
-  * @brief TIM4 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM4_Init(void)
-{
-
-  /* USER CODE BEGIN TIM4_Init 0 */
-
-  /* USER CODE END TIM4_Init 0 */
-
-  TIM_Encoder_InitTypeDef sConfig = {0};
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM4_Init 1 */
-
-  /* USER CODE END TIM4_Init 1 */
-  htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 0;
-  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 0xFFFF;
-  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
-  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  sConfig.EncoderMode = TIM_ENCODERMODE_TI1;
-  sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
-  sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
-  sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC1Filter = QUADRATURE_FILTER;
-  sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
-  sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
-  sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC2Filter = QUADRATURE_FILTER;
-  if (HAL_TIM_Encoder_Init(&htim4, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM4_Init 2 */
-
-  /* USER CODE END TIM4_Init 2 */
-
-}
-
-/**
   * @brief TIM6 Initialization Function
   * @param None
   * @retval None
@@ -795,30 +743,30 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M4_DIR_Pin
-                          |M0_NDIR_Pin|M1_NDIR_Pin|M2_NDIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin
+                          |M1_NDIR_Pin|M2_NDIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, M3_DIR_Pin|M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin
-                          |M5_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, M3_DIR_Pin|M4_DIR_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : M3_NDIR_Pin M4_NDIR_Pin M5_NDIR_Pin M4_DIR_Pin
-                           M0_NDIR_Pin M1_NDIR_Pin M2_NDIR_Pin */
-  GPIO_InitStruct.Pin = M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M4_DIR_Pin
-                          |M0_NDIR_Pin|M1_NDIR_Pin|M2_NDIR_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin|M5_DIR_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : M3_NDIR_Pin M4_NDIR_Pin M5_NDIR_Pin M0_NDIR_Pin
+                           M1_NDIR_Pin M2_NDIR_Pin */
+  GPIO_InitStruct.Pin = M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin
+                          |M1_NDIR_Pin|M2_NDIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : M3_DIR_Pin M0_DIR_Pin M1_DIR_Pin M2_DIR_Pin
-                           M5_DIR_Pin */
-  GPIO_InitStruct.Pin = M3_DIR_Pin|M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin
-                          |M5_DIR_Pin;
+  /*Configure GPIO pins : M3_DIR_Pin M4_DIR_Pin */
+  GPIO_InitStruct.Pin = M3_DIR_Pin|M4_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   /*Configure GPIO pins : M0_LIMIT_Pin M1_LIMIT_Pin M2_LIMIT_Pin M3_LIMIT_Pin
                            M4_LIMIT_Pin M5_LIMIT_Pin */
@@ -827,6 +775,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : M0_DIR_Pin M1_DIR_Pin M2_DIR_Pin M5_DIR_Pin */
+  GPIO_InitStruct.Pin = M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin|M5_DIR_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
