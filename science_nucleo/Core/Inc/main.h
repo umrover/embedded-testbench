@@ -62,8 +62,6 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define Ammonia_FWD_Pin GPIO_PIN_14
 #define Ammonia_FWD_GPIO_Port GPIOC
-#define White_LED_Pin GPIO_PIN_15
-#define White_LED_GPIO_Port GPIOC
 #define Ammonia_BWD_Pin GPIO_PIN_10
 #define Ammonia_BWD_GPIO_Port GPIOB
 #define Auton_Green_LED_Pin GPIO_PIN_6

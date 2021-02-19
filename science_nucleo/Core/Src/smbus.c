@@ -17,7 +17,7 @@ void disable_DMA(SMBus *smbus) {
 
 long read_byte(SMBus *smbus, uint8_t addr) {
     if (!smbus->DMA){
-        smbus->ret = HAL_I2C_Master_Receive(smbus->i2c, (addr << 1) | 1, smbus->buf, 1, HAL_MAX_DELAY);
+        smbus->ret = HAL_I2C_Master_Receive(smbus->i2c, (addr << 1) | 1, smbus->buf, 1, 1000);
     }
     else {
         smbus->ret = HAL_I2C_Master_Receive_DMA(smbus->i2c, (addr << 1) | 1, smbus->buf, 1);
@@ -29,7 +29,7 @@ long read_byte(SMBus *smbus, uint8_t addr) {
 void write_byte(SMBus *smbus, uint8_t addr, uint8_t data) {
     smbus->buf[0] = data;
     if (!smbus->DMA) {
-        smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 1, HAL_MAX_DELAY);
+        smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 1, 1000);
     }
     else {
         smbus->ret = HAL_I2C_Master_Transmit_DMA(smbus->i2c, addr << 1, smbus->buf, 1);
@@ -41,7 +41,7 @@ long read_byte_data(SMBus *smbus, uint8_t addr, char cmd) {
     //transmits the address to read from
     smbus->buf[0] = cmd;
     if (!smbus->DMA) {
-        smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 1, HAL_MAX_DELAY);
+        smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 1, 1000);
     }
     else {
         smbus->ret = HAL_I2C_Master_Transmit_DMA(smbus->i2c, addr << 1, smbus->buf, 1);
@@ -50,7 +50,7 @@ long read_byte_data(SMBus *smbus, uint8_t addr, char cmd) {
     
     //reads from address sent above
     if (!smbus->DMA) {
-        smbus->ret = HAL_I2C_Master_Receive(smbus->i2c, (addr << 1) | 1, smbus->buf, 1, HAL_MAX_DELAY);
+        smbus->ret = HAL_I2C_Master_Receive(smbus->i2c, (addr << 1) | 1, smbus->buf, 1, 1000);
     }
     else {
         smbus->ret = HAL_I2C_Master_Receive_DMA(smbus->i2c, (addr << 1) | 1, smbus->buf, 1);
@@ -65,7 +65,7 @@ void write_byte_data(SMBus *smbus, uint8_t addr, char cmd, uint8_t data) {
 
     //SMBUS docs first byte is cmd to write, second is data
     if (!smbus->DMA) {
-        smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 2, HAL_MAX_DELAY);
+        smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 2, 1000);
     }
     else {
         smbus->ret = HAL_I2C_Master_Transmit_DMA(smbus->i2c, addr << 1, smbus->buf, 2);
@@ -76,7 +76,7 @@ void write_byte_data(SMBus *smbus, uint8_t addr, char cmd, uint8_t data) {
 long read_word_data(SMBus *smbus, uint8_t addr, char cmd) {
     smbus->buf[0] = cmd;
     if (!smbus->DMA) {
-        smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 1, HAL_MAX_DELAY);
+        smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 1, 1000);
     }
     else {
         smbus->ret = HAL_I2C_Master_Transmit_DMA(smbus->i2c, addr << 1, smbus->buf, 1);
@@ -85,7 +85,7 @@ long read_word_data(SMBus *smbus, uint8_t addr, char cmd) {
     
     //reads from address sent above
     if (!smbus->DMA){
-        smbus->ret = HAL_I2C_Master_Receive(smbus->i2c, (addr << 1) | 1, smbus->buf, 2, HAL_MAX_DELAY);
+        smbus->ret = HAL_I2C_Master_Receive(smbus->i2c, (addr << 1) | 1, smbus->buf, 2, 1000);
     }
     else {
         smbus->ret = HAL_I2C_Master_Receive_DMA(smbus->i2c, (addr << 1) | 1, smbus->buf, 2);
@@ -102,7 +102,7 @@ void write_word_data(SMBus *smbus, uint8_t addr, char cmd, uint16_t data) {
     smbus->buf[2] = (data & 0xFF00) >> 8; //MSB
 
     if(!smbus->DMA) {
-        smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 3, HAL_MAX_DELAY);
+        smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 3, 1000);
     }
     else {
        smbus->ret = HAL_I2C_Master_Transmit_DMA(smbus->i2c, addr << 1, smbus->buf, 3);
@@ -115,7 +115,7 @@ int _check_error(SMBus *smbus) {
     if (smbus->ret != HAL_OK) {
         strcpy((char*)smbus->buf, "Err \r\n");
 
-        HAL_UART_Transmit(smbus->uart, smbus->buf, strlen((char*)smbus->buf), HAL_MAX_DELAY);
+        HAL_UART_Transmit(smbus->uart, smbus->buf, strlen((char*)smbus->buf), 1000);
         HAL_Delay(10);
         return FALSE;
     }
