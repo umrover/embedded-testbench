@@ -63,8 +63,6 @@ Channel channelDefault = {
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
 
-SPI_HandleTypeDef hspi1;
-
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
@@ -81,7 +79,6 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
-static void MX_SPI1_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
@@ -180,8 +177,8 @@ void updatePWM() {
 	TIM8->CCR3 = (uint32_t)(fabs(channels[5].speed) * TIM8->ARR);
 
 	//after SAR fix
-	//setDir(channels[3].pwmOutput, M3_DIR_GPIO_Port, M3_DIR_Pin, M3_NDIR_GPIO_Port, M3_NDIR_Pin);
-	//setDir(channels[4].pwmOutput, M4_DIR_GPIO_Port, M4_DIR_Pin, M4_NDIR_GPIO_Port, M4_NDIR_Pin);
+	setDir(channels[3].speed, M3_DIR_GPIO_Port, M3_DIR_Pin, M3_NDIR_GPIO_Port, M3_NDIR_Pin);
+	setDir(channels[4].speed, M4_DIR_GPIO_Port, M4_DIR_Pin, M4_NDIR_GPIO_Port, M4_NDIR_Pin);
 	setDir(channels[5].speed, M5_DIR_GPIO_Port, M5_DIR_Pin, M5_NDIR_GPIO_Port, M5_NDIR_Pin);
 }
 
@@ -226,7 +223,6 @@ int main(void)
   MX_GPIO_Init();
   MX_I2C1_Init();
   MX_I2C2_Init();
-  MX_SPI1_Init();
   MX_TIM1_Init();
   MX_TIM2_Init();
   MX_TIM3_Init();
@@ -419,46 +415,6 @@ static void MX_I2C2_Init(void)
   /* USER CODE BEGIN I2C2_Init 2 */
 
   /* USER CODE END I2C2_Init 2 */
-
-}
-
-/**
-  * @brief SPI1 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_SPI1_Init(void)
-{
-
-  /* USER CODE BEGIN SPI1_Init 0 */
-
-  /* USER CODE END SPI1_Init 0 */
-
-  /* USER CODE BEGIN SPI1_Init 1 */
-
-  /* USER CODE END SPI1_Init 1 */
-  /* SPI1 parameter configuration*/
-  hspi1.Instance = SPI1;
-  hspi1.Init.Mode = SPI_MODE_MASTER;
-  hspi1.Init.Direction = SPI_DIRECTION_2LINES;
-  hspi1.Init.DataSize = SPI_DATASIZE_16BIT;
-  hspi1.Init.CLKPolarity = SPI_POLARITY_HIGH;
-  hspi1.Init.CLKPhase = SPI_PHASE_2EDGE;
-  hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
-  hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
-  hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
-  hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
-  hspi1.Init.CRCPolynomial = 7;
-  hspi1.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
-  hspi1.Init.NSSPMode = SPI_NSS_PULSE_DISABLE;
-  if (HAL_SPI_Init(&hspi1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN SPI1_Init 2 */
-
-  /* USER CODE END SPI1_Init 2 */
 
 }
 
@@ -839,30 +795,30 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin
-                          |M1_NDIR_Pin|M2_NDIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M4_DIR_Pin
+                          |M0_NDIR_Pin|M1_NDIR_Pin|M2_NDIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, M0_SPI_CS_Pin|M1_SPI_CS_Pin|M2_SPI_CS_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, M3_DIR_Pin|M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin
+                          |M5_DIR_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin|M5_DIR_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pins : M3_NDIR_Pin M4_NDIR_Pin M5_NDIR_Pin M0_NDIR_Pin
-                           M1_NDIR_Pin M2_NDIR_Pin */
-  GPIO_InitStruct.Pin = M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin
-                          |M1_NDIR_Pin|M2_NDIR_Pin;
+  /*Configure GPIO pins : M3_NDIR_Pin M4_NDIR_Pin M5_NDIR_Pin M4_DIR_Pin
+                           M0_NDIR_Pin M1_NDIR_Pin M2_NDIR_Pin */
+  GPIO_InitStruct.Pin = M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M4_DIR_Pin
+                          |M0_NDIR_Pin|M1_NDIR_Pin|M2_NDIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : M0_SPI_CS_Pin M1_SPI_CS_Pin M2_SPI_CS_Pin */
-  GPIO_InitStruct.Pin = M0_SPI_CS_Pin|M1_SPI_CS_Pin|M2_SPI_CS_Pin;
+  /*Configure GPIO pins : M3_DIR_Pin M0_DIR_Pin M1_DIR_Pin M2_DIR_Pin
+                           M5_DIR_Pin */
+  GPIO_InitStruct.Pin = M3_DIR_Pin|M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin
+                          |M5_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : M0_LIMIT_Pin M1_LIMIT_Pin M2_LIMIT_Pin M3_LIMIT_Pin
                            M4_LIMIT_Pin M5_LIMIT_Pin */
@@ -871,13 +827,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : M0_DIR_Pin M1_DIR_Pin M2_DIR_Pin M5_DIR_Pin */
-  GPIO_InitStruct.Pin = M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin|M5_DIR_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
