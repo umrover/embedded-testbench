@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "abs_enc_reading.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -244,6 +244,8 @@ int main(void)
 
   i2c_bus = i2c_bus_default;
   i2c_bus_handle = &hi2c1;
+  I2C_HandleTypeDef* abs_encoder_handle = &hi2c2;
+  abs_encoder = abs_encoder_init(abs_encoder_handle);
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -275,6 +277,10 @@ int main(void)
 //		updatePWM();
 //		CH_tick();
 //		channels[0].closed_setpoint = 90;
+//	  i2c_bus.channel = 2;
+//	  i2c_bus.operation = ABS_ENC;
+//	  CH_prepare_send();
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

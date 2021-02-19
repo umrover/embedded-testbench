@@ -6,6 +6,7 @@
  */
 
 #include "command_handling.h"
+#include "abs_enc_reading.h"
 
 I2CBus i2c_bus_default = {
 	UNKNOWN, //operation
@@ -66,7 +67,7 @@ void CH_prepare_send() {
 	case CONFIG_K: return;
 	case QUAD_ENC: memcpy(i2c_bus.buffer, &(channel->quad_enc_value), 4); return;
 	case ADJUST: return;
-	case ABS_ENC: read_abs_enc(i2c_bus.channel); memcpy(i2c_bus.buffer, &(channel->abs_enc_value), 2); return;
+	case ABS_ENC: read_abs_enc(abs_encoder, i2c_bus.channel); memcpy(i2c_bus.buffer, &(channel->abs_enc_value), 2); return;
 	case LIMIT: memcpy(i2c_bus.buffer, &(channel->limit), 1); return;
 	case UNKNOWN: return;
 	}

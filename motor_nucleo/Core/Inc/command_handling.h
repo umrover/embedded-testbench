@@ -11,6 +11,7 @@
 #include "stm32f3xx_hal.h"
 #include <string.h>
 #include "main.h"
+#include "abs_enc_reading.h"
 
 I2C_HandleTypeDef *i2c_bus_handle;
 
@@ -37,6 +38,7 @@ typedef struct {
 extern I2CBus i2c_bus_default;
 
 I2CBus i2c_bus;
+Abs_Encoder* abs_encoder;
 
 uint8_t CH_num_receive();
 uint8_t CH_num_send();

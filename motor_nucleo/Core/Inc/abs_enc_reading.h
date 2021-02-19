@@ -8,13 +8,53 @@
 #ifndef INC_ABS_ENC_READING_H_
 #define INC_ABS_ENC_READING_H_
 
-#include "main.h"
 #include "stm32f3xx_hal.h"
+#include "stdint.h"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-//uint16_t spiPin(uint8_t channel);
-//
-//void spiUpdate(uint8_t channel);
+#define RAW_TO_180_DEGREES_CONVERSION_FACTOR 8192.0
+#define TRUE 1
+#define FALSE 0
 
-void read_abs_enc(uint8_t channel);
+enum {
+	device_slave_address_none_power = 0x40,
+	device_slave_address_a1_power = 0x41,
+	device_slave_address_a2_power = 0x42,
+	device_slave_address_both_power = 0x43,
+};
+
+typedef struct {
+    I2C_HandleTypeDef *i2c;
+    HAL_StatusTypeDef ret;
+    uint8_t buf[30];
+    uint8_t DMA;
+} SMBus;
+
+typedef struct {
+	int address;
+	SMBus* i2cBus;
+} Abs_Encoder;
+
+SMBus *new_smbus(I2C_HandleTypeDef *hi2c);
+
+long read_word_data(SMBus *smbus, uint8_t addr, char cmd);
+
+void disable_DMA(SMBus *smbus);
+
+void del_smbus(SMBus *smbus);
+
+Abs_Encoder* new_abs_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power); // 1 if pin connected to power, 0 if pin connected to ground
+
+int read_raw_angle(Abs_Encoder* abs_encoder);
+
+float get_angle_degrees(Abs_Encoder* abs_encoder);
+
+void deleteEncoder(Abs_Encoder*);
+
+Abs_Encoder* abs_encoder_init(I2C_HandleTypeDef* abs_encoder_handle);
+
+void read_abs_enc(Abs_Encoder* abs_encoder, uint8_t channel);
 
 #endif /* INC_ABS_ENC_READING_H_ */

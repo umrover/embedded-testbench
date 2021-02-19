@@ -1,0 +1,326 @@
+[33mcommit d7b07a3218421540ebe185ee8f9f54cf61ebed9f[m[33m ([m[1;36mHEAD -> [m[1;32mmotor_nucleo[m[33m)[m
+Merge: bd74252 4e4cc34
+Author: Guthrie <tabiosg@umich.edu>
+Date:   Wed Feb 17 21:34:03 2021 -0500
+
+    this merge is awful
+
+[33mcommit bd74252a9812a326320c1ccb8e88c7731a390c10[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Tue Nov 17 10:56:47 2020 -0500
+
+    got rid of unnecessary files
+
+[33mcommit 2873da93f5cb54e04afaf2911a1d29227c7d9998[m
+Author: raytitan <raytitan@umich.edu>
+Date:   Mon Dec 7 12:29:39 2020 -0800
+
+    Issue #95 \n Added a README
+
+[33mcommit 13d88a098b2855f6d9c26264b4cc83ec7129d442[m
+Author: raytitan <raytitan@umich.edu>
+Date:   Mon Oct 26 18:35:14 2020 -0400
+
+    commited 2020 version of arm code. certain sections marked as need to be deprecated
+
+[33mcommit 4e4cc349bfc4d0b9a55b24d3b20039d253352f3a[m[33m ([m[1;31morigin/motor_nucleo[m[33m)[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Tue Feb 16 16:04:25 2021 -0500
+
+    sa motor nucleo debugging
+
+[33mcommit de8b9f715bf83152dcf03392156db57765993a9c[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Sun Feb 14 19:35:38 2021 -0500
+
+    naming convention changes + updated control logic
+
+[33mcommit 01720a0b8b2c65cac411ad516aa984ff5f53641f[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Wed Feb 10 13:35:08 2021 -0500
+
+    maybe works
+
+[33mcommit 1f645456cabc6b74067058bdd28d0f861c6cf7e2[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Adithya Subbiah <35041927+asubbiah1999@users.noreply.github.com>
+Date:   Mon Feb 8 13:56:01 2021 -0500
+
+    Add files via upload
+
+[33mcommit 89c68bc0ba18d761d87974464ffc19e7f5ab0452[m
+Author: Adithya Subbiah <35041927+asubbiah1999@users.noreply.github.com>
+Date:   Mon Feb 8 13:47:48 2021 -0500
+
+    Add files via upload
+
+[33mcommit 2e0b3cf31331c55753e3a971f3bc31a7b3c01fa9[m
+Author: Adithya Subbiah <35041927+asubbiah1999@users.noreply.github.com>
+Date:   Mon Feb 8 13:45:07 2021 -0500
+
+    Add files via upload
+
+[33mcommit 42284616a884b2c4d72c8cfacb53b4b9c719bd4a[m
+Author: Adithya Subbiah <35041927+asubbiah1999@users.noreply.github.com>
+Date:   Mon Feb 8 13:42:00 2021 -0500
+
+    Add files via upload
+
+[33mcommit 1e3803a885a519183b3ae8ab554261f064c94f34[m
+Author: Adithya Subbiah <35041927+asubbiah1999@users.noreply.github.com>
+Date:   Mon Feb 8 13:35:43 2021 -0500
+
+    Add files via upload
+
+[33mcommit 65a89c9b38bf15228882a32744584e68219d56db[m
+Author: Adithya Subbiah <35041927+asubbiah1999@users.noreply.github.com>
+Date:   Mon Feb 8 13:28:00 2021 -0500
+
+    Add files via upload
+
+[33mcommit 3f7d51f3256b1d9082680a74067e1a00fb4ff3cf[m
+Author: Adithya Subbiah <35041927+asubbiah1999@users.noreply.github.com>
+Date:   Mon Feb 8 13:17:26 2021 -0500
+
+    Add files via upload
+
+[33mcommit 424b26ae6f3e9e7922a9be766523d91157b67755[m
+Merge: 4b12f96 bfbfe34
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Wed Jan 20 19:42:29 2021 -0500
+
+    Merge branch 'motor_nucleo' of https://github.com/umrover/embedded-testbench into motor_nucleo
+
+[33mcommit bfbfe34f8732f29195695cb3c9f9da96c4960d9e[m[33m ([m[1;31morigin/motor_nucleo_ik[m[33m)[m
+Merge: 83c74bf 6b202d7
+Author: raytitan <raytitan@umich.edu>
+Date:   Mon Dec 7 12:30:09 2020 -0800
+
+    Merge branch 'motor_nucleo' of https://github.com/umrover/embedded-testbench into motor_nucleo
+
+[33mcommit 83c74bfd560da29d8476d6a506adccec8165996b[m
+Author: raytitan <raytitan@umich.edu>
+Date:   Mon Dec 7 12:29:39 2020 -0800
+
+    Issue #95 \n Added a README
+
+[33mcommit 4b12f9689fa75ef405f0b0a541eb45b736aa4551[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Wed Nov 18 19:59:51 2020 -0500
+
+    changes
+
+[33mcommit 6b202d7b4eff1e62f3aacf76c40341aa6ab5ae10[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Tue Nov 17 10:56:47 2020 -0500
+
+    got rid of unnecessary files
+
+[33mcommit 4aa1647f7f90e2163a2d5da6349407d143c21cac[m[33m ([m[1;31morigin/akshaya-lcm-rgb[m[33m)[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Sun Nov 1 14:43:46 2020 -0500
+
+    removed hal wrapper library from master
+
+[33mcommit 6750f3d6cb64ba1e216b8d0ad091ac6fa690e229[m
+Author: raytitan <raytitan@umich.edu>
+Date:   Mon Oct 26 18:35:14 2020 -0400
+
+    commited 2020 version of arm code. certain sections marked as need to be deprecated
+
+[33mcommit 2529c6875ed55812946660655ea500c9632929ca[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Fri Oct 16 18:24:56 2020 -0400
+
+    bug
+
+[33mcommit 3579a3efc5537b181f0f4dd6ac9cbff694b2530f[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Fri Oct 16 18:24:04 2020 -0400
+
+    umm fixed merge
+
+[33mcommit fce5833e985538436be070791a8a4b7761004431[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Fri Oct 16 18:21:51 2020 -0400
+
+    got rid of .gitignore
+
+[33mcommit 12ef35d5f5ec9d0b3d109d7f53f4f7c453b19b8c[m
+Merge: 5c3a0fc 81d691c
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Fri Oct 16 18:21:08 2020 -0400
+
+    finished merge
+
+[33mcommit 81d691c36b3b3821187f58e71800da3f430e613c[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Fri Oct 16 18:19:04 2020 -0400
+
+    modified header, overall changed naming convention from Bus to SMBus, fixed DMA bug
+
+[33mcommit f808b2d63e084e50a7fadd48db9997da972113ba[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Fri Oct 16 18:17:02 2020 -0400
+
+    upaded .c file
+
+[33mcommit 5c3a0fc5c56dfe90b8fce66662fb7e31f0336f75[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Tue Oct 13 11:35:59 2020 -0400
+
+    updated library to have a DMA option, automatically enabled, user can disable it at the start
+
+[33mcommit 4e86ba185894f60de5e4b4244254495765ff7f4d[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Sun Oct 11 15:10:08 2020 -0400
+
+    added nucleo gitignore file
+
+[33mcommit 7350ad0aa6c0219a0f4082581ab92abc14bd59ab[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Wed Sep 23 13:20:28 2020 -0400
+
+    replaced accidentally deleted nucleo files folder
+
+[33mcommit 81aa76928ca821c7661e6bac8f22c14bbc679187[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Wed Sep 23 13:15:31 2020 -0400
+
+    moved tutorials over to the tutorial branch
+
+[33mcommit 4c820dae5c1e844e310c37afc48b60c9cc669308[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Sun Sep 20 00:45:01 2020 -0400
+
+    actually added the files
+
+[33mcommit b3e306d64cf8e179d36be5c46a70585d9acf9b44[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Sun Sep 20 00:44:19 2020 -0400
+
+    merge beaglebone tutorial into master
+
+[33mcommit c86c808f197d359e4a9cc76da8ca2912d96547d4[m
+Merge: e8581e2 7f203a5
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Sun Sep 20 00:43:17 2020 -0400
+
+    Merge branch 'accel_on_beaglebone'
+
+[33mcommit e8581e2be2382772d5c5d12148628a4a46c37566[m
+Merge: 0eb9961 797ce73
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Sun Sep 20 00:00:32 2020 -0400
+
+    Merge branch 'arduino_tutorial'
+
+[33mcommit 797ce73c69b4616e4f9e1d5bd4ebc38a181667b6[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Sat Sep 19 23:58:51 2020 -0400
+
+    renamed folders
+
+[33mcommit a5af46adf63e44593bb842fa436d22a13fb26f87[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Sat Sep 19 23:50:21 2020 -0400
+
+    arduino tutorial images for wiki and starter file
+
+[33mcommit 753318421a099420673bd418eee8ec9077d84f03[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Fri Sep 18 23:42:41 2020 -0400
+
+    return type changes
+
+[33mcommit be46a512998b0e792703d842f582caebb5c5bf47[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Fri Sep 18 23:37:08 2020 -0400
+
+    error handling in read block data
+
+[33mcommit af290b5035de524af297b77f28730f11dfffacfb[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Fri Sep 18 23:34:56 2020 -0400
+
+    read and write block data functions - untested
+
+[33mcommit 0eb996184aad9241d242eb0fd307aa40e95c8f19[m
+Author: Carmen Giger <cgiger00@gmail.com>
+Date:   Thu Sep 17 22:10:07 2020 -0400
+
+    read_byte_data and write_byte_data working, probably as debugged as it'll get right now, good for subteam usage
+
+[33mcommit 7f203a56c1739100a43ae9e6ddb11895fad5bf78[m
+Author: Polishdudealan <atondryk@umich.edu>
+Date:   Thu Sep 10 20:03:06 2020 -0400
+
+    Finished skeleton code
+
+[33mcommit 4315530b3cf281fb9dd7b8292e425171efbee42e[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Wed Sep 2 18:17:07 2020 -0400
+
+    write_word_data input to uint16
+
+[33mcommit 3520a53f23e1cce36889e5da2cc510d150492b83[m
+Author: Carmen Giger <cgiger@umich.edu>
+Date:   Wed Sep 2 18:15:12 2020 -0400
+
+    starter hal lib files, untested
+
+[33mcommit 14726402e3699a8aba5d9117362676478b58ff82[m
+Author: Polishdudealan <atondryk@umich.edu>
+Date:   Wed Aug 19 20:46:26 2020 -0400
+
+    added new picture
+
+[33mcommit 5e49ba603238bd3e10c1a364b9a994ebc0e7340b[m
+Merge: 488e6f4 dcb06f9
+Author: Polishdudealan <atondryk@umich.edu>
+Date:   Wed Aug 19 20:31:30 2020 -0400
+
+    Merge branch 'accel_on_beaglebone' of https://github.com/umrover/embedded-testbench into accel_on_beaglebone
+
+[33mcommit 488e6f40850bc91fc21dba5972bb2005a2633796[m
+Author: Polishdudealan <atondryk@umich.edu>
+Date:   Wed Aug 19 20:23:36 2020 -0400
+
+    added some pictures
+
+[33mcommit dcb06f9f0c7fb0f5ab23e2a0f2d6c3d3f1b26a22[m
+Author: Carmen <cgiger00@gmail.com>
+Date:   Tue Aug 11 21:21:48 2020 -0400
+
+    Update accel.py
+    
+    edits to skeleton
+
+[33mcommit c7dae8b3aa9d664d27765819ccca5b6217491340[m
+Author: Polishdudealan <atondryk@umich.edu>
+Date:   Tue Aug 11 21:10:37 2020 -0400
+
+    refactored picture names
+
+[33mcommit 3bdf99222727f59ffb04445a68ba41110cb0ebef[m
+Author: Polishdudealan <atondryk@umich.edu>
+Date:   Tue Aug 11 21:07:33 2020 -0400
+
+    added pictures for the tutorial
+
+[33mcommit 88dedcb6febdcc08e5330910fd86898782d3fa7d[m
+Author: Polishdudealan <atondryk@umich.edu>
+Date:   Wed Aug 5 01:21:20 2020 -0400
+
+    created accel_on_beaglebone folder with a starter file inside
+
+[33mcommit 7904190166ebafe428f74bd6c0784708708aeb24[m
+Author: Carmen <cgiger00@gmail.com>
+Date:   Sun Jul 19 18:18:19 2020 -0400
+
+    Create README.md
+
+[33mcommit f33ae27844d9d09d3f3863f6fbf55e189c557150[m
+Author: raytitan <raytitan@umich.edu>
+Date:   Sat Jul 18 09:26:28 2020 -0700
+
+    Adding images for nucleo quick start in wiki
