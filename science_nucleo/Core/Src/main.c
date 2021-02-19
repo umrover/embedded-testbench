@@ -45,10 +45,10 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-//#define SPECTRAL_ENABLE
-//#define THERMISTOR_ENABLE
+#define SPECTRAL_ENABLE
+#define THERMISTOR_ENABLE
 #define MOSFET_ENABLE
-//#define AMMONIA_MOTOR_ENABLE
+#define AMMONIA_MOTOR_ENABLE
 
 /* USER CODE END PM */
 
@@ -175,7 +175,7 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 	//char test[120];
 	//sprintf((char *)test, "$SPECTRAL,3,4,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,\n");
 
-	HAL_UART_Transmit(huart, (uint8_t *)string, 111, 50);
+	HAL_UART_Transmit(huart, (uint8_t *)string, 50, 50);
 	HAL_Delay(100);
 }
 
@@ -288,7 +288,7 @@ int main(void)
 #ifdef AMMONIA_MOTOR_ENABLE
   // pin B9 is only being used here because one of the GPIO pins on the testing
   // nucleo broke --> for SAR it will be pin C14
-  ammonia_motor = new_motor(GPIOB, GPIO_PIN_9, GPIOB, GPIO_PIN_10, &htim3);
+  ammonia_motor = new_motor(GPIOC, GPIO_PIN_14, GPIOB, GPIO_PIN_10, &htim3);
 #endif
 
   /* USER CODE END Init */
@@ -389,10 +389,10 @@ int main(void)
     /* USER CODE BEGIN 3 */
 #ifdef SPECTRAL_ENABLE
 
-//	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-//	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
-//	  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
-//	}
+	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
+	  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
+	}
 
 	send_spectral_data(spectral_data, &huart1);
 #endif
@@ -465,7 +465,7 @@ void SystemClock_Config(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB busses clocks
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -478,7 +478,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB busses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
@@ -523,7 +523,7 @@ static void MX_ADC2_Init(void)
   /* USER CODE BEGIN ADC2_Init 1 */
 
   /* USER CODE END ADC2_Init 1 */
-  /** Common config 
+  /** Common config
   */
   hadc2.Instance = ADC2;
   hadc2.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
@@ -543,7 +543,7 @@ static void MX_ADC2_Init(void)
   {
     Error_Handler();
   }
-  /** Configure Regular Channel 
+  /** Configure Regular Channel
   */
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = ADC_REGULAR_RANK_1;
@@ -579,7 +579,7 @@ static void MX_ADC3_Init(void)
   /* USER CODE BEGIN ADC3_Init 1 */
 
   /* USER CODE END ADC3_Init 1 */
-  /** Common config 
+  /** Common config
   */
   hadc3.Instance = ADC3;
   hadc3.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
@@ -599,14 +599,14 @@ static void MX_ADC3_Init(void)
   {
     Error_Handler();
   }
-  /** Configure the ADC multi-mode 
+  /** Configure the ADC multi-mode
   */
   multimode.Mode = ADC_MODE_INDEPENDENT;
   if (HAL_ADCEx_MultiModeConfigChannel(&hadc3, &multimode) != HAL_OK)
   {
     Error_Handler();
   }
-  /** Configure Regular Channel 
+  /** Configure Regular Channel
   */
   sConfig.Channel = ADC_CHANNEL_1;
   sConfig.Rank = ADC_REGULAR_RANK_1;
@@ -641,7 +641,7 @@ static void MX_ADC4_Init(void)
   /* USER CODE BEGIN ADC4_Init 1 */
 
   /* USER CODE END ADC4_Init 1 */
-  /** Common config 
+  /** Common config
   */
   hadc4.Instance = ADC4;
   hadc4.Init.ClockPrescaler = ADC_CLOCK_ASYNC_DIV1;
@@ -661,7 +661,7 @@ static void MX_ADC4_Init(void)
   {
     Error_Handler();
   }
-  /** Configure Regular Channel 
+  /** Configure Regular Channel
   */
   sConfig.Channel = ADC_CHANNEL_3;
   sConfig.Rank = ADC_REGULAR_RANK_1;
@@ -707,13 +707,13 @@ static void MX_I2C2_Init(void)
   {
     Error_Handler();
   }
-  /** Configure Analogue filter 
+  /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c2, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
-  /** Configure Digital filter 
+  /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c2, 0) != HAL_OK)
   {
@@ -869,26 +869,26 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_6 
-                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_10|GPIO_PIN_11 
-                          |GPIO_PIN_12, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, Ammonia_FWD_Pin|White_LED_Pin|GPIO_PIN_0|Auton_Green_LED_Pin
+                          |Auton_Blue_LED_Pin|Auton_Red_LED_Pin|sci_UV_LED_Pin|SA_UV_LED_Pin
+                          |Pump_2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_10|GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, Ammonia_BWD_Pin|Pump_1_Pin|Pump_0_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PC14 PC15 PC0 PC6 
-                           PC7 PC8 PC10 PC11 
-                           PC12 */
-  GPIO_InitStruct.Pin = GPIO_PIN_14|GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_6 
-                          |GPIO_PIN_7|GPIO_PIN_8|GPIO_PIN_10|GPIO_PIN_11 
-                          |GPIO_PIN_12;
+  /*Configure GPIO pins : Ammonia_FWD_Pin White_LED_Pin PC0 Auton_Green_LED_Pin
+                           Auton_Blue_LED_Pin Auton_Red_LED_Pin sci_UV_LED_Pin SA_UV_LED_Pin
+                           Pump_2_Pin */
+  GPIO_InitStruct.Pin = Ammonia_FWD_Pin|White_LED_Pin|GPIO_PIN_0|Auton_Green_LED_Pin
+                          |Auton_Blue_LED_Pin|Auton_Red_LED_Pin|sci_UV_LED_Pin|SA_UV_LED_Pin
+                          |Pump_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB10 PB8 PB9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_10|GPIO_PIN_8|GPIO_PIN_9;
+  /*Configure GPIO pins : Ammonia_BWD_Pin Pump_1_Pin Pump_0_Pin */
+  GPIO_InitStruct.Pin = Ammonia_BWD_Pin|Pump_1_Pin|Pump_0_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -921,7 +921,7 @@ void Error_Handler(void)
   * @retval None
   */
 void assert_failed(uint8_t *file, uint32_t line)
-{ 
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

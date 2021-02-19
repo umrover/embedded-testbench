@@ -60,6 +60,28 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define Ammonia_FWD_Pin GPIO_PIN_14
+#define Ammonia_FWD_GPIO_Port GPIOC
+#define White_LED_Pin GPIO_PIN_15
+#define White_LED_GPIO_Port GPIOC
+#define Ammonia_BWD_Pin GPIO_PIN_10
+#define Ammonia_BWD_GPIO_Port GPIOB
+#define Auton_Green_LED_Pin GPIO_PIN_6
+#define Auton_Green_LED_GPIO_Port GPIOC
+#define Auton_Blue_LED_Pin GPIO_PIN_7
+#define Auton_Blue_LED_GPIO_Port GPIOC
+#define Auton_Red_LED_Pin GPIO_PIN_8
+#define Auton_Red_LED_GPIO_Port GPIOC
+#define sci_UV_LED_Pin GPIO_PIN_10
+#define sci_UV_LED_GPIO_Port GPIOC
+#define SA_UV_LED_Pin GPIO_PIN_11
+#define SA_UV_LED_GPIO_Port GPIOC
+#define Pump_2_Pin GPIO_PIN_12
+#define Pump_2_GPIO_Port GPIOC
+#define Pump_1_Pin GPIO_PIN_8
+#define Pump_1_GPIO_Port GPIOB
+#define Pump_0_Pin GPIO_PIN_9
+#define Pump_0_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

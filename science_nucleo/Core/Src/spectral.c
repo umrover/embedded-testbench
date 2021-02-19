@@ -26,17 +26,10 @@ void enable_spectral(Spectral *spectral) {
 // gets the data as an array of 16 bit integers
 void get_spectral_data(Spectral *spectral, uint16_t *data) {
 
-	// if get_channel_data returns false, need to full those the data with 0's
-    if (!get_channel_data(spectral)){
-        for (uint8_t i = 0; i < CHANNELS; ++i) {
-            data[i] = 0;
-        }
-    }
-    else{
-        for (uint8_t i = 0; i < CHANNELS; ++i) {
-            data[i] = spectral->channels[i]->color_data;
-        }
-    }
+	 get_channel_data(spectral);
+	 for (uint8_t i = 0; i < CHANNELS; ++i) {
+		 data[i] = spectral->channels[i]->color_data;
+	 }
 }
 
 void del_spectral(Spectral *spectral) {
@@ -104,12 +97,12 @@ uint8_t virtual_read(Spectral *spectral, uint8_t v_reg) {
 	return d;
 }
 
-bool get_channel_data(Spectral *spectral) {
+void get_channel_data(Spectral *spectral) {
     for (uint8_t i = 0; i < CHANNELS; ++i) {
         Channel *temp = spectral->channels[i];
         temp->color_data = get_val(spectral, temp->lsb_register, temp->msb_register);
         HAL_Delay(10);
-        return (spectral->i2cBus->ret != HAL_OK);
+        //return (spectral->i2cBus->ret != HAL_OK);
     }
 }
 
