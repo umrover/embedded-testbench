@@ -45,10 +45,10 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-//#define SPECTRAL_ENABLE
-//#define THERMISTOR_ENABLE
-#define MOSFET_ENABLE
-#define AMMONIA_MOTOR_ENABLE
+#define SPECTRAL_ENABLE
+//#define THERMISTOR_ENABLE//
+//#define MOSFET_ENABLE
+//#define AMMONIA_MOTOR_ENABLE
 
 /* USER CODE END PM */
 
@@ -373,7 +373,7 @@ int main(void)
 //	sprintf((char *)emp, "$EMPTY\n");
 //	HAL_UART_Transmit(&huart1, (uint8_t *)emp, sizeof(emp), 11);
 
-	HAL_UART_Receive(&huart1, Rx_data, 13, HAL_MAX_DELAY);
+	HAL_UART_Receive(&huart1, Rx_data, 13, 1000);
 	HAL_Delay(250);
 	__HAL_UART_CLEAR_OREFLAG(&huart1);
 	__HAL_UART_CLEAR_NEFLAG(&huart1);
