@@ -35,7 +35,7 @@ typedef struct {
 typedef struct {
 	int address;
 	SMBus* i2cBus;
-} Abs_Encoder;
+} AbsEncoder;
 
 SMBus *new_smbus(I2C_HandleTypeDef *hi2c);
 
@@ -45,16 +45,16 @@ void disable_DMA(SMBus *smbus);
 
 void del_smbus(SMBus *smbus);
 
-Abs_Encoder* new_abs_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power); // 1 if pin connected to power, 0 if pin connected to ground
+AbsEncoder* new_abs_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power); // 1 if pin connected to power, 0 if pin connected to ground
 
-int read_raw_angle(Abs_Encoder* abs_encoder);
+int read_raw_angle(AbsEncoder* abs_encoder);
 
-float get_angle_degrees(Abs_Encoder* abs_encoder);
+float get_angle_degrees(AbsEncoder* abs_encoder);
 
-void deleteEncoder(Abs_Encoder*);
+void deleteEncoder(AbsEncoder*);
 
-Abs_Encoder* abs_encoder_init(I2C_HandleTypeDef* abs_encoder_handle);
+AbsEncoder* abs_encoder_init(I2C_HandleTypeDef* abs_encoder_handle);
 
-void read_abs_enc(Abs_Encoder* abs_encoder, uint8_t channel);
+void read_abs_enc(AbsEncoder* abs_encoder, uint8_t channel);
 
 #endif /* INC_ABS_ENC_READING_H_ */

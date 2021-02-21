@@ -130,8 +130,6 @@ void Error_Handler(void);
 #define M0_LIMIT_GPIO_Port GPIOB
 #define M1_LIMIT_Pin GPIO_PIN_11
 #define M1_LIMIT_GPIO_Port GPIOB
-#define M2_LIMIT_Pin GPIO_PIN_12
-#define M2_LIMIT_GPIO_Port GPIOB
 #define M3_LIMIT_Pin GPIO_PIN_13
 #define M3_LIMIT_GPIO_Port GPIOB
 #define M4_LIMIT_Pin GPIO_PIN_14
@@ -144,8 +142,6 @@ void Error_Handler(void);
 #define M4_PWM_GPIO_Port GPIOC
 #define M5_PWM_Pin GPIO_PIN_8
 #define M5_PWM_GPIO_Port GPIOC
-#define M0_DIR_Pin GPIO_PIN_10
-#define M0_DIR_GPIO_Port GPIOA
 #define M1_DIR_Pin GPIO_PIN_11
 #define M1_DIR_GPIO_Port GPIOA
 #define M2_DIR_Pin GPIO_PIN_12

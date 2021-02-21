@@ -62,6 +62,7 @@ Channel channelDefault = {
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
+I2C_HandleTypeDef hi2c3;
 
 SPI_HandleTypeDef hspi1;
 
@@ -88,6 +89,7 @@ static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM6_Init(void);
+static void MX_I2C3_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -118,7 +120,7 @@ void updateQuadEnc() {
 void updateLimit() {
 	channels[0].limit = (HAL_GPIO_ReadPin(M0_LIMIT_GPIO_Port, M0_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
-	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
+	//channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[3].limit = (HAL_GPIO_ReadPin(M3_LIMIT_GPIO_Port, M3_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[4].limit = (HAL_GPIO_ReadPin(M4_LIMIT_GPIO_Port, M4_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[5].limit = (HAL_GPIO_ReadPin(M5_LIMIT_GPIO_Port, M5_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
@@ -171,7 +173,7 @@ void updatePWM() {
 	TIM1->CCR2 = (uint32_t)(fabs(channels[1].speed) * TIM1->ARR);
 	TIM1->CCR3 = (uint32_t)(fabs(channels[2].speed) * TIM1->ARR);
 
-	setDir(channels[0].speed, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
+	//setDir(channels[0].speed, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
 	setDir(channels[1].speed, M1_DIR_GPIO_Port, M1_DIR_Pin, M1_NDIR_GPIO_Port, M1_NDIR_Pin);
 	setDir(channels[2].speed, M2_DIR_GPIO_Port, M2_DIR_Pin, M2_NDIR_GPIO_Port, M2_NDIR_Pin);
 
@@ -233,6 +235,7 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM8_Init();
   MX_TIM6_Init();
+  MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
 
 //  channels[0] = channelDefault;
@@ -244,8 +247,9 @@ int main(void)
 
   i2c_bus = i2c_bus_default;
   i2c_bus_handle = &hi2c1;
-  I2C_HandleTypeDef* abs_encoder_handle = &hi2c2;
+  abs_encoder_handle = &hi2c3;
   abs_encoder = abs_encoder_init(abs_encoder_handle);
+  disable_DMA(abs_encoder->i2cBus);
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -277,9 +281,6 @@ int main(void)
 //		updatePWM();
 //		CH_tick();
 //		channels[0].closed_setpoint = 90;
-//	  i2c_bus.channel = 2;
-//	  i2c_bus.operation = ABS_ENC;
-//	  CH_prepare_send();
 
     /* USER CODE END WHILE */
 
@@ -322,10 +323,12 @@ void SystemClock_Config(void)
     Error_Handler();
   }
   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1|RCC_PERIPHCLK_I2C2
-                              |RCC_PERIPHCLK_TIM1|RCC_PERIPHCLK_TIM8
-                              |RCC_PERIPHCLK_TIM2|RCC_PERIPHCLK_TIM34;
+                              |RCC_PERIPHCLK_I2C3|RCC_PERIPHCLK_TIM1
+                              |RCC_PERIPHCLK_TIM8|RCC_PERIPHCLK_TIM2
+                              |RCC_PERIPHCLK_TIM34;
   PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_HSI;
   PeriphClkInit.I2c2ClockSelection = RCC_I2C2CLKSOURCE_HSI;
+  PeriphClkInit.I2c3ClockSelection = RCC_I2C3CLKSOURCE_HSI;
   PeriphClkInit.Tim1ClockSelection = RCC_TIM1CLK_HCLK;
   PeriphClkInit.Tim8ClockSelection = RCC_TIM8CLK_HCLK;
   PeriphClkInit.Tim2ClockSelection = RCC_TIM2CLK_HCLK;
@@ -425,6 +428,52 @@ static void MX_I2C2_Init(void)
   /* USER CODE BEGIN I2C2_Init 2 */
 
   /* USER CODE END I2C2_Init 2 */
+
+}
+
+/**
+  * @brief I2C3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C3_Init(void)
+{
+
+  /* USER CODE BEGIN I2C3_Init 0 */
+
+  /* USER CODE END I2C3_Init 0 */
+
+  /* USER CODE BEGIN I2C3_Init 1 */
+
+  /* USER CODE END I2C3_Init 1 */
+  hi2c3.Instance = I2C3;
+  hi2c3.Init.Timing = 0x2000090E;
+  hi2c3.Init.OwnAddress1 = 0;
+  hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c3.Init.OwnAddress2 = 0;
+  hi2c3.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+  hi2c3.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c3.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure Analogue filter
+  */
+  if (HAL_I2CEx_ConfigAnalogFilter(&hi2c3, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure Digital filter
+  */
+  if (HAL_I2CEx_ConfigDigitalFilter(&hi2c3, 0) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C3_Init 2 */
+
+  /* USER CODE END I2C3_Init 2 */
 
 }
 
@@ -852,7 +901,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOB, M0_SPI_CS_Pin|M1_SPI_CS_Pin|M2_SPI_CS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin|M5_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, M1_DIR_Pin|M2_DIR_Pin|M5_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : M3_NDIR_Pin M4_NDIR_Pin M5_NDIR_Pin M0_NDIR_Pin
                            M1_NDIR_Pin M2_NDIR_Pin */
@@ -870,16 +919,16 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : M0_LIMIT_Pin M1_LIMIT_Pin M2_LIMIT_Pin M3_LIMIT_Pin
-                           M4_LIMIT_Pin M5_LIMIT_Pin */
-  GPIO_InitStruct.Pin = M0_LIMIT_Pin|M1_LIMIT_Pin|M2_LIMIT_Pin|M3_LIMIT_Pin
-                          |M4_LIMIT_Pin|M5_LIMIT_Pin;
+  /*Configure GPIO pins : M0_LIMIT_Pin M1_LIMIT_Pin M3_LIMIT_Pin M4_LIMIT_Pin
+                           M5_LIMIT_Pin */
+  GPIO_InitStruct.Pin = M0_LIMIT_Pin|M1_LIMIT_Pin|M3_LIMIT_Pin|M4_LIMIT_Pin
+                          |M5_LIMIT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : M0_DIR_Pin M1_DIR_Pin M2_DIR_Pin M5_DIR_Pin */
-  GPIO_InitStruct.Pin = M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin|M5_DIR_Pin;
+  /*Configure GPIO pins : M1_DIR_Pin M2_DIR_Pin M5_DIR_Pin */
+  GPIO_InitStruct.Pin = M1_DIR_Pin|M2_DIR_Pin|M5_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

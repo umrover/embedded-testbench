@@ -38,8 +38,8 @@ void del_smbus(SMBus *smbus) {
 	free(smbus);
 }
 
-Abs_Encoder* new_abs_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power){
-	Abs_Encoder* abs_encoder = (Abs_Encoder*) malloc(sizeof(Abs_Encoder));
+AbsEncoder* new_abs_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power){
+	AbsEncoder* abs_encoder = (AbsEncoder*) malloc(sizeof(AbsEncoder));
     if ((A1_power) && (A2_power)) abs_encoder->address = device_slave_address_both_power;
     else if (A1_power) abs_encoder->address = device_slave_address_a1_power;
     else if (A2_power) abs_encoder->address = device_slave_address_a2_power;
@@ -48,7 +48,7 @@ Abs_Encoder* new_abs_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power){
     return abs_encoder;
 }
 
-int read_raw_angle(Abs_Encoder* abs_encoder) {
+int read_raw_angle(AbsEncoder* abs_encoder) {
 	int raw_data = read_word_data(abs_encoder->i2cBus, abs_encoder->address, 0xFF);
 	int angle_left = ( raw_data >> 8 ) & 0xFF; // 0xFE
 	int angle_right = raw_data & 0xFF; // 0xFF
@@ -57,7 +57,7 @@ int read_raw_angle(Abs_Encoder* abs_encoder) {
     return angle_raw;
 }
 
-float get_angle_degrees(Abs_Encoder* encoder) {
+float get_angle_degrees(AbsEncoder* encoder) {
     int angle_raw = read_raw_angle(encoder);
     float degrees_proportion = 180.0 * angle_raw;
     float degrees = degrees_proportion / (RAW_TO_180_DEGREES_CONVERSION_FACTOR);
@@ -65,16 +65,16 @@ float get_angle_degrees(Abs_Encoder* encoder) {
 }
 
 
-void deleteEncoder(Abs_Encoder* abs_encoder){
+void deleteEncoder(AbsEncoder* abs_encoder){
     free(abs_encoder);
 }
 
-Abs_Encoder* abs_encoder_init(I2C_HandleTypeDef* abs_encoder_handle){
-	SMBus* i2cBus = new_smbus(abs_encoder_handle);
+AbsEncoder* abs_encoder_init(I2C_HandleTypeDef* abs_encoder_handle){
+	i2cBus = new_smbus(abs_encoder_handle);
 	return new_abs_encoder(i2cBus, 0, 0);
 }
 
-void read_abs_enc(Abs_Encoder* abs_encoder, uint8_t channel) {
+void read_abs_enc(AbsEncoder* abs_encoder, uint8_t channel) {
 	float current_angle = get_angle_degrees(abs_encoder);
 	((channels + channel)->abs_enc_value) = current_angle;
 }
