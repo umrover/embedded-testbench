@@ -181,13 +181,13 @@ void updatePWM() {
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
-	if (htim == &htim6) {
-		updateQuadEnc();
-		updateLimit();
-		updateLogic();
-		updatePWM();
-		CH_tick();
-	}
+//	if (htim == &htim6) {
+//		updateQuadEnc();
+//		updateLimit();
+//		updateLogic();
+//		updatePWM();
+//		CH_tick();
+//	}
 }
 /* USER CODE END 0 */
 
@@ -260,6 +260,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  double speed = 0.25;
   while (1)
   {
 //		updateQuadEnc();
@@ -268,6 +269,15 @@ int main(void)
 //		updatePWM();
 //		CH_tick();
 //		channels[0].closed_setpoint = 90;
+
+	  TIM1->CCR1 = (uint32_t)(fabs(speed) * TIM1->ARR);
+	  setDir(speed, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
+
+	  TIM1->CCR2 = (uint32_t)(fabs(speed) * TIM1->ARR);
+	  setDir(speed, M1_DIR_GPIO_Port, M1_DIR_Pin, M1_NDIR_GPIO_Port, M1_NDIR_Pin);
+
+	  TIM1->CCR3 = (uint32_t)(fabs(speed) * TIM1->ARR);
+	  setDir(speed, M2_DIR_GPIO_Port, M2_DIR_Pin, M2_NDIR_GPIO_Port, M2_NDIR_Pin);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -343,7 +353,7 @@ static void MX_I2C1_Init(void)
   hi2c1.Init.OwnAddress1 = 254;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-  hi2c1.Init.OwnAddress2 = 96;
+  hi2c1.Init.OwnAddress2 = 64;
   hi2c1.Init.OwnAddress2Masks = I2C_OA2_MASK04;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
@@ -662,7 +672,7 @@ static void MX_TIM8_Init(void)
   htim8.Instance = TIM8;
   htim8.Init.Prescaler = 7;
   htim8.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim8.Init.Period = 100;
+  htim8.Init.Period = 1000;
   htim8.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim8.Init.RepetitionCounter = 0;
   htim8.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
