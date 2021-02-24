@@ -16,7 +16,8 @@
 I2C_HandleTypeDef *i2c_bus_handle;
 SMBus* i2cBus;
 I2C_HandleTypeDef* abs_encoder_handle;
-AbsEncoder* abs_encoder;
+AbsEncoder* abs_enc_0;
+AbsEncoder* abs_enc_1;
 
 typedef struct {
 	enum {

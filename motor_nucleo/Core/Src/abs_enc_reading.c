@@ -38,11 +38,11 @@ void del_smbus(SMBus *smbus) {
 	free(smbus);
 }
 
-AbsEncoder* new_abs_encoder(SMBus* i2cBus, _Bool A1_power, _Bool A2_power){
+AbsEncoder* new_abs_encoder(SMBus* i2cBus, _Bool A1, _Bool A2){
 	AbsEncoder* abs_encoder = (AbsEncoder*) malloc(sizeof(AbsEncoder));
-    if ((A1_power) && (A2_power)) abs_encoder->address = device_slave_address_both_power;
-    else if (A1_power) abs_encoder->address = device_slave_address_a1_power;
-    else if (A2_power) abs_encoder->address = device_slave_address_a2_power;
+    if ((A1) && (A2)) abs_encoder->address = device_slave_address_both_power;
+    else if (A1) abs_encoder->address = device_slave_address_a1_power;
+    else if (A2) abs_encoder->address = device_slave_address_a2_power;
     else abs_encoder->address = device_slave_address_none_power;
     abs_encoder->i2cBus = i2cBus;
     return abs_encoder;
@@ -69,12 +69,15 @@ void deleteEncoder(AbsEncoder* abs_encoder){
     free(abs_encoder);
 }
 
-AbsEncoder* abs_encoder_init(I2C_HandleTypeDef* abs_encoder_handle){
+AbsEncoder* abs_encoder_init(I2C_HandleTypeDef* abs_encoder_handle, _Bool A1, _Bool A2){
 	i2cBus = new_smbus(abs_encoder_handle);
-	return new_abs_encoder(i2cBus, 0, 0);
+	return new_abs_encoder(i2cBus, A1, A2);
 }
 
-void read_abs_enc(AbsEncoder* abs_encoder, uint8_t channel) {
-	float current_angle = get_angle_degrees(abs_encoder);
+void read_abs_enc(AbsEncoder* abs_enc_0, AbsEncoder* abs_enc_1, uint8_t channel) {
+	float current_angle;
+	if (channel == 0) current_angle = get_angle_degrees(abs_enc_0);
+	else if (channel == 1) current_angle = get_angle_degrees(abs_enc_1);
+
 	((channels + channel)->abs_enc_value) = current_angle;
 }

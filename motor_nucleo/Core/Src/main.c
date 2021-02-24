@@ -248,8 +248,10 @@ int main(void)
   i2c_bus = i2c_bus_default;
   i2c_bus_handle = &hi2c1;
   abs_encoder_handle = &hi2c3;
-  abs_encoder = abs_encoder_init(abs_encoder_handle);
-  disable_DMA(abs_encoder->i2cBus);
+  abs_enc_0 = abs_encoder_init(abs_encoder_handle, 1, 1);
+  abs_enc_1 = abs_encoder_init(abs_encoder_handle, 0, 0);
+  disable_DMA(abs_enc_0->i2cBus);
+  disable_DMA(abs_enc_1->i2cBus);
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -281,6 +283,9 @@ int main(void)
 //		updatePWM();
 //		CH_tick();
 //		channels[0].closed_setpoint = 90;
+	  i2c_bus.channel = 1;
+	  i2c_bus.operation = ABS_ENC;
+	  CH_prepare_send();
 
     /* USER CODE END WHILE */
 
