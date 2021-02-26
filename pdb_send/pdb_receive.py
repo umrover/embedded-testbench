@@ -1,17 +1,25 @@
 import serial
+import Adafruit_BBIO.UART as UART
 
 #defines
-baud = 115200
-uartPort = "/dev/ttyO1"
-
+baud = 9600
+uartPort = "/dev/ttyS4"
+UART.setup("UART4")
 # configure the serial connections (set port yourself)
 ser = serial.Serial(
     port=uartPort,
-    baudrate=115200,
+    baudrate= baud
 )
-ser.isOpen()
+ser.close()
+ser.open()
 while 1 :
-    while ser.inWaiting() > 0:
-        s = ser.read()
-        print(">>" + s)
+    if ser.isOpen():
+        try:
+            print("i am running1")
+            s = ser.readline()
+            print(">>" + s)
+        except ser.SerialTimeoutException:
+            print("read timeout")
+    else:
+            print("Serial is not open")
 
