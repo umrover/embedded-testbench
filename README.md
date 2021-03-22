@@ -120,7 +120,7 @@ None
 
 - Format of the UART NMEA command
   - `$Mosfet,<device>,<enable>,<extra padding>`
-  - String is 30 characters long
+  - String is 13 characters long
 
 ### Public Members 😁
 
