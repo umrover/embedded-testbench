@@ -17,10 +17,10 @@ void enablesaUV(int enable){
     enablePin(enable, GPIOC,GPIO_PIN_11);
 }
 void enableWhiteled(int enable){
-    enablePin(enable, GPIOC,GPIO_PIN_15);
+    enablePin(enable, GPIOB, GPIO_PIN_9);
 }
 void enablePerPump0(int enable){
-	enablePin(enable, GPIOB,GPIO_PIN_9);
+	enablePin(enable, GPIOB, GPIO_PIN_9);
 }
 void enablePerPump1(int enable){
 	enablePin(enable, GPIOB,GPIO_PIN_8);

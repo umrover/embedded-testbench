@@ -78,8 +78,8 @@ void Error_Handler(void);
 #define Pump_2_GPIO_Port GPIOC
 #define Pump_1_Pin GPIO_PIN_8
 #define Pump_1_GPIO_Port GPIOB
-#define Pump_0_Pin GPIO_PIN_9
-#define Pump_0_GPIO_Port GPIOB
+#define whiteLED_Pin GPIO_PIN_9
+#define whiteLED_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

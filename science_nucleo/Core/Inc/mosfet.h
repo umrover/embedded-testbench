@@ -21,6 +21,25 @@ void enablePerPump1(int enable);
 // Enable or disable a certain pin
 void enablePin(int enable, GPIO_TypeDef *port, uint16_t pin);
 
+//GPIO_TypeDef *device_ports[6] = {
+//		GPIOC,
+//		GPIOC,
+//		GPIOC,
+//		GPIOC,
+//		GPIOC,
+//		GPIOC
+//};
+//
+//int device_pins[6] = {
+//		0,
+//		0,
+//		0,
+//		GPIO_PIN_10,
+//		GPIO_PIN_11,
+//		GPIO_PIN_15
+//};
+//void setPin(int set, int device);
+//
 
 
 #endif

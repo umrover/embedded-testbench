@@ -45,9 +45,9 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-#define SPECTRAL_ENABLE
+//#define SPECTRAL_ENABLE
 //#define THERMISTOR_ENABLE//
-//#define MOSFET_ENABLE
+#define MOSFET_ENABLE
 //#define AMMONIA_MOTOR_ENABLE
 
 /* USER CODE END PM */
@@ -265,7 +265,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+ h  HAL_Init();
 
   /* USER CODE BEGIN Init */
 #ifdef SPECTRAL_ENABLE
@@ -347,6 +347,11 @@ int main(void)
    *
    *
    */
+
+	enablesciUV(0);
+	enablesaUV(0);
+	enableWhiteled(0);
+
 #endif
 
 #ifdef AMMONIA_MOTOR_ENABLE
@@ -369,11 +374,11 @@ int main(void)
 	}
 	// Jank fix to stop readline from blocking in science_bridge
 	// Only use if thermistor/spectral is not sending
-//	char emp[7];
-//	sprintf((char *)emp, "$EMPTY\n");
-//	HAL_UART_Transmit(&huart1, (uint8_t *)emp, sizeof(emp), 11);
+	char emp[7];
+	sprintf((char *)emp, "$EMPTY\n");
+	HAL_UART_Transmit(&huart1, (uint8_t *)emp, sizeof(emp), 11);
 
-	HAL_UART_Receive(&huart1, Rx_data, 13, 1000);
+	HAL_UART_Receive(&huart1, Rx_data, 13, HAL_MAX_DELAY);
 	HAL_Delay(250);
 	__HAL_UART_CLEAR_OREFLAG(&huart1);
 	__HAL_UART_CLEAR_NEFLAG(&huart1);
@@ -425,7 +430,8 @@ int main(void)
 	  send_rr_drop(&huart1);
 	  break;
 	case 5:
-	  enableWhiteled(enable);
+	  enablePin(enable, GPIOC, whiteLED_Pin);
+	  //enableWhiteled(enable);
 	  break;
 	case 6:
 	  enablePerPump0(enable);
@@ -878,7 +884,7 @@ static void MX_GPIO_Init(void)
                           |SA_UV_LED_Pin|Pump_2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, Ammonia_BWD_Pin|Pump_1_Pin|Pump_0_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, Ammonia_BWD_Pin|Pump_1_Pin|whiteLED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : Ammonia_FWD_Pin PC15 PC0 PC2
                            Auton_Green_LED_Pin Auton_Blue_LED_Pin Auton_Red_LED_Pin sci_UV_LED_Pin
@@ -891,8 +897,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Ammonia_BWD_Pin Pump_1_Pin Pump_0_Pin */
-  GPIO_InitStruct.Pin = Ammonia_BWD_Pin|Pump_1_Pin|Pump_0_Pin;
+  /*Configure GPIO pins : Ammonia_BWD_Pin Pump_1_Pin whiteLED_Pin */
+  GPIO_InitStruct.Pin = Ammonia_BWD_Pin|Pump_1_Pin|whiteLED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
