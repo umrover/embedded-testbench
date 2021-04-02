@@ -17,7 +17,7 @@ void enablesaUV(int enable){
     enablePin(enable, GPIOC,GPIO_PIN_11);
 }
 void enableWhiteled(int enable){
-    enablePin(enable, GPIOC,GPIO_PIN_15);
+    enablePin(enable, GPIOB,GPIO_PIN_9);
 }
 void enablePerPump0(int enable){
 	enablePin(enable, GPIOB,GPIO_PIN_9);
@@ -28,7 +28,7 @@ void enablePerPump1(int enable){
 
 void enablePin(int enable, GPIO_TypeDef *port, uint16_t pin){
     if (enable){
-        HAL_GPIO_WritePin(port,pin, GPIO_PIN_SET);
+         HAL_GPIO_WritePin(port,pin, GPIO_PIN_SET);
     }
     else{
         HAL_GPIO_WritePin(port,pin,GPIO_PIN_RESET);
