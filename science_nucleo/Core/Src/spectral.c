@@ -43,7 +43,7 @@ void del_spectral(Spectral *spectral) {
 /*private interface*/
 
 // functionallly like write_byte  
-void virtual_write(Spectral *spectral, uint8_t v_reg, uint8_t data) {
+void _virtual_write(Spectral *spectral, uint8_t v_reg, uint8_t data) {
     uint8_t status;
 
 	while(1) {
@@ -66,7 +66,7 @@ void virtual_write(Spectral *spectral, uint8_t v_reg, uint8_t data) {
 }
 
 // functionally like read_byte
-uint8_t virtual_read(Spectral *spectral, uint8_t v_reg) {
+uint8_t _virtual_read(Spectral *spectral, uint8_t v_reg) {
     uint8_t status;
 	uint8_t d;
 	status = read_byte_data(spectral->i2cBus, DEVICE_SLAVE_ADDRESS, I2C_AS72XX_SLAVE_STATUS_REG);
@@ -97,7 +97,7 @@ uint8_t virtual_read(Spectral *spectral, uint8_t v_reg) {
 	return d;
 }
 
-void get_channel_data(Spectral *spectral) {
+void _get_channel_data(Spectral *spectral) {
     for (uint8_t i = 0; i < CHANNELS; ++i) {
         Channel *temp = spectral->channels[i];
         temp->color_data = get_val(spectral, temp->lsb_register, temp->msb_register);
@@ -107,7 +107,7 @@ void get_channel_data(Spectral *spectral) {
 }
 
 // creates a channel
-Channel* new_channel(uint8_t lsb_r, uint8_t msb_r) {
+Channel* _new_channel(uint8_t lsb_r, uint8_t msb_r) {
     Channel* ch = malloc(sizeof(Channel));
 	ch->color_data = 0;
 	ch->lsb_register = lsb_r;
@@ -116,16 +116,16 @@ Channel* new_channel(uint8_t lsb_r, uint8_t msb_r) {
 }
 
 // gets value of channel 
-uint16_t read_channel(Spectral *spectral, int channel) {
+uint16_t _read_channel(Spectral *spectral, int channel) {
     return spectral->channels[channel]->color_data;
 }
 
-uint16_t get_val(Spectral *spectral, uint8_t virtual_reg_l, uint8_t virtual_reg_h) {
+uint16_t _get_val(Spectral *spectral, uint8_t virtual_reg_l, uint8_t virtual_reg_h) {
     uint16_t high = virtual_read(spectral, virtual_reg_h) << 8;
     return high | (virtual_read(spectral, virtual_reg_l) & 0xFF);
 }
 
-void del_channel(Channel *channel) {
+void _del_channel(Channel *channel) {
 	free(channel);
 }
 

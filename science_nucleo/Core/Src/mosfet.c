@@ -26,7 +26,7 @@ void enablePerPump1(int enable){
 	enablePin(enable, GPIOB,GPIO_PIN_8);
 }
 
-void enablePin(int enable, GPIO_TypeDef *port, uint16_t pin){
+void _enablePin(int enable, GPIO_TypeDef *port, uint16_t pin){
     if (enable){
          HAL_GPIO_WritePin(port,pin, GPIO_PIN_SET);
     }

@@ -63,19 +63,19 @@ typedef struct {
 
 //private function interface
 
-uint16_t read_channel(Spectral *spectral, int channel);
+uint16_t _read_channel(Spectral *spectral, int channel);
 
-uint16_t get_val(Spectral *spectral, uint8_t virtual_reg_l, uint8_t virtual_reg_h);
+uint16_t _get_val(Spectral *spectral, uint8_t virtual_reg_l, uint8_t virtual_reg_h);
 
-void virtual_write(Spectral *spectral, uint8_t v_reg, uint8_t data);
+void _virtual_write(Spectral *spectral, uint8_t v_reg, uint8_t data);
 
-uint8_t virtual_read(Spectral *spectral, uint8_t v_reg);
+uint8_t _virtual_read(Spectral *spectral, uint8_t v_reg);
 
-void get_channel_data(Spectral *spectral);
+void _get_channel_data(Spectral *spectral);
 
-Channel* new_channel(uint8_t lsb_r, uint8_t msb_r);
+Channel* _new_channel(uint8_t lsb_r, uint8_t msb_r);
 
-void del_channel(Channel *channel);
+void _del_channel(Channel *channel);
 
 //public function interface
 

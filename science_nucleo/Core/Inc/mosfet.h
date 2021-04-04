@@ -19,7 +19,7 @@ void enablePerPump1(int enable);
 
 // Private Interface
 // Enable or disable a certain pin
-void enablePin(int enable, GPIO_TypeDef *port, uint16_t pin);
+void _enablePin(int enable, GPIO_TypeDef *port, uint16_t pin);
 
 //GPIO_TypeDef *device_ports[6] = {
 //		GPIOC,

@@ -94,7 +94,7 @@ void deleteThermistors(Thermistors* thermistors){
 ///////////////////
 
 
-uint32_t readVoltage(ADC_HandleTypeDef* adcObject){
+uint32_t _readVoltage(ADC_HandleTypeDef* adcObject){
 	HAL_ADC_Start(adcObject);
 	HAL_ADC_PollForConversion(adcObject, HAL_MAX_DELAY);
     uint32_t raw = HAL_ADC_GetValue(adcObject);
