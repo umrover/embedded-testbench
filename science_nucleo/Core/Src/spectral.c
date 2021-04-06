@@ -9,24 +9,24 @@ Spectral *new_spectral(SMBus *i2cBus) {
 	uint8_t START_REG = 0x08; //RAW_VALUE_RGA_LOW;
 
 	for (uint8_t i = 0; i < CHANNELS; ++i) {
-		spectral->channels[i] = new_channel(START_REG + (2 * i), START_REG + (2 * i) + 1);
+		spectral->channels[i] = _new_channel(START_REG + (2 * i), START_REG + (2 * i) + 1);
 	}
 	return spectral;
 }
 
 // sets enable bits in devices
 void enable_spectral(Spectral *spectral) {
-    virtual_write(spectral, CONTROL_SET_UP, 0x28);  // runs twice to account for status miss
+    _virtual_write(spectral, CONTROL_SET_UP, 0x28);  // runs twice to account for status miss
     HAL_Delay(5);
-    virtual_write(spectral, CONTROL_SET_UP, 0x28);  // converts data bank to 2
-    virtual_write(spectral, INT_TIME, 0xFF);  // increases integration time
+    _virtual_write(spectral, CONTROL_SET_UP, 0x28);  // converts data bank to 2
+    _virtual_write(spectral, INT_TIME, 0xFF);  // increases integration time
 }
 
 
 // gets the data as an array of 16 bit integers
 void get_spectral_data(Spectral *spectral, uint16_t *data) {
 
-	 get_channel_data(spectral);
+	 _get_channel_data(spectral);
 	 for (uint8_t i = 0; i < CHANNELS; ++i) {
 		 data[i] = spectral->channels[i]->color_data;
 	 }
@@ -34,7 +34,7 @@ void get_spectral_data(Spectral *spectral, uint16_t *data) {
 
 void del_spectral(Spectral *spectral) {
 	for (int i = 0; i < CHANNELS; ++i) {
-		del_channel(spectral->channels[i]);
+		_del_channel(spectral->channels[i]);
 	}
 	free(spectral);
 }
@@ -100,7 +100,7 @@ uint8_t _virtual_read(Spectral *spectral, uint8_t v_reg) {
 void _get_channel_data(Spectral *spectral) {
     for (uint8_t i = 0; i < CHANNELS; ++i) {
         Channel *temp = spectral->channels[i];
-        temp->color_data = get_val(spectral, temp->lsb_register, temp->msb_register);
+        temp->color_data = _get_val(spectral, temp->lsb_register, temp->msb_register);
         HAL_Delay(10);
         //return (spectral->i2cBus->ret != HAL_OK);
     }
@@ -121,8 +121,8 @@ uint16_t _read_channel(Spectral *spectral, int channel) {
 }
 
 uint16_t _get_val(Spectral *spectral, uint8_t virtual_reg_l, uint8_t virtual_reg_h) {
-    uint16_t high = virtual_read(spectral, virtual_reg_h) << 8;
-    return high | (virtual_read(spectral, virtual_reg_l) & 0xFF);
+    uint16_t high = _virtual_read(spectral, virtual_reg_h) << 8;
+    return high | (_virtual_read(spectral, virtual_reg_l) & 0xFF);
 }
 
 void _del_channel(Channel *channel) {
