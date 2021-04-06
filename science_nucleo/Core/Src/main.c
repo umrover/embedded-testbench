@@ -240,7 +240,7 @@ void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable){
 }
 
 void send_rr_drop(UART_HandleTypeDef* huart){
-	char string[10];
+	char string[11];
 	sprintf((char *)string, "$REPEATER\n");
 	HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 11);
 }
@@ -391,7 +391,7 @@ int main(void)
 	}
 	// Jank fix to stop readline from blocking in science_bridge
 	// Only use if thermistor/spectral is not sending
-	char emp[7];
+	char emp[8];
 	sprintf((char *)emp, "$EMPTY\n");
 	HAL_UART_Transmit(JETSON_UART, (uint8_t *)emp, sizeof(emp), 11);
 
