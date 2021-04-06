@@ -102,10 +102,10 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     /**ADC2 GPIO Configuration
     PA4     ------> ADC2_IN1
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_4;
+    GPIO_InitStruct.Pin = Therm_0_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(Therm_0_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN ADC2_MspInit 1 */
 
@@ -126,10 +126,10 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     /**ADC3 GPIO Configuration
     PB1     ------> ADC3_IN1
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_1;
+    GPIO_InitStruct.Pin = Therm_2_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    HAL_GPIO_Init(Therm_2_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN ADC3_MspInit 1 */
 
@@ -150,10 +150,10 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     /**ADC4 GPIO Configuration
     PB12     ------> ADC4_IN3
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_12;
+    GPIO_InitStruct.Pin = Therm_1_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    HAL_GPIO_Init(Therm_1_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN ADC4_MspInit 1 */
 
@@ -181,7 +181,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     /**ADC2 GPIO Configuration
     PA4     ------> ADC2_IN1
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_4);
+    HAL_GPIO_DeInit(Therm_0_GPIO_Port, Therm_0_Pin);
 
   /* USER CODE BEGIN ADC2_MspDeInit 1 */
 
@@ -201,7 +201,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     /**ADC3 GPIO Configuration
     PB1     ------> ADC3_IN1
     */
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_1);
+    HAL_GPIO_DeInit(Therm_2_GPIO_Port, Therm_2_Pin);
 
   /* USER CODE BEGIN ADC3_MspDeInit 1 */
 
@@ -221,7 +221,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     /**ADC4 GPIO Configuration
     PB12     ------> ADC4_IN3
     */
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_12);
+    HAL_GPIO_DeInit(Therm_1_GPIO_Port, Therm_1_Pin);
 
   /* USER CODE BEGIN ADC4_MspDeInit 1 */
 
@@ -250,7 +250,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     PA9     ------> I2C2_SCL
     PA10     ------> I2C2_SDA
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_10;
+    GPIO_InitStruct.Pin = Mux_SCL_Pin|Mux_SDA_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -286,9 +286,9 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c)
     PA9     ------> I2C2_SCL
     PA10     ------> I2C2_SDA
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_9);
+    HAL_GPIO_DeInit(Mux_SCL_GPIO_Port, Mux_SCL_Pin);
 
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_10);
+    HAL_GPIO_DeInit(Mux_SDA_GPIO_Port, Mux_SDA_Pin);
 
   /* USER CODE BEGIN I2C2_MspDeInit 1 */
 
@@ -332,12 +332,12 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim)
     /**TIM3 GPIO Configuration
     PA6     ------> TIM3_CH1
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_6;
+    GPIO_InitStruct.Pin = Ammonia_PWM_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(Ammonia_PWM_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN TIM3_MspPostInit 1 */
 
@@ -389,7 +389,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     PB6     ------> USART1_TX
     PB7     ------> USART1_RX
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
+    GPIO_InitStruct.Pin = J_UART_TX_Pin|J_UART_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -413,7 +413,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     PA2     ------> USART2_TX
     PA3     ------> USART2_RX
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3;
+    GPIO_InitStruct.Pin = DEBUG_UART_TX_Pin|DEBUG_UART_RX_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
@@ -447,7 +447,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     PB6     ------> USART1_TX
     PB7     ------> USART1_RX
     */
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_6|GPIO_PIN_7);
+    HAL_GPIO_DeInit(GPIOB, J_UART_TX_Pin|J_UART_RX_Pin);
 
   /* USER CODE BEGIN USART1_MspDeInit 1 */
 
@@ -465,7 +465,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
     PA2     ------> USART2_TX
     PA3     ------> USART2_RX
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2|GPIO_PIN_3);
+    HAL_GPIO_DeInit(GPIOA, DEBUG_UART_TX_Pin|DEBUG_UART_RX_Pin);
 
   /* USER CODE BEGIN USART2_MspDeInit 1 */
 

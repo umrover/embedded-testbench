@@ -265,7 +265,7 @@ int main(void)
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
- h  HAL_Init();
+  HAL_Init();
 
   /* USER CODE BEGIN Init */
 #ifdef SPECTRAL_ENABLE
@@ -874,31 +874,42 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, Ammonia_FWD_Pin|GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_2
-                          |Auton_Green_LED_Pin|Auton_Blue_LED_Pin|Auton_Red_LED_Pin|sci_UV_LED_Pin
-                          |SA_UV_LED_Pin|Pump_2_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(Heater_0_GPIO_Port, Heater_0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, Ammonia_BWD_Pin|Pump_1_Pin|whiteLED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, Heater_2_Pin|Heater_1_Pin|Ammonia_FWD_Pin|Auton_Green_LED_Pin
+                          |Auton_Blue_LED_Pin|Auton_Red_LED_Pin|sci_UV_LED_Pin|SA_UV_LED_Pin
+                          |Pump_2_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : Ammonia_FWD_Pin PC15 PC0 PC2
-                           Auton_Green_LED_Pin Auton_Blue_LED_Pin Auton_Red_LED_Pin sci_UV_LED_Pin
-                           SA_UV_LED_Pin Pump_2_Pin */
-  GPIO_InitStruct.Pin = Ammonia_FWD_Pin|GPIO_PIN_15|GPIO_PIN_0|GPIO_PIN_2
-                          |Auton_Green_LED_Pin|Auton_Blue_LED_Pin|Auton_Red_LED_Pin|sci_UV_LED_Pin
-                          |SA_UV_LED_Pin|Pump_2_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOB, Ammonia_BWD_Pin|Pump_0_Pin|Pump_1_Pin|whiteLED_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : Heater_0_Pin */
+  GPIO_InitStruct.Pin = Heater_0_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(Heater_0_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : Heater_2_Pin Heater_1_Pin Ammonia_FWD_Pin Auton_Green_LED_Pin
+                           Auton_Blue_LED_Pin Auton_Red_LED_Pin sci_UV_LED_Pin SA_UV_LED_Pin
+                           Pump_2_Pin */
+  GPIO_InitStruct.Pin = Heater_2_Pin|Heater_1_Pin|Ammonia_FWD_Pin|Auton_Green_LED_Pin
+                          |Auton_Blue_LED_Pin|Auton_Red_LED_Pin|sci_UV_LED_Pin|SA_UV_LED_Pin
+                          |Pump_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Ammonia_BWD_Pin Pump_1_Pin whiteLED_Pin */
-  GPIO_InitStruct.Pin = Ammonia_BWD_Pin|Pump_1_Pin|whiteLED_Pin;
+  /*Configure GPIO pins : Ammonia_BWD_Pin Pump_0_Pin Pump_1_Pin whiteLED_Pin */
+  GPIO_InitStruct.Pin = Ammonia_BWD_Pin|Pump_0_Pin|Pump_1_Pin|whiteLED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
