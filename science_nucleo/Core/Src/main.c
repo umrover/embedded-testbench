@@ -65,6 +65,11 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+
+#define JETSON_UART &huart1
+// Debugging UART through usb connection
+#define USB_UART &huart2
+
 /* spectral code */
 
 #ifdef SPECTRAL_ENABLE
@@ -120,6 +125,11 @@ static void MX_I2C2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
+// Clears the ORE and NE flags from the uart handler with delay
+// TODO add better explanation why
+void clear_flags();
+
+
 /* spectral code */
 //transmits the spectral data as a sentance
 //$SPECTRAL,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,
@@ -147,6 +157,13 @@ void receive_ammonia_motor_cmd(uint8_t *buffer, double *speed);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+// Clears the ORE and NE flags from the uart handler with delay
+// TODO add better explanation why
+void clear_flags(){
+	HAL_Delay(250);
+	__HAL_UART_CLEAR_OREFLAG(JETSON_UART);
+	__HAL_UART_CLEAR_NEFLAG(JETSON_UART);
+}
 
 #ifdef SPECTRAL_ENABLE
 /* spectral code */
@@ -376,20 +393,17 @@ int main(void)
 	// Only use if thermistor/spectral is not sending
 	char emp[7];
 	sprintf((char *)emp, "$EMPTY\n");
-	HAL_UART_Transmit(&huart1, (uint8_t *)emp, sizeof(emp), 11);
+	HAL_UART_Transmit(JETSON_UART, (uint8_t *)emp, sizeof(emp), 11);
 
-	HAL_UART_Receive(&huart1, Rx_data, 13, 23000);
-	HAL_Delay(250);
-	__HAL_UART_CLEAR_OREFLAG(&huart1);
-	__HAL_UART_CLEAR_NEFLAG(&huart1);
+	HAL_UART_Receive(JETSON_UART, Rx_data, 13, 23000);
+	clear_flags();
 
 
 
-    // Read and send all thermistor data over huart1
+    // Read and send all thermistor data over Jetson UART
 #ifdef THERMISTOR_ENABLE
-    sendThermistorData(thermistors, &huart1);
-    __HAL_UART_CLEAR_OREFLAG(&huart1);
-    __HAL_UART_CLEAR_NEFLAG(&huart1);
+    sendThermistorData(thermistors, JETSON_UART);
+    clear_flags();
 #endif
     /* USER CODE END WHILE */
 
@@ -401,9 +415,8 @@ int main(void)
 	  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
 	}
 
-	send_spectral_data(spectral_data, &huart1);
-    __HAL_UART_CLEAR_OREFLAG(&huart1);
-    __HAL_UART_CLEAR_NEFLAG(&huart1);
+	send_spectral_data(spectral_data, JETSON_UART);
+    clear_flags();
 #endif
 
 #ifdef MOSFET_ENABLE
@@ -414,30 +427,37 @@ int main(void)
 	int d = device;
 	switch(d){
 	case 0 :
-	  enableRled(enable);
+	  //enableRled(enable);
+	  enablePin(enable, Auton_Red_LED_GPIO_Port, Auton_Red_LED_Pin);
 	  break;
 	case 1 :
-	  enableGled(enable);
+	  //enableGled(enable);
+	  enablePin(enable, Auton_Green_LED_GPIO_Port, Auton_Green_LED_Pin);
 	  break;
 	case 2:
-	  enableBled(enable);
+	  //enableBled(enable);
+	  enablePin(enable, Auton_Blue_LED_GPIO_Port, Auton_Blue_LED_Pin);
 	  break;
 	case 3:
-	  enablesciUV(enable);
+	  //enablesciUV(enable);
+	  enablePin(enable, sci_UV_LED_GPIO_Port, sci_UV_LED_Pin);
 	  break;
 	case 4:
-	  enablesaUV(enable);
-	  send_rr_drop(&huart1);
+	  //enablesaUV(enable);
+	  enablePin(enable, SA_UV_LED_GPIO_Port, SA_UV_LED_Pin);
+	  send_rr_drop(JETSON_UART);
 	  break;
 	case 5:
-	  enablePin(enable, GPIOC, whiteLED_Pin);
+	  enablePin(enable, whiteLED_GPIO_Port, whiteLED_Pin);
 	  //enableWhiteled(enable);
 	  break;
 	case 6:
-	  enablePerPump0(enable);
+	  //enablePerPump0(enable);
+	  enablePin(enable, Pump_1_GPIO_Port, Pump_1_Pin);
 	  break;
  	case 7:
- 	  enablePerPump1(enable);
+ 	  //enablePerPump1(enable);
+ 	  enablePin(enable, Pump_2_GPIO_Port, Pump_2_Pin);
  	  break;
  	case 8:
  	  break;
