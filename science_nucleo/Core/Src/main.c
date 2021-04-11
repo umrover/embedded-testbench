@@ -70,6 +70,16 @@ UART_HandleTypeDef huart2;
 // Debugging UART through usb connection
 #define USB_UART &huart2
 
+//Global buffer for receiving UART commands
+uint8_t Rx_data[20];
+
+// Flag for command received
+int cmd_received = 0;
+
+//Global buffer of the last received command.
+uint8_t cmd_data[20];
+
+
 /* spectral code */
 
 #ifdef SPECTRAL_ENABLE
@@ -145,7 +155,7 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart);
 
 /* mosfet code */
 #ifdef MOSFET_ENABLE
-void receive_mosfet_cmd(uint8_t *buffer,int *device, int*enable);
+void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable, char*mosfetcopy);
 #endif
 
 /* ammonia motor code */
@@ -156,6 +166,20 @@ void receive_ammonia_motor_cmd(uint8_t *buffer, double *speed);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+//Callback to be called after HAL_UART_RECEIVE_IT finishes getting data
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
+	// Disable Interrupts
+	HAL_NVIC_DisableIRQ(USART1_IRQn);
+	// Set received flag
+	cmd_received = 1;
+	// Copy the receive buffer into the command buffer.
+	memcpy(cmd_data,Rx_data,13);
+	// Save the last command
+	// Enable Interrupts
+	HAL_NVIC_EnableIRQ(USART1_IRQn);
+	HAL_UART_Receive_IT(JETSON_UART,Rx_data,13);
+}
 
 // Clears the ORE and NE flags from the uart handler with delay
 // TODO add better explanation why
@@ -222,22 +246,25 @@ void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
 
 #ifdef MOSFET_ENABLE
   /* mosfet code */
-void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable){
+void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable, char*mosfetcopy){
 
   //Change to string
   char delim[] = ",";
-  char *copy = (char *)malloc(strlen(buffer) + 1);
-  if (copy == NULL) {
+
+  strcpy(mosfetcopy, buffer);
+
+  if (mosfetcopy == NULL) {
   	return;
   }
-  strcpy(copy, buffer);
+
   //Expected $Mosfet,<devicenum>,<enablenum>
-  char *identifier = strtok(copy,delim);
+  char *identifier = strtok(mosfetcopy,delim);
   if (!strcmp(identifier,"$Mosfet")){
 	  *device = atoi(strtok(NULL,delim));
 	  *enable = atoi(strtok(NULL,delim));
   }
 }
+
 
 void send_rr_drop(UART_HandleTypeDef* huart){
 	char string[11];
@@ -381,22 +408,19 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-
-  uint8_t Rx_data[20];
+  HAL_UART_Receive_IT(JETSON_UART,Rx_data,13);
+  char *mosfetcopy = (char *)malloc(21);
   while (1)
   {
-	// receive the UART data string
-	for(int i = 0; i< 20; ++i){
-		Rx_data[i] = 0;
-	}
 	// Jank fix to stop readline from blocking in science_bridge
 	// Only use if thermistor/spectral is not sending
-	char emp[8];
-	sprintf((char *)emp, "$EMPTY\n");
-	HAL_UART_Transmit(JETSON_UART, (uint8_t *)emp, sizeof(emp), 11);
+//	char emp[7];
+//	sprintf((char *)emp, "$EMPTY\n");
+//	HAL_UART_Transmit(JETSON_UART, (uint8_t *)emp, sizeof(emp), 11);
 
-	HAL_UART_Receive(JETSON_UART, Rx_data, 13, 23000);
+	//HAL_UART_Transmit(USB_UART, (uint8_t *)Rx_data, sizeof(Rx_data), 3.36);
 	clear_flags();
+
 
 
 
@@ -418,56 +442,63 @@ int main(void)
 	send_spectral_data(spectral_data, JETSON_UART);
     clear_flags();
 #endif
-
+    //Disable interrupts
+    HAL_NVIC_DisableIRQ(USART1_IRQn);
+   	uint8_t message[20];
+   	for(int i = 0; i< 20; ++i){
+   		message[i] = 0;
+   	}
+   	if(cmd_received == 1){
+   		cmd_received = 0;
+   		memcpy(message,cmd_data,13);
+   	}
+   	HAL_NVIC_EnableIRQ(USART1_IRQn);
+   	//Enable interrupts
 #ifdef MOSFET_ENABLE
-	int device = 8;
-	int enable = 0;
-	receive_mosfet_cmd(Rx_data,&device,&enable);
+   	int device = 8;
+   	int enable = 0;
+   	if(message[1] == 'M'){
+   		receive_mosfet_cmd(message,&device,&enable,mosfetcopy);
+   	}
 
-	int d = device;
-	switch(d){
-	case 0 :
-	  //enableRled(enable);
-	  enablePin(enable, Auton_Red_LED_GPIO_Port, Auton_Red_LED_Pin);
-	  break;
-	case 1 :
-	  //enableGled(enable);
-	  enablePin(enable, Auton_Green_LED_GPIO_Port, Auton_Green_LED_Pin);
-	  break;
-	case 2:
-	  //enableBled(enable);
-	  enablePin(enable, Auton_Blue_LED_GPIO_Port, Auton_Blue_LED_Pin);
-	  break;
-	case 3:
-	  //enablesciUV(enable);
-	  enablePin(enable, sci_UV_LED_GPIO_Port, sci_UV_LED_Pin);
-	  break;
-	case 4:
-	  //enablesaUV(enable);
-	  enablePin(enable, SA_UV_LED_GPIO_Port, SA_UV_LED_Pin);
-	  send_rr_drop(JETSON_UART);
-	  break;
-	case 5:
-	  enablePin(enable, whiteLED_GPIO_Port, whiteLED_Pin);
-	  //enableWhiteled(enable);
-	  break;
-	case 6:
-	  //enablePerPump0(enable);
-	  enablePin(enable, Pump_1_GPIO_Port, Pump_1_Pin);
-	  break;
- 	case 7:
- 	  //enablePerPump1(enable);
- 	  enablePin(enable, Pump_2_GPIO_Port, Pump_2_Pin);
- 	  break;
- 	case 8:
- 	  break;
- 	}
-
-
-
-
-
-
+   	int d = device;
+   	switch(d){
+   	case 0 :
+   	  //enableRled(enable);
+   	  enablePin(enable, Auton_Red_LED_GPIO_Port, Auton_Red_LED_Pin);
+   	  break;
+   	case 1 :
+   	  //enableGled(enable);
+   	  enablePin(enable, Auton_Green_LED_GPIO_Port, Auton_Green_LED_Pin);
+   	  break;
+   	case 2:
+   	  //enableBled(enable);
+   	  enablePin(enable, Auton_Blue_LED_GPIO_Port, Auton_Blue_LED_Pin);
+   	  break;
+   	case 3:
+   	  //enablesciUV(enable);
+   	  enablePin(enable, sci_UV_LED_GPIO_Port, sci_UV_LED_Pin);
+   	  break;
+   	case 4:
+   	  //enablesaUV(enable);
+   	  enablePin(enable, SA_UV_LED_GPIO_Port, SA_UV_LED_Pin);
+   	  send_rr_drop(JETSON_UART);
+   	  break;
+   	case 5:
+   	  enablePin(enable, whiteLED_GPIO_Port, whiteLED_Pin);
+   	  //enableWhiteled(enable);
+   	  break;
+   	case 6:
+   	  //enablePerPump0(enable);
+   	  enablePin(enable, Pump_1_GPIO_Port, Pump_1_Pin);
+   	  break;
+   	case 7:
+   	  //enablePerPump1(enable);
+   	  enablePin(enable, Pump_2_GPIO_Port, Pump_2_Pin);
+   	  break;
+   	case 8:
+   	  break;
+   	}
 #endif
 
 #ifdef AMMONIA_MOTOR_ENABLE
