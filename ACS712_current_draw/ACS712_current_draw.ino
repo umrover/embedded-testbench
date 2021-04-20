@@ -5,8 +5,8 @@
 
 #define Current_sensor0 A0  //The sensor analog input pin
 #define Current_sensor1 A1  //The sensor analog input pin
-#define Current_sensor0 A2  //The sensor analog input pin
-#define Current_sensor1 A3  //The sensor analog input pin
+#define Current_sensor2 A2  //The sensor analog input pin
+#define Current_sensor3 A3  //The sensor analog input pin
 
 
 float i0;
@@ -19,10 +19,10 @@ float i3;
 void setup() {
 
 Serial.begin(9600);
-pinMode(Current_sensor0, INPUT);
-pinMode(Current_sensor1, INPUT);
-pinMode(Current_sensor2, INPUT);
-pinMode(Current_sensor3, INPUT);
+pinMode(Current_sensor0, INPUT); // 206f m1 z
+pinMode(Current_sensor1, INPUT); // battery 2069
+pinMode(Current_sensor2, INPUT); // 2069 m0 z
+pinMode(Current_sensor3, INPUT); // 206f m0 z
 
 }
 
@@ -39,16 +39,17 @@ void loop() {
   i3 = i3 * 1/1023 - 0.5;  
 
 
-  Serial.print(i0 * 5/.11);
-  Serial.print(" ");
+  Serial.print(i0 * 5/.11); //blue 206f m1 z   
+  Serial.print(",");
   
-  Serial.println(i1 * 5/.11);
-  Serial.print(" ");
+  Serial.print(i1 * 5/.11); //red battery 
+  Serial.print(",");
   
-  Serial.println(i2 * 5/.11);
-  Serial.print(" ");
+  Serial.print(i2 * 5/.11); //green 2069 m1 z
+  Serial.print(",");
   
-  Serial.println(i3 * 5/.11);
+  Serial.println(i3 * 5/.11); //yellow 206f m0 z
+  //Serial.print(" ");
 
   
   //delay(100);                     //Modifying or removing the delay will change the way the signal is shown 
