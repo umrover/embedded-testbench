@@ -48,7 +48,7 @@
 //#define SPECTRAL_ENABLE
 //#define THERMISTOR_ENABLE//
 #define MOSFET_ENABLE
-//#define AMMONIA_MOTOR_ENABLE
+#define AMMONIA_MOTOR_ENABLE
 
 /* USER CODE END PM */
 
@@ -281,6 +281,7 @@ void send_rr_drop(UART_HandleTypeDef* huart){
 void receive_ammonia_motor_cmd(uint8_t *buffer, double *speed) {
 	// expects $AMMONIA, <speed>, <comma padding>
 	char delim[] = ",";
+	//TODO verify how legal this is to do in C
 	char *copy = (char *)malloc(strlen(buffer) + 1);
 	if (copy == NULL) {
 	  return;
@@ -334,7 +335,7 @@ int main(void)
 #ifdef AMMONIA_MOTOR_ENABLE
   // pin B9 is only being used here because one of the GPIO pins on the testing
   // nucleo broke --> for SAR it will be pin C14
-  ammonia_motor = new_motor(GPIOC, GPIO_PIN_2, GPIOB, GPIO_PIN_10, &htim3);
+  ammonia_motor = new_motor(Ammonia_FWD_GPIO_Port, Ammonia_FWD_Pin, Ammonia_BWD_GPIO_Port, Ammonia_BWD_Pin, &htim3);
 #endif
 
   /* USER CODE END Init */
@@ -503,7 +504,10 @@ int main(void)
 
 #ifdef AMMONIA_MOTOR_ENABLE
   /* ammonia motor code */
-	receive_ammonia_motor_cmd(Rx_data, &speed);
+
+   	if(message[1] == 'A'){
+   		receive_ammonia_motor_cmd(message, &speed);
+   	}
 	set_speed(ammonia_motor, speed);
 
 #endif
@@ -806,7 +810,7 @@ static void MX_TIM3_Init(void)
 
   /* USER CODE END TIM3_Init 1 */
   htim3.Instance = TIM3;
-  htim3.Init.Prescaler = 799;
+  htim3.Init.Prescaler = 3;
   htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim3.Init.Period = 200;
   htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
