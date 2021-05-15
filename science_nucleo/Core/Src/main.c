@@ -45,10 +45,10 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-//#define SPECTRAL_ENABLE
+#define SPECTRAL_ENABLE
 //#define THERMISTOR_ENABLE//
-#define MOSFET_ENABLE
-#define AMMONIA_MOTOR_ENABLE
+//#define MOSFET_ENABLE
+//#define AMMONIA_MOTOR_ENABLE
 
 /* USER CODE END PM */
 
@@ -87,11 +87,11 @@ enum {
 	SPECTRAL_0_CHANNEL = 0,
 	SPECTRAL_1_CHANNEL = 1,
 	SPECTRAL_2_CHANNEL = 2,
-	SPECTRAL_DEVICES = 1
+	SPECTRAL_DEVICES = 3
 };
 
-//int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
-int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL };
+int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
+//int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL };
 SMBus *i2cBus;
 Spectral *spectral;
 
@@ -195,9 +195,9 @@ void clear_flags(){
 
 void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 	int channels = 6;
-	int devices = 1;
+	int devices = 3;
 
-	char string[50];
+	char string[195];
 	sprintf((char *)string, "$SPECTRAL");
 
 	for (uint8_t i = 0; i < devices; ++i) {
@@ -210,13 +210,13 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 		}
 	}
 
-	sprintf((char *)string + 10 + channels*6," \r\n");
+	//sprintf((char *)string + 10 + channels*6," \r\n");
 
 	// testing stuff - use if you don't have a
-	//char test[120];
-	//sprintf((char *)test, "$SPECTRAL,3,4,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,\n");
+	char test[120];
+	sprintf((char *)test, "$SPECTRAL,3,4,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,\n");
 
-	HAL_UART_Transmit(huart, (uint8_t *)string, 50, 50);
+	HAL_UART_Transmit(huart, (uint8_t *)test, 195, 250);
 	HAL_Delay(100);
 
 
@@ -359,20 +359,24 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 #ifdef SPECTRAL_ENABLE
-	// adds all the spectral channels
-	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-		add_channel(mux, spectral_channels[i]);
-	}
 
-	// opens all channels on the mux to listen
+    // TESTING CHANGE
+//	// adds all the spectral channels
+//	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+//		add_channel(mux, spectral_channels[i]);
+//	}
+//
+//	// opens all channels on the mux to listen
+//
+//	int select = 0;
+//	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+//		select += mux->channel_list[i];
+//	}
+//	channel_select(mux, select);
 
-	int select = 0;
-	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-		select += mux->channel_list[i];
-	}
-	channel_select(mux, select);
+	// TESTING CHANGE END
 
-	uint8_t *buf[30];
+	uint8_t *buf[60];
 
 	enable_spectral(spectral);
 	uint16_t spectral_data[SPECTRAL_DEVICES * CHANNELS];
@@ -436,12 +440,17 @@ int main(void)
 #ifdef SPECTRAL_ENABLE
 
 	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
+//	  // TESTING CHANGE
+//	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
+//	  // TESTING CHANGE END
+	  _virtual_write(spectral, DEV_SEL, i);
 	  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
 	}
 
-	send_spectral_data(spectral_data, JETSON_UART);
-    clear_flags();
+	//send_spectral_data(spectral_data, JETSON_UART);
+	send_spectral_data(spectral_data, &huart2);
+
+	clear_flags();
 #endif
     //Disable interrupts
     HAL_NVIC_DisableIRQ(USART1_IRQn);
