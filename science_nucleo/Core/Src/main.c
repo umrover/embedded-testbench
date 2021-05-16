@@ -87,11 +87,11 @@ enum {
 	SPECTRAL_0_CHANNEL = 0,
 	SPECTRAL_1_CHANNEL = 1,
 	SPECTRAL_2_CHANNEL = 2,
-	SPECTRAL_DEVICES = 3
+	SPECTRAL_DEVICES = 1
 };
 
-int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
-//int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL };
+//int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
+int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL };
 SMBus *i2cBus;
 Spectral *spectral;
 
@@ -195,30 +195,42 @@ void clear_flags(){
 
 void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 	int channels = 6;
-	int devices = 3;
+	int devices = 1;
 
-	char string[195];
-	sprintf((char *)string, "$SPECTRAL");
+	char string[153] = "";
+
+	int separated_data[36] = {0};
 
 	for (uint8_t i = 0; i < devices; ++i) {
-		uint8_t start = i * (channels*6) + 10;
+		//uint8_t start = i * (channels*6) + 10;
 		for (uint8_t j = 0; j < channels; ++j) {
-			uint8_t msb = data[i*channels + j] >> 8;
-			uint8_t lsb = data[i*channels + j];
 
-			sprintf((char *)string + start + j*6,",%u,%u", msb, lsb);
+			unsigned int msb = (data[i*channels + j] >> 8) & 0xff;
+			unsigned int lsb = (data[i*channels + j]) & 0xff;
+
+			separated_data[(i*channels) + (2*j)] =  msb;
+			separated_data[(i*channels) + (2*j) + 1] =  lsb;
+
+			//sprintf((char *)string + start + j*6,",%u,%u", msb, lsb);
 		}
 	}
+
+	  sprintf((char *)string, "$SPECTRAL,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u \r\n",\
+			  separated_data[0], separated_data[1], separated_data[2], separated_data[3], separated_data[4], separated_data[5], \
+			  separated_data[6], separated_data[7], separated_data[8], separated_data[9], separated_data[10], separated_data[11], \
+			  separated_data[12], separated_data[13], separated_data[14], separated_data[15], separated_data[16], separated_data[17], \
+			  separated_data[18], separated_data[19], separated_data[20], separated_data[21], separated_data[22], separated_data[23], \
+			  separated_data[24], separated_data[25], separated_data[26], separated_data[27], separated_data[28], separated_data[29], \
+			  separated_data[30], separated_data[31], separated_data[32], separated_data[33], separated_data[34], separated_data[35]);
+
 
 	//sprintf((char *)string + 10 + channels*6," \r\n");
 
 	// testing stuff - use if you don't have a
-	char test[120];
-	sprintf((char *)test, "$SPECTRAL,3,4,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,\n");
+	//char test[120];
+	//sprintf((char *)test, "$SPECTRAL,3,4,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,\n");
 
-	HAL_UART_Transmit(huart, (uint8_t *)test, 195, 250);
-	HAL_Delay(100);
-
+	HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 100);
 
 }
 
@@ -443,12 +455,12 @@ int main(void)
 //	  // TESTING CHANGE
 //	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
 //	  // TESTING CHANGE END
-	  _virtual_write(spectral, DEV_SEL, i);
+	  //_virtual_write(spectral, DEV_SEL, i);
 	  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
 	}
 
-	//send_spectral_data(spectral_data, JETSON_UART);
-	send_spectral_data(spectral_data, &huart2);
+	send_spectral_data(spectral_data, JETSON_UART);
+	//send_spectral_data(spectral_data, USB_UART);
 
 	clear_flags();
 #endif

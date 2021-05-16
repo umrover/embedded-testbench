@@ -6,7 +6,7 @@ Spectral *new_spectral(SMBus *i2cBus) {
     Spectral *spectral = malloc(sizeof(Spectral));
     spectral->i2cBus = i2cBus;
 
-	uint8_t START_REG = 0x08; //RAW_VALUE_RGA_LOW;
+	uint8_t START_REG = 0x08; //RAW_VALUE_RGA_HIGH; *** TODO FIX THIS IS THE HIGH ONE
 
 	for (uint8_t i = 0; i < CHANNELS; ++i) {
 		spectral->channels[i] = _new_channel(START_REG + (2 * i), START_REG + (2 * i) + 1);
@@ -107,7 +107,7 @@ void _get_channel_data(Spectral *spectral) {
 }
 
 // creates a channel
-Channel* _new_channel(uint8_t lsb_r, uint8_t msb_r) {
+Channel* _new_channel(uint8_t msb_r, uint8_t lsb_r) {
     Channel* ch = malloc(sizeof(Channel));
 	ch->color_data = 0;
 	ch->lsb_register = lsb_r;
@@ -121,7 +121,7 @@ uint16_t _read_channel(Spectral *spectral, int channel) {
 }
 
 uint16_t _get_val(Spectral *spectral, uint8_t virtual_reg_l, uint8_t virtual_reg_h) {
-    uint16_t high = _virtual_read(spectral, virtual_reg_h) << 8;
+    uint16_t high = (_virtual_read(spectral, virtual_reg_h) & 0xFF) << 8;
     return high | (_virtual_read(spectral, virtual_reg_l) & 0xFF);
 }
 
