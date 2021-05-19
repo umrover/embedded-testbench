@@ -45,8 +45,8 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-#define SPECTRAL_ENABLE
-//#define THERMISTOR_ENABLE//
+//#define SPECTRAL_ENABLE
+#define THERMISTOR_ENABLE
 //#define MOSFET_ENABLE
 //#define AMMONIA_MOTOR_ENABLE
 
@@ -71,13 +71,13 @@ UART_HandleTypeDef huart2;
 #define USB_UART &huart2
 
 //Global buffer for receiving UART commands
-uint8_t Rx_data[20];
+volatile uint8_t Rx_data[20];
 
 // Flag for command received
-int cmd_received = 0;
+volatile int cmd_received = 0;
 
 //Global buffer of the last received command.
-uint8_t cmd_data[20];
+volatile uint8_t cmd_data[20];
 
 
 /* spectral code */
@@ -87,11 +87,11 @@ enum {
 	SPECTRAL_0_CHANNEL = 0,
 	SPECTRAL_1_CHANNEL = 1,
 	SPECTRAL_2_CHANNEL = 2,
-	SPECTRAL_DEVICES = 1
+	SPECTRAL_DEVICES = 2
 };
 
 //int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
-int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL };
+int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL };
 SMBus *i2cBus;
 Spectral *spectral;
 
@@ -151,6 +151,7 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart);
 /* thermistor code*/
 
 #ifdef THERMISTOR_ENABLE
+void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart);
 #endif
 
 /* mosfet code */
@@ -195,7 +196,7 @@ void clear_flags(){
 
 void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 	int channels = 6;
-	int devices = 1;
+	int devices = 2;
 
 	char string[153] = "";
 
@@ -205,11 +206,12 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 		//uint8_t start = i * (channels*6) + 10;
 		for (uint8_t j = 0; j < channels; ++j) {
 
+			//int temp = (i*2*channels) + (2*j) + 1;
 			unsigned int msb = (data[i*channels + j] >> 8) & 0xff;
 			unsigned int lsb = (data[i*channels + j]) & 0xff;
 
-			separated_data[(i*channels) + (2*j)] =  msb;
-			separated_data[(i*channels) + (2*j) + 1] =  lsb;
+			separated_data[(2*i*channels) + (2*j)] =  msb;
+			separated_data[(2*i*channels) + (2*j) + 1] =  lsb;
 
 			//sprintf((char *)string + start + j*6,",%u,%u", msb, lsb);
 		}
@@ -373,24 +375,23 @@ int main(void)
 #ifdef SPECTRAL_ENABLE
 
     // TESTING CHANGE
-//	// adds all the spectral channels
-//	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-//		add_channel(mux, spectral_channels[i]);
-//	}
-//
-//	// opens all channels on the mux to listen
-//
-//	int select = 0;
-//	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-//		select += mux->channel_list[i];
-//	}
-//	channel_select(mux, select);
+	// adds all the spectral channels
+	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+		add_channel(mux, spectral_channels[i]);
+	}
+
+	// opens all channels on the mux to listen
+
+	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+		channel_select(mux, mux->channel_list[i]);
+		enable_spectral(spectral);
+	}
 
 	// TESTING CHANGE END
 
 	uint8_t *buf[60];
 
-	enable_spectral(spectral);
+
 	uint16_t spectral_data[SPECTRAL_DEVICES * CHANNELS];
 #endif
 
@@ -441,28 +442,25 @@ int main(void)
 
 
 
-    // Read and send all thermistor data over Jetson UART
-#ifdef THERMISTOR_ENABLE
-    sendThermistorData(thermistors, JETSON_UART);
-    clear_flags();
-#endif
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 #ifdef SPECTRAL_ENABLE
 
 	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
 //	  // TESTING CHANGE
-//	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
-//	  // TESTING CHANGE END
-	  //_virtual_write(spectral, DEV_SEL, i);
+	  if (i == 1) {
+		  _virtual_write(spectral, DEV_SEL, i);
+	  }
+//	  // TESTING CHANGE
+
 	  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
 	}
 
 	send_spectral_data(spectral_data, JETSON_UART);
 	//send_spectral_data(spectral_data, USB_UART);
 
-	clear_flags();
 #endif
     //Disable interrupts
     HAL_NVIC_DisableIRQ(USART1_IRQn);
@@ -477,19 +475,19 @@ int main(void)
    	HAL_NVIC_EnableIRQ(USART1_IRQn);
    	//Enable interrupts
 #ifdef MOSFET_ENABLE
-   	int device = 8;
-   	int enable = 0;
+   	int device = -1;
+   	int enable = -1;
    	if(message[1] == 'M'){
    		receive_mosfet_cmd(message,&device,&enable,mosfetcopy);
    	}
 
    	int d = device;
    	switch(d){
-   	case 0 :
+   	case 0:
    	  //enableRled(enable);
    	  enablePin(enable, Auton_Red_LED_GPIO_Port, Auton_Red_LED_Pin);
    	  break;
-   	case 1 :
+   	case 1:
    	  //enableGled(enable);
    	  enablePin(enable, Auton_Green_LED_GPIO_Port, Auton_Green_LED_Pin);
    	  break;
@@ -512,14 +510,29 @@ int main(void)
    	  break;
    	case 6:
    	  //enablePerPump0(enable);
-   	  enablePin(enable, Pump_1_GPIO_Port, Pump_1_Pin);
+   	  enablePin(enable, Pump_0_GPIO_Port, Pump_0_Pin);
    	  break;
    	case 7:
    	  //enablePerPump1(enable);
-   	  enablePin(enable, Pump_2_GPIO_Port, Pump_2_Pin);
+   	  enablePin(enable, Pump_1_GPIO_Port, Pump_1_Pin);
    	  break;
    	case 8:
+      enablePin(enable, Pump_2_GPIO_Port, Pump_2_Pin);
    	  break;
+   	case 9:
+   	  enablePin(enable, Heater_0_GPIO_Port, Heater_0_Pin);
+   	  break;
+   	case 10:
+   	  enablePin(enable, Heater_1_GPIO_Port, Heater_1_Pin);
+   	  break;
+   	case 11:
+   	  enablePin(enable, Heater_2_GPIO_Port, Heater_2_Pin);
+   	  break;
+   	case 12:
+   		//raman
+   	  break;
+   	default:
+   		break;
    	}
 #endif
 
@@ -536,7 +549,9 @@ int main(void)
 
   }
 #ifdef THERMISTOR_ENABLE
-  deleteThermistors(thermistors);
+  // Read and send all thermistor data over Jetson UART
+  sendThermistorData(thermistors, JETSON_UART);
+  // deleteThermistors(thermistors);
 #endif
   /* USER CODE END 3 */
 }

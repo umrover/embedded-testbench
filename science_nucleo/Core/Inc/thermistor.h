@@ -6,7 +6,7 @@
 //      nricha@umich.edu
 //
 //////////////////////////////////////
-//#define THERMISTOR_ENABLE
+#define THERMISTOR_ENABLE
 #ifdef THERMISTOR_ENABLE
 
 #ifndef THERMISTOR_H_
