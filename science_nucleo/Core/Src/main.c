@@ -45,10 +45,10 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-//#define SPECTRAL_ENABLE
+#define SPECTRAL_ENABLE
 #define THERMISTOR_ENABLE
-//#define MOSFET_ENABLE
-//#define AMMONIA_MOTOR_ENABLE
+#define MOSFET_ENABLE
+#define AMMONIA_MOTOR_ENABLE
 
 /* USER CODE END PM */
 
@@ -65,6 +65,8 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+
+HAL_StatusTypeDef ret;
 
 #define JETSON_UART &huart1
 // Debugging UART through usb connection
@@ -179,8 +181,23 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	// Save the last command
 	// Enable Interrupts
 	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	HAL_UART_Receive_IT(JETSON_UART,Rx_data,13);
+	ret = HAL_UART_Receive_IT(JETSON_UART,Rx_data,13);
+
+	if (ret != HAL_OK) {
+		Error_Handler();
+		HAL_UART_Abort_IT(&huart1);
+	    SET_BIT(huart1.Instance->CR3, USART_CR3_EIE);
+	    SET_BIT(huart1.Instance->CR1, USART_CR1_PEIE | USART_CR1_RXNEIE);
+	    HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
+
+	    ret = HAL_UART_Receive_IT(JETSON_UART,Rx_data,13);
+	}
 }
+
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+
+}
+
 
 // Clears the ORE and NE flags from the uart handler with delay
 // TODO add better explanation why
@@ -232,7 +249,10 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 	//char test[120];
 	//sprintf((char *)test, "$SPECTRAL,3,4,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,\n");
 
-	HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 100);
+	//HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 40);
+
+	HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
+	HAL_Delay(40);
 
 }
 
@@ -248,9 +268,12 @@ void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
   char string[50] = "";
 
   sprintf((char *)string, "$THERMISTOR,%f,%f,%f,\n", currTemps[0], currTemps[1], currTemps[2]);
-  HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 50);
+  //HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 15);
+
+  HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
+  HAL_Delay(15);
   // Delay before Clearing flags so beaglebone can successfully read the 
-  HAL_Delay(100);
+//  HAL_Delay(100);
 
 
 }
@@ -372,6 +395,8 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  HAL_NVIC_SetPriority(USART1_IRQn, 0, 1);
+
 #ifdef SPECTRAL_ENABLE
 
     // TESTING CHANGE
@@ -437,7 +462,6 @@ int main(void)
 //	HAL_UART_Transmit(JETSON_UART, (uint8_t *)emp, sizeof(emp), 11);
 
 	//HAL_UART_Transmit(USB_UART, (uint8_t *)Rx_data, sizeof(Rx_data), 3.36);
-	clear_flags();
 
 
 
@@ -462,6 +486,15 @@ int main(void)
 	//send_spectral_data(spectral_data, USB_UART);
 
 #endif
+
+	HAL_Delay(10);
+
+#ifdef THERMISTOR_ENABLE
+  // Read and send all thermistor data over Jetson UART
+  sendThermistorData(thermistors, JETSON_UART);
+  // deleteThermistors(thermistors);
+#endif
+
     //Disable interrupts
     HAL_NVIC_DisableIRQ(USART1_IRQn);
    	uint8_t message[20];
@@ -534,6 +567,8 @@ int main(void)
    	default:
    		break;
    	}
+
+	clear_flags();
 #endif
 
 #ifdef AMMONIA_MOTOR_ENABLE
@@ -546,13 +581,8 @@ int main(void)
 
 #endif
 
-
   }
-#ifdef THERMISTOR_ENABLE
-  // Read and send all thermistor data over Jetson UART
-  sendThermistorData(thermistors, JETSON_UART);
-  // deleteThermistors(thermistors);
-#endif
+
   /* USER CODE END 3 */
 }
 
@@ -906,7 +936,7 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
   huart1.Init.Mode = UART_MODE_TX_RX;
-  huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart1.Init.HwFlowCtl = UART_HWCONTROL_CTS;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
   huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
@@ -979,6 +1009,9 @@ static void MX_GPIO_Init(void)
                           |Pump_2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, Ammonia_BWD_Pin|Pump_0_Pin|Pump_1_Pin|whiteLED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : Heater_0_Pin */
@@ -998,6 +1031,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PA5 */
+  GPIO_InitStruct.Pin = GPIO_PIN_5;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : Ammonia_BWD_Pin Pump_0_Pin Pump_1_Pin whiteLED_Pin */
   GPIO_InitStruct.Pin = Ammonia_BWD_Pin|Pump_0_Pin|Pump_1_Pin|whiteLED_Pin;
@@ -1020,6 +1060,8 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
+
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
 
   /* USER CODE END Error_Handler_Debug */
 }

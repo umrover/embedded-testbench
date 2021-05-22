@@ -50,7 +50,7 @@ Thermistors* newThermistors(ADC_HandleTypeDef* adc0, ADC_HandleTypeDef* adc1, AD
 
 float getTemp(const uint8_t whichTherm, const Thermistors* therms){
     
-    uint32_t rawData = readVoltage(therms->adcPins[whichTherm]);
+    uint32_t rawData = _readVoltage(therms->adcPins[whichTherm]);
 
     // Logic to get actual Voltage from 12 bit string
     // NOTE pretty sure it is 12 bit that's what HAL says in documentation, but could be wrong
