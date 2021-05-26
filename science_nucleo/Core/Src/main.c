@@ -89,11 +89,11 @@ enum {
 	SPECTRAL_0_CHANNEL = 0,
 	SPECTRAL_1_CHANNEL = 1,
 	SPECTRAL_2_CHANNEL = 2,
-	SPECTRAL_DEVICES = 2
+	SPECTRAL_DEVICES = 3
 };
 
-//int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
-int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL };
+int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
+//int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL };
 SMBus *i2cBus;
 Spectral *spectral;
 
@@ -183,6 +183,9 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	HAL_NVIC_EnableIRQ(USART1_IRQn);
 	ret = HAL_UART_Receive_IT(JETSON_UART,Rx_data,13);
 
+	//__HAL_UART_CLEAR_FLAG(JETSON_UART, UART_CLEAR_OREF);
+	//__HAL_UART_SEND_REQ(JETSON_UART, UART_RXDATA_FLUSH_REQUEST);
+
 	if (ret != HAL_OK) {
 		Error_Handler();
 		HAL_UART_Abort_IT(&huart1);
@@ -213,7 +216,7 @@ void clear_flags(){
 
 void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 	int channels = 6;
-	int devices = 2;
+	int devices = 3;
 
 	char string[153] = "";
 
@@ -267,7 +270,7 @@ void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
 
   char string[50] = "";
 
-  sprintf((char *)string, "$THERMISTOR,%f,%f,%f,\n", currTemps[0], currTemps[1], currTemps[2]);
+  sprintf((char *)string, "$THERMISTOR,%f,%f,%f,\n", currTemps[0], currTemps[2], currTemps[1]);
   //HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 15);
 
   HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
@@ -474,9 +477,9 @@ int main(void)
 	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
 	  channel_select(mux, mux->channel_list[spectral_channels[i]]);
 //	  // TESTING CHANGE
-	  if (i == 1) {
-		  _virtual_write(spectral, DEV_SEL, i);
-	  }
+//	  if (i == 1) {
+//		  _virtual_write(spectral, DEV_SEL, i);
+//	  }
 //	  // TESTING CHANGE
 
 	  get_spectral_data(spectral, spectral_data + (i * CHANNELS));
@@ -516,11 +519,11 @@ int main(void)
 
    	int d = device;
    	switch(d){
-   	case 0:
+   	case 10:
    	  //enableRled(enable);
    	  enablePin(enable, Auton_Red_LED_GPIO_Port, Auton_Red_LED_Pin);
    	  break;
-   	case 1:
+   	case 11:
    	  //enableGled(enable);
    	  enablePin(enable, Auton_Green_LED_GPIO_Port, Auton_Green_LED_Pin);
    	  break;
@@ -555,10 +558,10 @@ int main(void)
    	case 9:
    	  enablePin(enable, Heater_0_GPIO_Port, Heater_0_Pin);
    	  break;
-   	case 10:
+   	case 0:
    	  enablePin(enable, Heater_1_GPIO_Port, Heater_1_Pin);
    	  break;
-   	case 11:
+   	case 1:
    	  enablePin(enable, Heater_2_GPIO_Port, Heater_2_Pin);
    	  break;
    	case 12:
@@ -1006,13 +1009,13 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOC, Heater_2_Pin|Heater_1_Pin|Ammonia_FWD_Pin|Auton_Green_LED_Pin
                           |Auton_Blue_LED_Pin|Auton_Red_LED_Pin|sci_UV_LED_Pin|SA_UV_LED_Pin
-                          |Pump_2_Pin, GPIO_PIN_RESET);
+                          |Pump_0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, Ammonia_BWD_Pin|Pump_0_Pin|Pump_1_Pin|whiteLED_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, Ammonia_BWD_Pin|Pump_2_Pin|Pump_1_Pin|whiteLED_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : Heater_0_Pin */
   GPIO_InitStruct.Pin = Heater_0_Pin;
@@ -1023,10 +1026,10 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pins : Heater_2_Pin Heater_1_Pin Ammonia_FWD_Pin Auton_Green_LED_Pin
                            Auton_Blue_LED_Pin Auton_Red_LED_Pin sci_UV_LED_Pin SA_UV_LED_Pin
-                           Pump_2_Pin */
+                           Pump_0_Pin */
   GPIO_InitStruct.Pin = Heater_2_Pin|Heater_1_Pin|Ammonia_FWD_Pin|Auton_Green_LED_Pin
                           |Auton_Blue_LED_Pin|Auton_Red_LED_Pin|sci_UV_LED_Pin|SA_UV_LED_Pin
-                          |Pump_2_Pin;
+                          |Pump_0_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -1039,8 +1042,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Ammonia_BWD_Pin Pump_0_Pin Pump_1_Pin whiteLED_Pin */
-  GPIO_InitStruct.Pin = Ammonia_BWD_Pin|Pump_0_Pin|Pump_1_Pin|whiteLED_Pin;
+  /*Configure GPIO pins : Ammonia_BWD_Pin Pump_2_Pin Pump_1_Pin whiteLED_Pin */
+  GPIO_InitStruct.Pin = Ammonia_BWD_Pin|Pump_2_Pin|Pump_1_Pin|whiteLED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

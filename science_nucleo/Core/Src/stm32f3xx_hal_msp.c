@@ -126,10 +126,10 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     /**ADC3 GPIO Configuration
     PB1     ------> ADC3_IN1
     */
-    GPIO_InitStruct.Pin = Therm_2_Pin;
+    GPIO_InitStruct.Pin = Therm_1_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(Therm_2_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(Therm_1_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN ADC3_MspInit 1 */
 
@@ -150,10 +150,10 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     /**ADC4 GPIO Configuration
     PB12     ------> ADC4_IN3
     */
-    GPIO_InitStruct.Pin = Therm_1_Pin;
+    GPIO_InitStruct.Pin = Therm_2_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
-    HAL_GPIO_Init(Therm_1_GPIO_Port, &GPIO_InitStruct);
+    HAL_GPIO_Init(Therm_2_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN ADC4_MspInit 1 */
 
@@ -201,7 +201,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     /**ADC3 GPIO Configuration
     PB1     ------> ADC3_IN1
     */
-    HAL_GPIO_DeInit(Therm_2_GPIO_Port, Therm_2_Pin);
+    HAL_GPIO_DeInit(Therm_1_GPIO_Port, Therm_1_Pin);
 
   /* USER CODE BEGIN ADC3_MspDeInit 1 */
 
@@ -221,7 +221,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     /**ADC4 GPIO Configuration
     PB12     ------> ADC4_IN3
     */
-    HAL_GPIO_DeInit(Therm_1_GPIO_Port, Therm_1_Pin);
+    HAL_GPIO_DeInit(Therm_2_GPIO_Port, Therm_2_Pin);
 
   /* USER CODE BEGIN ADC4_MspDeInit 1 */
 
