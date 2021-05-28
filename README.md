@@ -201,3 +201,4 @@ Make sure all shared variables in the CallBack function are declared as volitile
 - [ ] Implement HBridge Error Checking pins
 - [ ] CRC error checking
 - [ ] DMA working for the spectral sensors/test DMA for the smubs library in the process 
+- [ ] DMA for the UART send/receive functions
