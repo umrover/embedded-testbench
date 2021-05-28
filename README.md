@@ -195,9 +195,9 @@ Make sure all shared variables in the CallBack function are declared as volitile
 
 
 ## TODO
-- [ ] Increase message size from 13 to probably around 20
+- [x] Increase message size from 13 to probably around 20
 - [ ] Figure out the lag in the thermistor/spectral UART recieve
-- [ ] Remerge this back into science-nucleo OR just make this science-nucleo 
+- [x] Remerge this back into science-nucleo OR just make this science-nucleo 
 - [ ] Implement HBridge Error Checking pins
 - [ ] CRC error checking
 - [ ] DMA working for the spectral sensors/test DMA for the smubs library in the process 
