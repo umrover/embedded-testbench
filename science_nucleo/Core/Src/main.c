@@ -201,6 +201,19 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 
 }
 
+void HAL_GPIO_EXTI_Callback(uint16_t pin){
+	send_hbridge_error(pin, JETSON_UART);
+}
+
+void send_hbridge_error(uint16_t pin, UART_HandleTypeDef * huart){
+	// need to find out which pin triggered the interrupt
+	bool PA7 = HAL_GPIO_ReadPin()
+	if(){
+
+	}
+	sprintf((char *)string, "$HBRIDGE,%u \r\n", 0);
+}
+
 
 // Clears the ORE and NE flags from the uart handler with delay
 // TODO add better explanation why
@@ -1042,12 +1055,31 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : PA7 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PC4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
   /*Configure GPIO pins : Ammonia_BWD_Pin Pump_2_Pin Pump_1_Pin whiteLED_Pin */
   GPIO_InitStruct.Pin = Ammonia_BWD_Pin|Pump_2_Pin|Pump_1_Pin|whiteLED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }
 
