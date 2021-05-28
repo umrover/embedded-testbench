@@ -172,8 +172,8 @@ none!
 ### 
 
 ## TODO
-- [ ] Increase message size from 13 to probably around 20
+- [x] Increase message size from 13 to probably around 20
 - [ ] Figure out the lag in the thermistor/spectral UART recieve
-- [ ] Remerge this back into science-nucleo OR just make this science-nucleo 
+- [x] Remerge this back into science-nucleo OR just make this science-nucleo 
 - [ ] Implement HBridge Error Checking pins
 - [ ] CRC error checking
