@@ -177,11 +177,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	// Set received flag
 	cmd_received = 1;
 	// Copy the receive buffer into the command buffer.
-	memcpy(cmd_data,Rx_data,13);
+	memcpy(cmd_data,Rx_data,20);
 	// Save the last command
 	// Enable Interrupts
 	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	ret = HAL_UART_Receive_IT(JETSON_UART,Rx_data,13);
+	ret = HAL_UART_Receive_IT(JETSON_UART,Rx_data,20);
 
 	//__HAL_UART_CLEAR_FLAG(JETSON_UART, UART_CLEAR_OREF);
 	//__HAL_UART_SEND_REQ(JETSON_UART, UART_RXDATA_FLUSH_REQUEST);
@@ -193,7 +193,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	    SET_BIT(huart1.Instance->CR1, USART_CR1_PEIE | USART_CR1_RXNEIE);
 	    HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
 
-	    ret = HAL_UART_Receive_IT(JETSON_UART,Rx_data,13);
+	    ret = HAL_UART_Receive_IT(JETSON_UART,Rx_data,20);
 	}
 }
 
@@ -454,7 +454,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  HAL_UART_Receive_IT(JETSON_UART,Rx_data,13);
+  HAL_UART_Receive_IT(JETSON_UART,Rx_data,20);
   char *mosfetcopy = (char *)malloc(21);
   while (1)
   {
@@ -506,7 +506,7 @@ int main(void)
    	}
    	if(cmd_received == 1){
    		cmd_received = 0;
-   		memcpy(message,cmd_data,13);
+   		memcpy(message,cmd_data,20);
    	}
    	HAL_NVIC_EnableIRQ(USART1_IRQn);
    	//Enable interrupts
