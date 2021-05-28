@@ -519,11 +519,11 @@ int main(void)
 
    	int d = device;
    	switch(d){
-   	case 10:
+   	case 0:
    	  //enableRled(enable);
    	  enablePin(enable, Auton_Red_LED_GPIO_Port, Auton_Red_LED_Pin);
    	  break;
-   	case 11:
+   	case 1:
    	  //enableGled(enable);
    	  enablePin(enable, Auton_Green_LED_GPIO_Port, Auton_Green_LED_Pin);
    	  break;
@@ -558,14 +558,15 @@ int main(void)
    	case 9:
    	  enablePin(enable, Heater_0_GPIO_Port, Heater_0_Pin);
    	  break;
-   	case 0:
+   	case 10:
    	  enablePin(enable, Heater_1_GPIO_Port, Heater_1_Pin);
    	  break;
-   	case 1:
+   	case 11:
    	  enablePin(enable, Heater_2_GPIO_Port, Heater_2_Pin);
    	  break;
    	case 12:
    		//raman
+   		// Should be same as Red led according to pinout
    	  break;
    	default:
    		break;
