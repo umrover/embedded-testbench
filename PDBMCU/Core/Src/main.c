@@ -52,6 +52,39 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 
+
+
+
+/* thermal code */
+
+#ifdef THERMAL_ENABLE
+enum{
+  THERMAL_0_CHANNEL = 0,
+	THERMAL_1_CHANNEL = 1,
+	THERMAL_2_CHANNEL = 2,
+  THERMAL_3_CHANNEL = 3,
+	THERMAL_DEVICES = 4
+};
+
+int thermal_channels[THERMAL_DEVICES] = { THERMAL_0_CHANNEL, THERMAL_1_CHANNEL, THERMAL_2_CHANNEL, THERMAL_3_CHANNEL };
+SMBus *i2cBus;
+ThermalSensor *_ThermalSensor;
+
+Mux *mux;
+#endif
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -85,6 +118,17 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+#ifdef THERMAL_ENABLE
+	i2cBus = new_smbus(&hi2c2, &huart2); //TODO: replace &hi2c2, &huart2
+	i2cBus->DMA = 0; //TODO: replace 0
+	mux = new_mux(i2cBus);
+  int thermalAddress[THERMAL_DEVICES] = { 1,2,3,4}; //TODO: add in addresses for thermal sensors
+	_ThermalSensor = newThermalSensor(i2cBus, thermalAddress);
+#endif
+
+
+
+
 
   /* USER CODE END Init */
 
@@ -101,6 +145,21 @@ int main(void)
   MX_I2C1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+
+#ifdef THERMAL_ENABLE
+
+  // adds all the thermal channels
+
+    for (int i = 0; i < THERMAL_DEVICES; ++i) {
+      add_channel(mux, thermalAddress[i]);
+    }
+
+  // opens all channels on the mux to listen
+
+    for (int i = 0; i < THERMAL_DEVICES; ++i) {
+      channel_select(mux, mux->channel_list[i]);
+      //enable_thermal(_ThermalSensor); TODO: create enable_thermal (write to thermal sensor enable bits) function in "thermal_sens.c" if needed
+    }
 
   /* USER CODE END 2 */
 
