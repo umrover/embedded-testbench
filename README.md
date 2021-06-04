@@ -120,7 +120,7 @@ None
 
 - Format of the UART NMEA command
   - `$Mosfet,<device>,<enable>,<extra padding>`
-  - String is 13 characters long
+  - String is 20 characters long
 
 ### Public Members 😁
 
@@ -142,7 +142,7 @@ None
 
 - Format of the UART NMEA command
   - `$AMMONIA,<speed>,<padding commas>`
-  - String is 13 characters long
+  - String is 20 characters long
   - Speed can range from -1 to 1 & is capped at those two points 
 
 ### Public Members 😁
