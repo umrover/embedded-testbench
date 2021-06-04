@@ -63,6 +63,10 @@ TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
+DMA_HandleTypeDef hdma_usart1_tx;
+DMA_HandleTypeDef hdma_usart1_rx;
+DMA_HandleTypeDef hdma_usart2_rx;
+DMA_HandleTypeDef hdma_usart2_tx;
 
 /* USER CODE BEGIN PV */
 
@@ -129,6 +133,7 @@ Motor *ammonia_motor;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_ADC3_Init(void);
@@ -181,7 +186,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	// Save the last command
 	// Enable Interrupts
 	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	ret = HAL_UART_Receive_IT(JETSON_UART,Rx_data,20);
+	ret = HAL_UART_Receive_DMA(JETSON_UART,Rx_data,20);
 
 	//__HAL_UART_CLEAR_FLAG(JETSON_UART, UART_CLEAR_OREF);
 	//__HAL_UART_SEND_REQ(JETSON_UART, UART_RXDATA_FLUSH_REQUEST);
@@ -193,34 +198,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart){
 	    SET_BIT(huart1.Instance->CR1, USART_CR1_PEIE | USART_CR1_RXNEIE);
 	    HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
 
-	    ret = HAL_UART_Receive_IT(JETSON_UART,Rx_data,20);
+	    ret = HAL_UART_Receive_DMA(JETSON_UART,Rx_data,20);
 	}
 }
-void HAL_UART_RxHalfCpltCallback(UART_HandleTypeDef *huart){
-	// Disable Interrupts
-	HAL_NVIC_DisableIRQ(USART1_IRQn);
-	// Set received flag
-	cmd_received = 1;
-	// Copy the receive buffer into the command buffer.
-	memcpy(cmd_data,Rx_data,20);
-	// Save the last command
-	// Enable Interrupts
-	HAL_NVIC_EnableIRQ(USART1_IRQn);
-	ret = HAL_UART_Receive_IT(JETSON_UART,Rx_data,20);
 
-	//__HAL_UART_CLEAR_FLAG(JETSON_UART, UART_CLEAR_OREF);
-	//__HAL_UART_SEND_REQ(JETSON_UART, UART_RXDATA_FLUSH_REQUEST);
-
-	if (ret != HAL_OK) {
-		Error_Handler();
-		HAL_UART_Abort_IT(&huart1);
-	    SET_BIT(huart1.Instance->CR3, USART_CR3_EIE);
-	    SET_BIT(huart1.Instance->CR1, USART_CR1_PEIE | USART_CR1_RXNEIE);
-	    HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
-
-	    ret = HAL_UART_Receive_IT(JETSON_UART,Rx_data,20);
-	}
-}
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
 
@@ -279,7 +260,8 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 
 	//HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 40);
 
-	HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
+	//HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
+	HAL_UART_Transmit_DMA(huart,(uint8_t *)string, sizeof(string));
 	HAL_Delay(40);
 
 }
@@ -298,7 +280,8 @@ void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
   sprintf((char *)string, "$THERMISTOR,%f,%f,%f,\n", currTemps[0], currTemps[2], currTemps[1]);
   //HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 15);
 
-  HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
+  //HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
+  HAL_UART_Transmit_DMA(huart,(uint8_t *)string, sizeof(string));
   HAL_Delay(15);
   // Delay before Clearing flags so beaglebone can successfully read the 
 //  HAL_Delay(100);
@@ -334,7 +317,8 @@ void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable, char*mosfetcopy
 void send_rr_drop(UART_HandleTypeDef* huart){
 	char string[11];
 	sprintf((char *)string, "$REPEATER\n");
-	HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 11);
+	//HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 11);
+	HAL_UART_Transmit_DMA(huart,(uint8_t *)string, sizeof(string));
 }
 
 
@@ -414,6 +398,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_ADC2_Init();
   MX_ADC3_Init();
@@ -479,7 +464,7 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  HAL_UART_Receive_IT(JETSON_UART,Rx_data,20);
+  HAL_UART_Receive_DMA(JETSON_UART,Rx_data,20);
   char *mosfetcopy = (char *)malloc(21);
   while (1)
   {
@@ -1011,6 +996,31 @@ static void MX_USART2_UART_Init(void)
   /* USER CODE BEGIN USART2_Init 2 */
 
   /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel4_IRQn);
+  /* DMA1_Channel5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
+  /* DMA1_Channel6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel6_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel6_IRQn);
+  /* DMA1_Channel7_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel7_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel7_IRQn);
 
 }
 
