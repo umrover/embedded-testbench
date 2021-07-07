@@ -29,3 +29,4 @@ void channel_select(Mux* mux, int channel) {
 void del_mux(Mux* mux) {
     free(mux->channel_list);
     free(mux);
+}

@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include "analog.h"
 #include "thermal_sens.h"
+#include "mux.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,38 +53,33 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 
-
-
-
-/* thermal code */
+//TODO: fix uart connections to actual
+#define JETSON_UART &huart1
+// Debugging UART through usb connection
+#define USB_UART &huart2
 
 #ifdef THERMAL_ENABLE
-enum{
-  THERMAL_0_CHANNEL = 0,
-	THERMAL_1_CHANNEL = 1,
-	THERMAL_2_CHANNEL = 2,
-  THERMAL_3_CHANNEL = 3,
-	THERMAL_DEVICES = 4
+
+enum {
+    THERMAL_0_CHANNEL = 0,
+    THERMAL_1_CHANNEL = 1,
+    THERMAL_2_CHANNEL = 2,
+    THERMAL_3_CHANNEL = 3,
+    THERMAL_DEVICES = 4
 };
 
 int thermal_channels[THERMAL_DEVICES] = { THERMAL_0_CHANNEL, THERMAL_1_CHANNEL, THERMAL_2_CHANNEL, THERMAL_3_CHANNEL };
-SMBus *i2cBus;
-ThermalSensor *_ThermalSensor;
+SMBus* i2cBus;
+ThermalSensor* thermalSensor;
+Mux* mux;
 
-Mux *mux;
 #endif
 
+#ifdef ANALOG_ENABLE
 
+Analog* analog;
 
-
-
-
-
-
-
-
-
-
+#endif
 
 /* USER CODE END PV */
 
@@ -95,10 +91,69 @@ static void MX_I2C1_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
+#ifdef THERMAL_ENABLE
+
+// EFFECTS: sends thermal data in the following format
+// FORMAT: THERMAL,x0,x1,x2,x3,
+void sendThermalData(float _thermalData[4], UART_HandleTypeDef* huart);
+
+#endif
+
+#ifdef ANALOG_ENABLE
+
+// EFFECTS: sends analog data in the following format
+// FORMAT: ANALOG,v0,v1,c0,c1,
+void sendAnalogData(const Analog* _analog, UART_HandleTypeDef* huart);
+
+#endif
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+#ifdef THERMAL_ENABLE
+
+// EFFECTS: sends thermal data in the following format
+// FORMAT: THERMAL,x0,x1,x2,x3,
+void sendThermalData(float _thermalData[4], UART_HandleTypeDef* huart) {
+
+    char string[50] = "";
+
+    sprintf((char*)string, "THERMAL,%f,%f,%f,%f,\n",  // @suppress("Float formatting support")
+        _thermalData[0], _thermalData[1], _thermalData[2], _thermalData[3]);
+    //HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 15);
+
+    //HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
+    HAL_UART_Transmit_DMA(huart, (uint8_t*)string, sizeof(string));
+    HAL_Delay(15);
+}
+
+#endif 
+
+#ifdef ANALOG_ENABLE
+
+// EFFECTS: sends analog data in the following format
+// FORMAT: ANALOG,v0,v1,c0,c1,
+void sendAnalogData(const Analog* _analog, UART_HandleTypeDef* huart) {
+    float analogData[4];
+    for (int i = 0; i < 2; ++i) {
+        analogData[i] = getVoltageData(_analog, i);
+        analogData[i + 2] = getCurrentData(_analog, i);
+    }
+
+    char string[50] = "";
+
+    sprintf((char*)string, "ANALOG,%f,%f,%f,%f,\n",
+        analogData[0], analogData[1], analogData[2], analogData[3]);
+    //HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 15);
+
+    //HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
+    HAL_UART_Transmit_DMA(huart, (uint8_t*)string, sizeof(string));
+    HAL_Delay(15);
+}
+
+#endif
 
 /* USER CODE END 0 */
 
@@ -110,6 +165,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
+
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -119,14 +175,23 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 #ifdef THERMAL_ENABLE
-	i2cBus = new_smbus(&hi2c2, &huart2); //TODO: replace &hi2c2, &huart2
-	i2cBus->DMA = 0; //TODO: replace 0
-	mux = new_mux(i2cBus);
-  int thermalAddress[THERMAL_DEVICES] = { 1,2,3,4}; //TODO: add in addresses for thermal sensors
-	_ThermalSensor = newThermalSensor(i2cBus, thermalAddress);
+
+i2cBus = new_smbus(&hi2c1, &huart1); //TODO: replace &hi2c2, &huart2
+disable_DMA(i2cBus);
+mux = new_mux(i2cBus);
+int thermalAddress[THERMAL_DEVICES] = { 1, 2, 3, 4 }; //TODO: change addresses for thermal sensors to real
+thermalSensor = newThermalSensor(i2cBus);
+
 #endif
 
+#ifdef ANALOG_ENABLE
 
+ADC_HandleTypeDef* voltagePins[2] = {&hadc1, &hadc1}; // TODO: must change &hadc0, &hadc1 to real
+ADC_HandleTypeDef* currentPins[2] = {&hadc1, &hadc1}; // TODO: must change &hadc2, &hadc3 to real
+
+analog = newAnalog(voltagePins, currentPins);
+
+#endif
 
 
 
@@ -148,18 +213,22 @@ int main(void)
 
 #ifdef THERMAL_ENABLE
 
-  // adds all the thermal channels
+    // adds all the thermal channels
 
     for (int i = 0; i < THERMAL_DEVICES; ++i) {
       add_channel(mux, thermalAddress[i]);
     }
 
-  // opens all channels on the mux to listen
+    // opens all channels on the mux to listen
 
+    // TODO: if needed, create enable_thermal
     for (int i = 0; i < THERMAL_DEVICES; ++i) {
       channel_select(mux, mux->channel_list[i]);
-      //enable_thermal(_ThermalSensor); TODO: create enable_thermal (write to thermal sensor enable bits) function in "thermal_sens.c" if needed
+      //enable_thermal(thermalSensor);
+      //(write to thermal sensor enable bits) function in "thermal_sens.c" if needed
     }
+
+#endif
 
   /* USER CODE END 2 */
 
@@ -170,6 +239,23 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+#ifdef THERMAL_ENABLE
+
+      float thermalData[THERMAL_DEVICES];
+
+      for (int i = 0; i < THERMAL_DEVICES; ++i) {
+          channel_select(mux, mux->channel_list[thermal_channels[i]]);
+
+          thermalData[i] = getThermalData(thermalSensor);
+      }
+      sendThermalData(thermalData, JETSON_UART);
+
+
+#endif
+
+#ifdef ANALOG_ENABLE
+      sendAnalogData(analog, JETSON_UART);
+#endif
   }
   /* USER CODE END 3 */
 }

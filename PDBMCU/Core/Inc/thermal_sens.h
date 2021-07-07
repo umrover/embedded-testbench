@@ -13,6 +13,7 @@
 #include "stdio.h"
 #include "math.h"
 #include "string.h"
+#include "smbus.h"
 
 // Thermal Sensor: MCP9808T-E/MS
 
@@ -21,8 +22,8 @@
 // This struct stores data regarding the thermal sensor itself
 typedef struct {
 
-	// store the 4 addresses
-	int addresses[4];
+	// store the address
+	int address;
 
 	// store the i2cBus data
 	SMBus* i2cBus;
@@ -34,11 +35,10 @@ typedef struct {
 // All Public Functions
 
 // EFFECTS: Create a new ThermalSensor struct and returns pointer to struct.
-ThermalSensor* newThermalSensor(SMBus* _i2cBus, int _addresses[4]);
+ThermalSensor* newThermalSensor(SMBus* _i2cBus);
 
-// EFFECTS: Get temperature data from a specific thermal sensor in Celsius
-// REQUIRES: whichThermal is either 0, 1, 2, or 3
-float getThermalData(const ThermalSensor* _ThermalSensor, int whichThermal);
+// EFFECTS: Get temperature data from a thermal sensor in Celsius
+float getThermalData(const ThermalSensor* _ThermalSensor);
 
 // EFFECTS: Delete the ThermalSensor object from memory
 void deleteThermalSensor(ThermalSensor* _ThermalSensor);

@@ -4,7 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "stm32f3xx_hal.h"
+#include "stm32f1xx_hal.h"
 #include "smbus.h"
 
 
