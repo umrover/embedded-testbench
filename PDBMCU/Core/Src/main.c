@@ -101,6 +101,10 @@ void sendThermalData(float _thermalData[4], UART_HandleTypeDef* huart);
 
 #ifdef ANALOG_ENABLE
 
+// EFFECTS: Selects the ADC channel
+// REQUIRES: whichChannel is 0, 1, ... or 15.
+void selectADCChannel(int whichChannel);
+
 // EFFECTS: sends analog data in the following format
 // FORMAT: ANALOG,v0,v1,c0,c1,
 void sendAnalogData(const Analog* _analog, UART_HandleTypeDef* huart);
@@ -133,18 +137,31 @@ void sendThermalData(float _thermalData[4], UART_HandleTypeDef* huart) {
 
 #ifdef ANALOG_ENABLE
 
+// EFFECTS: Selects the ADC channel
+// REQUIRES: whichChannel is 0, 1, ... or 15.
+void selectADCChannel(int whichChannel){
+	// TODO!!!!
+	//set PC13 S0 to whichChannel % 2 > 0
+	//set PC14 S1 to whichChannel % 4 > 1
+	//set PC15 S2 to whichChannel % 8 > 3
+	//set PD0 S3 to whichChannel > 7
+	// set PD1 E to 1
+}
+
 // EFFECTS: sends analog data in the following format
 // FORMAT: ANALOG,v0,v1,c0,c1,
 void sendAnalogData(const Analog* _analog, UART_HandleTypeDef* huart) {
     float analogData[4];
     for (int i = 0; i < 2; ++i) {
-        analogData[i] = getVoltageData(_analog, i);
-        analogData[i + 2] = getCurrentData(_analog, i);
+    	selectADCChannel(i);
+        analogData[i] = getVoltageData(_analog);
+        selectADCChannel(i + 2);
+        analogData[i + 2] = getCurrentData(_analog);
     }
 
     char string[50] = "";
 
-    sprintf((char*)string, "ANALOG,%f,%f,%f,%f,\n",
+    sprintf((char*)string, "ANALOG,%f,%f,%f,%f,\n", // @suppress("Float formatting support")
         analogData[0], analogData[1], analogData[2], analogData[3]);
     //HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 15);
 
@@ -176,20 +193,16 @@ int main(void)
   /* USER CODE BEGIN Init */
 #ifdef THERMAL_ENABLE
 
-i2cBus = new_smbus(&hi2c1, &huart1); //TODO: replace &hi2c2, &huart2
+i2cBus = new_smbus(&hi2c1, &huart1); //TODO: hi2c1 is good, not sure about huart1
 disable_DMA(i2cBus);
 mux = new_mux(i2cBus);
-int thermalAddress[THERMAL_DEVICES] = { 1, 2, 3, 4 }; //TODO: change addresses for thermal sensors to real
 thermalSensor = newThermalSensor(i2cBus);
 
 #endif
 
 #ifdef ANALOG_ENABLE
 
-ADC_HandleTypeDef* voltagePins[2] = {&hadc1, &hadc1}; // TODO: must change &hadc0, &hadc1 to real
-ADC_HandleTypeDef* currentPins[2] = {&hadc1, &hadc1}; // TODO: must change &hadc2, &hadc3 to real
-
-analog = newAnalog(voltagePins, currentPins);
+analog = newAnalog(&hadc1);
 
 #endif
 
@@ -216,7 +229,7 @@ analog = newAnalog(voltagePins, currentPins);
     // adds all the thermal channels
 
     for (int i = 0; i < THERMAL_DEVICES; ++i) {
-      add_channel(mux, thermalAddress[i]);
+      add_channel(mux, thermal_channels[i]);
     }
 
     // opens all channels on the mux to listen

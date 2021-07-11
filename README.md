@@ -41,7 +41,6 @@ A STM32F103C6T6A chip is being used.
 
 - Format of the data string
   - `Thermal,<temp0>,<temp1>,<temp2>,<temp3>`
-  - String is ???TODO??? characters long
   
 ## Mux 
 

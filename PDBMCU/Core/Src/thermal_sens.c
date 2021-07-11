@@ -21,7 +21,8 @@ ThermalSensor* newThermalSensor(SMBus* _i2cBus){
 	ThermalSensor* _ThermalSensor = (ThermalSensor*) malloc(sizeof(ThermalSensor));
 
 	// Initialize the struct
-	_ThermalSensor->address = 0x18; // Assumes 3 ground pins
+	_ThermalSensor->address = 0b0011000; // Assumes 3 ground pins
+	// 0b0011000 is 0x18
 
 	_ThermalSensor->i2cBus = _i2cBus;
 
@@ -30,10 +31,12 @@ ThermalSensor* newThermalSensor(SMBus* _i2cBus){
 
 // EFFECTS: Get temperature data from a thermal sensor in Celsius
 float getThermalData(const ThermalSensor* _ThermalSensor){
+
 	int specificAddress = _ThermalSensor->address;
 
 	// rawData is the data for the ambient
-	float rawData = read_word_data(_ThermalSensor->i2cBus, specificAddress, 0x5);
+	// 0b000000101 is 0x05
+	float rawData = read_word_data(_ThermalSensor->i2cBus, specificAddress, 0b000000101);
 
 	float lowerByte = (int)rawData & 0xFF;; // original && 0000000...111111111
 	float upperByte = ((int)rawData & 0xFF00) >> 8;; // original bit shifted
@@ -50,10 +53,10 @@ float getThermalData(const ThermalSensor* _ThermalSensor){
 	float actualTemperature = 0;
 	if (signBit) {
 		upperByte = (int)upperByte & 0x0F;
-		actualTemperature = 256 - (upperByte * 16 + lowerByte / 16);
+		actualTemperature = (float)256 - ((float)upperByte * (float)16 + (1.0 / 16.0) * (float)lowerByte);
 	}
 	else {
-		actualTemperature = upperByte * 16 + lowerByte / 16;
+		actualTemperature = (float)upperByte * (float)16 + (1.0 / 16.0) * (float)lowerByte;
 	}
 	return actualTemperature;
 }

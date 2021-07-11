@@ -18,8 +18,7 @@
 typedef struct {
 
 	// Stores the four adcPins
-	ADC_HandleTypeDef* adcVoltagePins[2];
-	ADC_HandleTypeDef* adcCurrentPins[2];
+	ADC_HandleTypeDef* adcPin;
 
 	// Store voltage range of current sensor;
 	float V1;
@@ -31,15 +30,13 @@ typedef struct {
 // All Public Functions
 
 // EFFECTS: Create a new Analog struct and returns pointer to struct.
-Analog* newAnalog(ADC_HandleTypeDef* _voltagePins[2], ADC_HandleTypeDef* _currentPins[2]);
+Analog* newAnalog(ADC_HandleTypeDef* _adcPin);
 
 // EFFECTS: Get voltage data from a specific voltage sensor in Volts
-// REQUIRES: whichVoltage is either 0 or 1
-float getVoltageData(const Analog* _Analog, int whichVoltage);
+float getVoltageData(const Analog* _Analog);
 
 // EFFECTS: Get current data from a specific current sensor in Amps
-// REQUIRES: whichVoltage is either 0 or 1
-float getCurrentData(const Analog* _Analog, int whichCurrent);
+float getCurrentData(const Analog* _Analog);
 
 // EFFECTS: Delete the Analog object from memory
 void deleteAnalog(Analog* _Analog);

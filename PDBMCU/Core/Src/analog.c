@@ -16,39 +16,35 @@
 // All Public Functions
 
 // EFFECTS: Create a new Analog struct and returns pointer to struct.
-Analog* newAnalog(ADC_HandleTypeDef* _voltagePins[2], ADC_HandleTypeDef* _currentPins[2]){
+Analog* newAnalog(ADC_HandleTypeDef* _adcPin){
 
 	// Create a new struct
-	Analog* _Analog = (Analog*) malloc(sizeof(Analog));
+	Analog* AnalogObject = (Analog*) malloc(sizeof(Analog));
 
-	// Initialize the struct
-	_Analog->adcVoltagePins[0] = _voltagePins[0];
-	_Analog->adcVoltagePins[1] = _voltagePins[1];
-	_Analog->adcCurrentPins[2] = _currentPins[0];
-	_Analog->adcCurrentPins[3] = _currentPins[1];
+	AnalogObject->adcPin = _adcPin;
 
-	_Analog->V1 = 3.3;
+	AnalogObject->V1 = 3.3;
 
-	return _Analog;
+	return AnalogObject;
 
 }
 
 // EFFECTS: Get voltage data from a specific voltage sensor in Volts
-// REQUIRES: whichVoltage is either 0 or 1
-float getVoltageData(const Analog* _Analog, int whichVoltage){
+float getVoltageData(const Analog* _Analog){
 	// Read data from ADC, rawADCData is a number in [0, 4095]
-	uint32_t rawADCData = readFromADC(_Analog->adcVoltagePins[whichVoltage]);
+	uint32_t rawADCData = readFromADC(_Analog->adcPin);
 	// Convert from [0, 4095] to [0, 1] to [0, 3.3]
-	return (rawADCData / 4095.0) * 3.3;
+	float steppedDownVoltage = (rawADCData / 4095.0) * 3.3;
+	// Convert steppedDownVoltage to actual output voltage
+	return steppedDownVoltage * 8.0;
 }
 
 // EFFECTS: Get current data from a specific current sensor in Amps
-// REQUIRES: whichCurrent is either 0 or 1
-float getCurrentData(const Analog* _Analog, int whichCurrent){
+float getCurrentData(const Analog* _Analog){
 	// Read data from ADC, rawADCData is a number in [0, 4095]
-	uint32_t rawADCData = readFromADC(_Analog->adcCurrentPins[whichCurrent]);
+	uint32_t rawADCData = readFromADC(_Analog->adcPin);
 	// Convert from [0, 4095] to [0, 1] to [0, 3.3]
-	float rawVolts = (rawADCData / 4095.0) * 3.3;
+	float rawVolts = (rawADCData / 4095.0) * 3.3 * 8.0;
 	// Convert from [0, 3.3] to [-1.65, 1.65] to [-1650, -1650]
 	float rawMillivolts = (rawVolts - 1.65) * 1000.0;
 	// Convert based on sensitivity, which is 40 mV/A
