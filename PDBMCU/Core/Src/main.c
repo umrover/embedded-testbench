@@ -138,14 +138,13 @@ void sendThermalData(float _thermalData[4], UART_HandleTypeDef* huart) {
 #ifdef ANALOG_ENABLE
 
 // EFFECTS: Selects the ADC channel
-// REQUIRES: whichChannel is 0, 1, ... or 15.
+// REQUIRES: whichChannel is an integer (0..15)
 void selectADCChannel(int whichChannel){
-	// TODO!!!!
-	//set PC13 S0 to whichChannel % 2 > 0
-	//set PC14 S1 to whichChannel % 4 > 1
-	//set PC15 S2 to whichChannel % 8 > 3
-	//set PD0 S3 to whichChannel > 7
-	// set PD1 E to 1
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_13,  whichChannel % 2 > 0);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_14,  whichChannel % 4 > 1);
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_15,  whichChannel % 8 > 3);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_0,  whichChannel > 7);
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_1,  1);
 }
 
 // EFFECTS: sends analog data in the following format
@@ -163,9 +162,7 @@ void sendAnalogData(const Analog* _analog, UART_HandleTypeDef* huart) {
 
     sprintf((char*)string, "ANALOG,%f,%f,%f,%f,\n", // @suppress("Float formatting support")
         analogData[0], analogData[1], analogData[2], analogData[3]);
-    //HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 15);
 
-    //HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
     HAL_UART_Transmit_DMA(huart, (uint8_t*)string, sizeof(string));
     HAL_Delay(15);
 }
