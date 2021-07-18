@@ -260,8 +260,8 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 
 	//HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 40);
 
-	//HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
-	HAL_UART_Transmit_DMA(huart,(uint8_t *)string, sizeof(string));
+	HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
+	//HAL_UART_Transmit_DMA(huart,(uint8_t *)string, sizeof(string));
 	HAL_Delay(40);
 
 }
@@ -280,8 +280,8 @@ void sendThermistorData(Thermistors* therms, UART_HandleTypeDef* huart){
   sprintf((char *)string, "$THERMISTOR,%f,%f,%f,\n", currTemps[0], currTemps[2], currTemps[1]);
   //HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 15);
 
-  //HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
-  HAL_UART_Transmit_DMA(huart,(uint8_t *)string, sizeof(string));
+  HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
+  //HAL_UART_Transmit_DMA(huart,(uint8_t *)string, sizeof(string));
   HAL_Delay(15);
   // Delay before Clearing flags so beaglebone can successfully read the 
 //  HAL_Delay(100);
@@ -317,8 +317,8 @@ void receive_mosfet_cmd(uint8_t *buffer, int *device,int*enable, char*mosfetcopy
 void send_rr_drop(UART_HandleTypeDef* huart){
 	char string[11];
 	sprintf((char *)string, "$REPEATER\n");
-	//HAL_UART_Transmit(huart, (uint8_t *)string, sizeof(string), 11);
-	HAL_UART_Transmit_DMA(huart,(uint8_t *)string, sizeof(string));
+	HAL_UART_Transmit_IT(huart, (uint8_t *)string, sizeof(string));
+	//HAL_UART_Transmit_DMA(huart,(uint8_t *)string, sizeof(string));
 }
 
 
