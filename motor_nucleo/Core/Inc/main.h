@@ -92,6 +92,7 @@ void Error_Handler(void);
 #define CONTROL_LOOP_PERIOD 1000
 #define I2C_ADDRESS 0x10
 #define PWM_PERIOD 10000
+#define CHANNELS 6
 #define M3_NDIR_Pin GPIO_PIN_13
 #define M3_NDIR_GPIO_Port GPIOC
 #define M4_NDIR_Pin GPIO_PIN_14

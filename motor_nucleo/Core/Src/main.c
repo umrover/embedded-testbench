@@ -63,6 +63,8 @@ Channel channelDefault = {
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
 
+IWDG_HandleTypeDef hiwdg;
+
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
@@ -83,6 +85,7 @@ static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM6_Init(void);
+static void MX_IWDG_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -92,7 +95,6 @@ static void MX_TIM6_Init(void);
 void updateQuadEnc() {
 	channels[0].quad_enc_raw_now = TIM2->CNT;
 	channels[1].quad_enc_raw_now = TIM3->CNT;
-	// channels[2].quad_enc_raw_now = TIM4->CNT;
 
 	for (int i = 0; i < 3; i++){
 		Channel *channel = channels + i;
@@ -186,7 +188,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
 		updateLimit();
 		updateLogic();
 		updatePWM();
-		CH_tick();
 	}
 }
 /* USER CODE END 0 */
@@ -226,17 +227,22 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM8_Init();
   MX_TIM6_Init();
+  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
+  // LED indicator about reset by watchdog
+  HAL_Delay (500);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
 
-//  channels[0] = channelDefault;
-//  channels[1] = channelDefault;
-//  channels[2] = channelDefault;
-//  channels[3] = channelDefault;
-//  channels[4] = channelDefault;
-//  channels[5] = channelDefault;
+  MX_IWDG_Init();
+
+  for (int i = 0; i < CHANNELS; ++i)
+  {
+	  channels[i] = channelDefault;
+  }
 
   i2c_bus = i2c_bus_default;
   i2c_bus_handle = &hi2c1;
+  watch_dog_handle = &hiwdg;
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -246,38 +252,15 @@ int main(void)
   HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_3);
   HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-  // HAL_TIM_Encoder_Start(&htim4, TIM_CHANNEL_ALL);
   HAL_TIM_Base_Start_IT(&htim6);
   HAL_I2C_EnableListen_IT(&hi2c1);
-
-//  channels[0].mode = 0xFF;
-//  channels[0].closed_setpoint = 90;
-//  channels[0].speedMax = .33;
-//  channels[0].KP = 0.1;
-//  channels[0].KI = 0.0005;
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  double speed = 0.25;
   while (1)
   {
-//		updateQuadEnc();
-//		updateLimit();
-//		updateLogic();
-//		updatePWM();
-//		CH_tick();
-//		channels[0].closed_setpoint = 90;
-
-//	  TIM1->CCR1 = (uint32_t)(fabs(speed) * TIM1->ARR);
-//	  setDir(speed, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
-//
-//	  TIM1->CCR2 = (uint32_t)(fabs(speed) * TIM1->ARR);
-//	  setDir(speed, M1_DIR_GPIO_Port, M1_DIR_Pin, M1_NDIR_GPIO_Port, M1_NDIR_Pin);
-//
-//	  TIM1->CCR3 = (uint32_t)(fabs(speed) * TIM1->ARR);
-//	  setDir(speed, M2_DIR_GPIO_Port, M2_DIR_Pin, M2_NDIR_GPIO_Port, M2_NDIR_Pin);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -297,9 +280,10 @@ void SystemClock_Config(void)
 
   /** Initializes the CPU, AHB and APB busses clocks
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -422,6 +406,36 @@ static void MX_I2C2_Init(void)
   /* USER CODE BEGIN I2C2_Init 2 */
 
   /* USER CODE END I2C2_Init 2 */
+
+}
+
+/**
+  * @brief IWDG Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_IWDG_Init(void)
+{
+
+  /* USER CODE BEGIN IWDG_Init 0 */
+
+  /* USER CODE END IWDG_Init 0 */
+
+  /* USER CODE BEGIN IWDG_Init 1 */
+	// watchdog timeout to 2 seconds
+
+  /* USER CODE END IWDG_Init 1 */
+  hiwdg.Instance = IWDG;
+  hiwdg.Init.Prescaler = IWDG_PRESCALER_32;
+  hiwdg.Init.Window = 2499;
+  hiwdg.Init.Reload = 2499;
+  if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN IWDG_Init 2 */
+
+  /* USER CODE END IWDG_Init 2 */
 
 }
 

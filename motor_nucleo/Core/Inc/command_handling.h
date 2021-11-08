@@ -13,6 +13,7 @@
 #include "main.h"
 
 I2C_HandleTypeDef *i2c_bus_handle;
+IWDG_HandleTypeDef *watch_dog_handle;
 
 typedef struct {
 	enum {

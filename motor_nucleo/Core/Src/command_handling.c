@@ -99,16 +99,9 @@ void CH_process_received() {
 void CH_reset() {
 	HAL_I2C_DeInit(i2c_bus_handle);
 	i2c_bus.operation = UNKNOWN;
+    for (int i = 0; i < CHANNELS; ++i){channels[i] = channelDefault;}
 	HAL_I2C_Init(i2c_bus_handle);
 	HAL_I2C_EnableListen_IT(i2c_bus_handle);
-}
-
-void CH_tick() {
-	i2c_bus.tick += 1;
-	if (i2c_bus.tick >= 1000) {
-		i2c_bus.tick = 0;
-		CH_reset();
-	}
 }
 
 void HAL_I2C_AddrCallback(I2C_HandleTypeDef * hi2c, uint8_t TransferDirection, uint16_t AddrMatchCode){
@@ -123,7 +116,7 @@ void HAL_I2C_AddrCallback(I2C_HandleTypeDef * hi2c, uint8_t TransferDirection, u
 			HAL_I2C_Slave_Seq_Transmit_IT(i2c_bus_handle, i2c_bus.buffer, CH_num_send(), I2C_LAST_FRAME);
 		}
 	}
-	i2c_bus.tick = 0;
+    HAL_IWDG_Refresh(watch_dog_handle);
 }
 
 void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef * hi2c) {
