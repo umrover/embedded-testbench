@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+//#include "abs_enc_reading.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -227,13 +227,12 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM8_Init();
   MX_TIM6_Init();
-  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
   // LED indicator about reset by watchdog
   HAL_Delay (500);
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
 
-  MX_IWDG_Init();
+   MX_IWDG_Init();
 
   for (int i = 0; i < CHANNELS; ++i)
   {
@@ -243,6 +242,12 @@ int main(void)
   i2c_bus = i2c_bus_default;
   i2c_bus_handle = &hi2c1;
   watch_dog_handle = &hiwdg;
+
+//  abs_encoder_handle = &hi2c2;
+//  abs_enc_0 = abs_encoder_init(abs_encoder_handle, 1, 1);
+//  abs_enc_1 = abs_encoder_init(abs_encoder_handle, 0, 0);
+//  disable_DMA(abs_enc_0->i2cBus);
+//  disable_DMA(abs_enc_1->i2cBus);
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
@@ -337,7 +342,7 @@ static void MX_I2C1_Init(void)
   hi2c1.Init.OwnAddress1 = 254;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-  hi2c1.Init.OwnAddress2 = 32;
+  hi2c1.Init.OwnAddress2 = 64;
   hi2c1.Init.OwnAddress2Masks = I2C_OA2_MASK04;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
@@ -422,12 +427,11 @@ static void MX_IWDG_Init(void)
   /* USER CODE END IWDG_Init 0 */
 
   /* USER CODE BEGIN IWDG_Init 1 */
-	// watchdog timeout to 2 seconds
 
   /* USER CODE END IWDG_Init 1 */
   hiwdg.Instance = IWDG;
-  hiwdg.Init.Prescaler = IWDG_PRESCALER_32;
-  hiwdg.Init.Window = 2499;
+  hiwdg.Init.Prescaler = IWDG_PRESCALER_16;
+  hiwdg.Init.Window = 4095;
   hiwdg.Init.Reload = 2499;
   if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
   {
@@ -771,10 +775,11 @@ static void MX_GPIO_Init(void)
                           |M1_NDIR_Pin|M2_NDIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, M3_DIR_Pin|M4_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5|M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin
+                          |M5_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin|M5_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, M3_DIR_Pin|M4_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : M3_NDIR_Pin M4_NDIR_Pin M5_NDIR_Pin M0_NDIR_Pin
                            M1_NDIR_Pin M2_NDIR_Pin */
@@ -784,6 +789,15 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PA5 M0_DIR_Pin M1_DIR_Pin M2_DIR_Pin
+                           M5_DIR_Pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_5|M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin
+                          |M5_DIR_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : M3_DIR_Pin M4_DIR_Pin */
   GPIO_InitStruct.Pin = M3_DIR_Pin|M4_DIR_Pin;
@@ -799,13 +813,6 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : M0_DIR_Pin M1_DIR_Pin M2_DIR_Pin M5_DIR_Pin */
-  GPIO_InitStruct.Pin = M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin|M5_DIR_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
 }
 
