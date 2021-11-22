@@ -63,8 +63,6 @@ Channel channelDefault = {
 I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
 
-IWDG_HandleTypeDef hiwdg;
-
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
@@ -85,7 +83,6 @@ static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM6_Init(void);
-static void MX_IWDG_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -178,7 +175,7 @@ void updatePWM() {
 
 	//after SAR fix
 	setDir(channels[3].speed, M3_DIR_GPIO_Port, M3_DIR_Pin, M3_NDIR_GPIO_Port, M3_NDIR_Pin);
-	setDir(channels[4].speed, M4_DIR_GPIO_Port, M4_DIR_Pin, M4_NDIR_GPIO_Port, M4_NDIR_Pin);
+	//setDir(channels[4].speed, M4_DIR_GPIO_Port, M4_DIR_Pin, M4_NDIR_GPIO_Port, M4_NDIR_Pin);
 	setDir(channels[5].speed, M5_DIR_GPIO_Port, M5_DIR_Pin, M5_NDIR_GPIO_Port, M5_NDIR_Pin);
 }
 
@@ -188,6 +185,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
 		updateLimit();
 		updateLogic();
 		updatePWM();
+		CH_tick();
 	}
 }
 /* USER CODE END 0 */
@@ -232,16 +230,14 @@ int main(void)
   HAL_Delay (500);
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
 
-   MX_IWDG_Init();
-
   for (int i = 0; i < CHANNELS; ++i)
   {
-	  channels[i] = channelDefault;
+	  channels[i].open_setpoint = 0;
   }
 
   i2c_bus = i2c_bus_default;
   i2c_bus_handle = &hi2c1;
-  watch_dog_handle = &hiwdg;
+//  watch_dog_handle = &hiwdg;
 
 //  abs_encoder_handle = &hi2c2;
 //  abs_enc_0 = abs_encoder_init(abs_encoder_handle, 1, 1);
@@ -285,10 +281,9 @@ void SystemClock_Config(void)
 
   /** Initializes the CPU, AHB and APB busses clocks
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -411,35 +406,6 @@ static void MX_I2C2_Init(void)
   /* USER CODE BEGIN I2C2_Init 2 */
 
   /* USER CODE END I2C2_Init 2 */
-
-}
-
-/**
-  * @brief IWDG Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_IWDG_Init(void)
-{
-
-  /* USER CODE BEGIN IWDG_Init 0 */
-
-  /* USER CODE END IWDG_Init 0 */
-
-  /* USER CODE BEGIN IWDG_Init 1 */
-
-  /* USER CODE END IWDG_Init 1 */
-  hiwdg.Instance = IWDG;
-  hiwdg.Init.Prescaler = IWDG_PRESCALER_16;
-  hiwdg.Init.Window = 4095;
-  hiwdg.Init.Reload = 2499;
-  if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN IWDG_Init 2 */
-
-  /* USER CODE END IWDG_Init 2 */
 
 }
 
@@ -779,7 +745,7 @@ static void MX_GPIO_Init(void)
                           |M5_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, M3_DIR_Pin|M4_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(M3_DIR_GPIO_Port, M3_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : M3_NDIR_Pin M4_NDIR_Pin M5_NDIR_Pin M0_NDIR_Pin
                            M1_NDIR_Pin M2_NDIR_Pin */
@@ -799,12 +765,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : M3_DIR_Pin M4_DIR_Pin */
-  GPIO_InitStruct.Pin = M3_DIR_Pin|M4_DIR_Pin;
+  /*Configure GPIO pin : M3_DIR_Pin */
+  GPIO_InitStruct.Pin = M3_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(M3_DIR_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pins : M0_LIMIT_Pin M1_LIMIT_Pin M2_LIMIT_Pin M3_LIMIT_Pin
                            M4_LIMIT_Pin M5_LIMIT_Pin */

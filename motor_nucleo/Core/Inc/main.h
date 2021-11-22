@@ -70,6 +70,7 @@ extern Channel channelDefault;
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 
+//reserved_area = (const char *) 0x20000088;
 Channel channels[6];
 /* USER CODE END EC */
 
@@ -88,11 +89,11 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define QUADRATURE_FILTER 8
 #define CONTROL_LOOP_PERIOD 1000
 #define I2C_ADDRESS 0x20
-#define PWM_PERIOD 10000
 #define CHANNELS 6
+#define QUADRATURE_FILTER 8
+#define PWM_PERIOD 10000
 #define M3_NDIR_Pin GPIO_PIN_13
 #define M3_NDIR_GPIO_Port GPIOC
 #define M4_NDIR_Pin GPIO_PIN_14
@@ -151,8 +152,6 @@ void Error_Handler(void);
 #define M1_NDIR_GPIO_Port GPIOC
 #define M2_NDIR_Pin GPIO_PIN_12
 #define M2_NDIR_GPIO_Port GPIOC
-#define M4_DIR_Pin GPIO_PIN_6
-#define M4_DIR_GPIO_Port GPIOB
 #define J_I2C_SCL_Pin GPIO_PIN_8
 #define J_I2C_SCL_GPIO_Port GPIOB
 #define J_I2C_SDA_Pin GPIO_PIN_9
