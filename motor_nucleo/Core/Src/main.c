@@ -117,6 +117,14 @@ void updateQuadEnc() {
 	}
 }
 
+void updateAbsEnc() {
+	uint16_t abs_enc_0_angle = get_angle_degrees(abs_enc_0);
+	uint16_t abs_enc_1_angle = get_angle_degrees(abs_enc_1);
+
+	(channels + 0)->abs_enc_value = abs_enc_0_angle;
+	(channels + 1)->abs_enc_value = abs_enc_1_angle;
+}
+
 void updateLimit() {
 	channels[0].limit = (HAL_GPIO_ReadPin(M0_LIMIT_GPIO_Port, M0_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
@@ -248,8 +256,8 @@ int main(void)
   i2c_bus = i2c_bus_default;
   i2c_bus_handle = &hi2c1;
   abs_encoder_handle = &hi2c3;
-  abs_enc_0 = abs_encoder_init(abs_encoder_handle, 1, 1);
-  abs_enc_1 = abs_encoder_init(abs_encoder_handle, 0, 0);
+  abs_enc_0 = abs_encoder_init(abs_encoder_handle, TRUE, TRUE);
+  abs_enc_1 = abs_encoder_init(abs_encoder_handle, FALSE, FALSE);
   disable_DMA(abs_enc_0->i2cBus);
   disable_DMA(abs_enc_1->i2cBus);
 
@@ -283,6 +291,7 @@ int main(void)
 //		updatePWM();
 //		CH_tick();
 //		channels[0].closed_setpoint = 90;
+	  updateAbsEnc();
 	  i2c_bus.channel = 1;
 	  i2c_bus.operation = ABS_ENC;
 	  CH_prepare_send();

@@ -6,7 +6,6 @@
  */
 
 #include "abs_enc_reading.h"
-#include "main.h"
 
 SMBus *new_smbus(I2C_HandleTypeDef *hi2c) {
     SMBus *smbus = malloc(sizeof(SMBus));
@@ -38,7 +37,8 @@ void del_smbus(SMBus *smbus) {
 	free(smbus);
 }
 
-AbsEncoder* new_abs_encoder(SMBus* i2cBus, _Bool A1, _Bool A2){
+// A1/A2 is 1 if pin connected to power, 0 if pin connected to ground
+AbsEncoder* new_abs_encoder(SMBus* i2cBus, uint8_t A1, uint8_t A2){
 	AbsEncoder* abs_encoder = (AbsEncoder*) malloc(sizeof(AbsEncoder));
     if ((A1) && (A2)) abs_encoder->address = device_slave_address_both_power;
     else if (A1) abs_encoder->address = device_slave_address_a1_power;
@@ -57,10 +57,10 @@ int read_raw_angle(AbsEncoder* abs_encoder) {
     return angle_raw;
 }
 
-float get_angle_degrees(AbsEncoder* encoder) {
+uint16_t get_angle_degrees(AbsEncoder* encoder) {
     int angle_raw = read_raw_angle(encoder);
-    float degrees_proportion = 180.0 * angle_raw;
-    float degrees = degrees_proportion / (RAW_TO_180_DEGREES_CONVERSION_FACTOR);
+    int16_t degrees_proportion = 180.0 * angle_raw;
+    int16_t degrees = degrees_proportion / (RAW_TO_180_DEGREES_CONVERSION_FACTOR);
     return degrees;
 }
 
@@ -69,15 +69,7 @@ void deleteEncoder(AbsEncoder* abs_encoder){
     free(abs_encoder);
 }
 
-AbsEncoder* abs_encoder_init(I2C_HandleTypeDef* abs_encoder_handle, _Bool A1, _Bool A2){
-	i2cBus = new_smbus(abs_encoder_handle);
+AbsEncoder* abs_encoder_init(I2C_HandleTypeDef* abs_encoder_handle, uint8_t A1, uint8_t A2){
+	SMBus* i2cBus = new_smbus(abs_encoder_handle);
 	return new_abs_encoder(i2cBus, A1, A2);
-}
-
-void read_abs_enc(AbsEncoder* abs_enc_0, AbsEncoder* abs_enc_1, uint8_t channel) {
-	float current_angle;
-	if (channel == 0) current_angle = get_angle_degrees(abs_enc_0);
-	else if (channel == 1) current_angle = get_angle_degrees(abs_enc_1);
-
-	((channels + channel)->abs_enc_value) = current_angle;
 }
