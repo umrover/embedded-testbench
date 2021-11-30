@@ -49,7 +49,7 @@ typedef struct{
 	float KD;
 
 	uint8_t limit;
-	uint16_t abs_enc_value;
+	float abs_enc_value;
 	int32_t quad_enc_value;
 
 	float speedMax; //max percent
@@ -70,6 +70,7 @@ extern Channel channelDefault;
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 
+//reserved_area = (const char *) 0x20000088;
 Channel channels[6];
 /* USER CODE END EC */
 
@@ -88,9 +89,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define QUADRATURE_FILTER 8
 #define CONTROL_LOOP_PERIOD 1000
-#define I2C_ADDRESS 0x30
+#define I2C_ADDRESS 0x20
+#define CHANNELS 6
+#define QUADRATURE_FILTER 8
 #define PWM_PERIOD 10000
 #define M3_NDIR_Pin GPIO_PIN_13
 #define M3_NDIR_GPIO_Port GPIOC
@@ -112,24 +114,18 @@ void Error_Handler(void);
 #define M0_QUAD_A_GPIO_Port GPIOA
 #define M0_QUAD_B_Pin GPIO_PIN_1
 #define M0_QUAD_B_GPIO_Port GPIOA
-#define M1_QUAD_A_Pin GPIO_PIN_4
+#define M1_QUAD_B_Pin GPIO_PIN_4
+#define M1_QUAD_B_GPIO_Port GPIOA
+#define M1_QUAD_A_Pin GPIO_PIN_6
 #define M1_QUAD_A_GPIO_Port GPIOA
-#define M_SPI_SCK_Pin GPIO_PIN_5
-#define M_SPI_SCK_GPIO_Port GPIOA
-#define M_SPI_MISO_Pin GPIO_PIN_6
-#define M_SPI_MISO_GPIO_Port GPIOA
-#define M_SPI_MOSI_Pin GPIO_PIN_7
-#define M_SPI_MOSI_GPIO_Port GPIOA
-#define M0_SPI_CS_Pin GPIO_PIN_0
-#define M0_SPI_CS_GPIO_Port GPIOB
-#define M1_SPI_CS_Pin GPIO_PIN_1
-#define M1_SPI_CS_GPIO_Port GPIOB
-#define M2_SPI_CS_Pin GPIO_PIN_2
-#define M2_SPI_CS_GPIO_Port GPIOB
+#define M3_DIR_Pin GPIO_PIN_2
+#define M3_DIR_GPIO_Port GPIOB
 #define M0_LIMIT_Pin GPIO_PIN_10
 #define M0_LIMIT_GPIO_Port GPIOB
 #define M1_LIMIT_Pin GPIO_PIN_11
 #define M1_LIMIT_GPIO_Port GPIOB
+#define M2_LIMIT_Pin GPIO_PIN_12
+#define M2_LIMIT_GPIO_Port GPIOB
 #define M3_LIMIT_Pin GPIO_PIN_13
 #define M3_LIMIT_GPIO_Port GPIOB
 #define M4_LIMIT_Pin GPIO_PIN_14
@@ -142,6 +138,8 @@ void Error_Handler(void);
 #define M4_PWM_GPIO_Port GPIOC
 #define M5_PWM_Pin GPIO_PIN_8
 #define M5_PWM_GPIO_Port GPIOC
+#define M0_DIR_Pin GPIO_PIN_10
+#define M0_DIR_GPIO_Port GPIOA
 #define M1_DIR_Pin GPIO_PIN_11
 #define M1_DIR_GPIO_Port GPIOA
 #define M2_DIR_Pin GPIO_PIN_12
@@ -154,12 +152,6 @@ void Error_Handler(void);
 #define M1_NDIR_GPIO_Port GPIOC
 #define M2_NDIR_Pin GPIO_PIN_12
 #define M2_NDIR_GPIO_Port GPIOC
-#define M1_QUAD_B_Pin GPIO_PIN_4
-#define M1_QUAD_B_GPIO_Port GPIOB
-#define M2_QUAD_A_Pin GPIO_PIN_6
-#define M2_QUAD_A_GPIO_Port GPIOB
-#define M2_QUAD_B_Pin GPIO_PIN_7
-#define M2_QUAD_B_GPIO_Port GPIOB
 #define J_I2C_SCL_Pin GPIO_PIN_8
 #define J_I2C_SCL_GPIO_Port GPIOB
 #define J_I2C_SDA_Pin GPIO_PIN_9

@@ -14,6 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 #define RAW_TO_180_DEGREES_CONVERSION_FACTOR 8192.0
 #define TRUE 1
 #define FALSE 0
@@ -45,16 +46,17 @@ void disable_DMA(SMBus *smbus);
 
 void del_smbus(SMBus *smbus);
 
-AbsEncoder* new_abs_encoder(SMBus* i2cBus, _Bool A1, _Bool A2); // 1 if pin connected to power, 0 if pin connected to ground
+// A1/A2 is 1 if pin connected to power, 0 if pin connected to ground
+AbsEncoder* new_abs_encoder(SMBus* i2cBus, uint8_t A1, uint8_t A2);
 
 int read_raw_angle(AbsEncoder* abs_encoder);
 
 float get_angle_degrees(AbsEncoder* abs_encoder);
 
+float get_angle_radians(AbsEncoder* encoder);
+
 void deleteEncoder(AbsEncoder*);
 
-AbsEncoder* abs_encoder_init(I2C_HandleTypeDef* abs_encoder_handle, _Bool A1, _Bool A2);
-
-void read_abs_enc(AbsEncoder* abs_enc_0, AbsEncoder* abs_enc_1, uint8_t channel);
+AbsEncoder* abs_encoder_init(I2C_HandleTypeDef* abs_encoder_handle, uint8_t A1, uint8_t A2);
 
 #endif /* INC_ABS_ENC_READING_H_ */

@@ -34,7 +34,7 @@ Each channel has its own set of registers that dictate the channel’s behavior.
 | closed_KI | 32-bit float | This register is an input for closed-loop control | 0 | |
 | closed_KD | 32-bit float | This register is an input for closed-loop control | 0 | |
 | quad_enc | 32-bit integer | This register is automatically incremented/decremented upon quadrature encoder feedback | 0 | quadrature encoder counts |
-| abs_enc | 16-bit integer | This register is a passthrough to the absolute encoder's position register. Reading from this register is equivalent to reading from an absolute encoder. | 0 | absolute encoder counts |
+| abs_enc | 32-bit float | This register is a passthrough to the absolute encoder's position register. Reading from this register is equivalent to reading from an absolute encoder. | 0 | absolute encoder counts |
 | pwm_max | 16-bit unsigned integer | VALUE = maximum PWM pulse width. Use this register to protect lower voltage motors. | 0 | 0.125 uS |
 
 In closed-loop control mode, the Nucleo will use output from a standard PID loop. The error for the PID loop is calculated by *closed_setpoint – quad_enc*. The PWM pulse width and PWM direction will automatically be calculated, with a maximum pulse width of pwmMax.
