@@ -51,7 +51,9 @@ AbsEncoder* new_abs_encoder(SMBus* i2cBus, uint8_t A1, uint8_t A2);
 
 int read_raw_angle(AbsEncoder* abs_encoder);
 
-uint16_t get_angle_degrees(AbsEncoder* abs_encoder);
+float get_angle_degrees(AbsEncoder* abs_encoder);
+
+float get_angle_radians(AbsEncoder* encoder);
 
 void deleteEncoder(AbsEncoder*);
 

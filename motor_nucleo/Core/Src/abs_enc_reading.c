@@ -57,13 +57,17 @@ int read_raw_angle(AbsEncoder* abs_encoder) {
     return angle_raw;
 }
 
-uint16_t get_angle_degrees(AbsEncoder* encoder) {
+float get_angle_degrees(AbsEncoder* encoder) {
     int angle_raw = read_raw_angle(encoder);
-    int16_t degrees_proportion = 180.0 * angle_raw;
-    int16_t degrees = degrees_proportion / (RAW_TO_180_DEGREES_CONVERSION_FACTOR);
+    float degrees_proportion = 180.0 * angle_raw;
+    float degrees = degrees_proportion / (RAW_TO_180_DEGREES_CONVERSION_FACTOR);
     return degrees;
 }
 
+float get_angle_radians(AbsEncoder* encoder) {
+	float degrees = get_angle_degrees(encoder);
+	return degrees * 3.141529/180.0;
+}
 
 void deleteEncoder(AbsEncoder* abs_encoder){
     free(abs_encoder);
