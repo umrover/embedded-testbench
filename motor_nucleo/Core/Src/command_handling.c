@@ -46,7 +46,7 @@ uint8_t CH_num_send() {
 	case CONFIG_K: return 0;
 	case QUAD_ENC: return 4;
 	case ADJUST: return 0;
-	case ABS_ENC: return 2;
+	case ABS_ENC: return 4;
 	case LIMIT: return 1;
 	case UNKNOWN: return 0;
 	}
