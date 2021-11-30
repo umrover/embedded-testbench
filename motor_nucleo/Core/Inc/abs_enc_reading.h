@@ -39,6 +39,8 @@ int read_raw_angle(AbsEncoder* encoder);
 
 float get_angle_degrees(AbsEncoder* encoder);
 
+float get_angle_radians(AbsEncoder* encoder);
+
 // Deletes the encoder object
 
 void delete_abs_encoder(AbsEncoder*);

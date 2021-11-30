@@ -56,15 +56,21 @@ float get_angle_degrees(AbsEncoder* encoder) {
     return degrees;
 }
 
+float get_angle_radians(AbsEncoder* encoder)
+{
+	float deg = get_angle_degrees(encoder);
+	return deg * 3.141529/180.0;
+}
+
 float read_abs_enc(AbsEncoder* abs_enc_0, AbsEncoder* abs_enc_1, uint8_t channel) {
 	float current_angle;
 	if (channel == 0)
 	{
-		current_angle = get_angle_degrees(abs_enc_0);
+		current_angle = get_angle_radians(abs_enc_0);
 	}
 	else if (channel == 1)
 	{
-		current_angle = get_angle_degrees(abs_enc_1);
+		current_angle = get_angle_radians(abs_enc_1);
 	}
 
 	return current_angle;
