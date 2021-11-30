@@ -54,7 +54,7 @@ uint8_t CH_num_send() {
 }
 
 void CH_prepare_send() {
-	if (i2c_bus.channel > 6) {return;}
+	if (i2c_bus.channel > 5) {return;}
 	Channel *channel = channels + i2c_bus.channel;
 	switch(i2c_bus.operation) {
 	case OFF:
@@ -67,14 +67,14 @@ void CH_prepare_send() {
 	case CONFIG_K: return;
 	case QUAD_ENC: memcpy(i2c_bus.buffer, &(channel->quad_enc_value), 4); return;
 	case ADJUST: return;
-	case ABS_ENC: read_abs_enc(abs_enc_0, abs_enc_1, i2c_bus.channel); memcpy(i2c_bus.buffer, &(channel->abs_enc_value), 2); return;
+	case ABS_ENC: memcpy(i2c_bus.buffer, &(channel->abs_enc_value), 2); return;
 	case LIMIT: memcpy(i2c_bus.buffer, &(channel->limit), 1); return;
 	case UNKNOWN: return;
 	}
 }
 
 void CH_process_received() {
-	if (i2c_bus.channel > 6) {return;}
+	if (i2c_bus.channel > 5) {return;}
 	Channel *channel = channels + i2c_bus.channel;
 	switch(i2c_bus.operation) {
 	case OFF: channel->speedMax = 0; return;
