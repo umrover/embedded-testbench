@@ -21,11 +21,11 @@ void disable_DMA(SMBus *smbus) {
 
 long read_word_data(SMBus *smbus, uint8_t addr, char cmd) {
     smbus->buf[0] = cmd;
-    if (!smbus->DMA) smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 1, HAL_MAX_DELAY);
+    if (!smbus->DMA) smbus->ret = HAL_I2C_Master_Transmit(smbus->i2c, addr << 1, smbus->buf, 1, 50);
     else smbus->ret = HAL_I2C_Master_Transmit_DMA(smbus->i2c, addr << 1, smbus->buf, 1);
 
     //reads from address sent above
-    if (!smbus->DMA) smbus->ret = HAL_I2C_Master_Receive(smbus->i2c, (addr << 1) | 1, smbus->buf, 2, HAL_MAX_DELAY);
+    if (!smbus->DMA) smbus->ret = HAL_I2C_Master_Receive(smbus->i2c, (addr << 1) | 1, smbus->buf, 2, 50);
     else smbus->ret = HAL_I2C_Master_Receive_DMA(smbus->i2c, (addr << 1) | 1, smbus->buf, 2);
 
     long data = smbus->buf[0] | (smbus->buf[1] << 8);
