@@ -106,7 +106,7 @@ void CH_reset() {
 
 void CH_tick() {
 	i2c_bus.tick += 1;
-	if (i2c_bus.tick >= 2000) {
+	if (i2c_bus.tick >= 1200) {
 		i2c_bus.tick = 0;
 		CH_reset();
 	}
