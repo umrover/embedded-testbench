@@ -242,6 +242,9 @@ int main(void)
   for (int i = 0; i < CHANNELS; ++i)
   {
 	  channels[i].open_setpoint = 0;
+	  channels[i].quad_enc_value = 0;
+	  channels[i].quad_enc_raw_now = 0;
+	  channels[i].quad_enc_raw_last = 0;
   }
 
   i2c_bus = i2c_bus_default;
@@ -346,7 +349,7 @@ static void MX_I2C1_Init(void)
   hi2c1.Init.OwnAddress1 = 254;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-  hi2c1.Init.OwnAddress2 = 32;
+  hi2c1.Init.OwnAddress2 = 96;
   hi2c1.Init.OwnAddress2Masks = I2C_OA2_MASK04;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
