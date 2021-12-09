@@ -67,7 +67,6 @@ TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim6;
-TIM_HandleTypeDef htim7;
 TIM_HandleTypeDef htim8;
 
 /* USER CODE BEGIN PV */
@@ -84,7 +83,6 @@ static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_TIM8_Init(void);
 static void MX_TIM6_Init(void);
-static void MX_TIM7_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -211,9 +209,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
 		updatePWM();
 		CH_tick();
 	}
-	else if (htim == &htim7) {
-		//updateAbsEnc();
-	}
 }
 /* USER CODE END 0 */
 
@@ -252,7 +247,6 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM8_Init();
   MX_TIM6_Init();
-  MX_TIM7_Init();
   /* USER CODE BEGIN 2 */
   // LED indicator about reset by watchdog
   HAL_Delay (500);
@@ -285,7 +279,6 @@ int main(void)
   HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
   HAL_TIM_Base_Start_IT(&htim6);
-  //HAL_TIM_Base_Start_IT(&htim7);
   HAL_I2C_EnableListen_IT(&hi2c1);
 
   /* USER CODE END 2 */
@@ -664,44 +657,6 @@ static void MX_TIM6_Init(void)
   /* USER CODE BEGIN TIM6_Init 2 */
 
   /* USER CODE END TIM6_Init 2 */
-
-}
-
-/**
-  * @brief TIM7 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_TIM7_Init(void)
-{
-
-  /* USER CODE BEGIN TIM7_Init 0 */
-
-  /* USER CODE END TIM7_Init 0 */
-
-  TIM_MasterConfigTypeDef sMasterConfig = {0};
-
-  /* USER CODE BEGIN TIM7_Init 1 */
-
-  /* USER CODE END TIM7_Init 1 */
-  htim7.Instance = TIM7;
-  htim7.Init.Prescaler = 7;
-  htim7.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim7.Init.Period = 500;
-  htim7.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
-  if (HAL_TIM_Base_Init(&htim7) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
-  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
-  if (HAL_TIMEx_MasterConfigSynchronization(&htim7, &sMasterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN TIM7_Init 2 */
-
-  /* USER CODE END TIM7_Init 2 */
 
 }
 
