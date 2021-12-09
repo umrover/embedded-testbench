@@ -134,7 +134,21 @@ void updateLogic() {
 		float output;
 
 		if (channel->mode == 0xFF){
-			float error = (float)(channel->closed_setpoint - channel->quad_enc_value);
+
+			float error = 0;
+
+			if (I2C_ADDRESS == 0x20 && i == 1)
+			{
+				error = (float)(channel->closed_setpoint - channel->quad_enc_value);
+			}
+			else
+			{
+				// gets floating point representation
+				float closed_set_point_rad;
+				memcpy(&closed_set_point_rad, &closed_setpoint, 4);
+				error = (float)(closed_set_point_rad - channel->abs_enc_value);
+			}
+
 			float integratedError = channel->integrated_error + (error * DT);
 			float derivativeError = (error - channel->last_error) / DT;
 
