@@ -1,0 +1,75 @@
+/*
+ * analog.c
+ *
+ *  Created on: Apr 15, 2021
+ *      Author: gutst
+ */
+
+#ifndef INC_ANALOG_H_
+
+#include "analog.h"
+
+// Current Sensor: ACS758LCB-050B-PFF-T
+
+//
+//
+// All Public Functions
+
+// EFFECTS: Create a new Analog struct and returns pointer to struct.
+Analog* newAnalog(ADC_HandleTypeDef* _adcPin, uint8_t S0, uint8_t S1, uint8_t S2, uint8_t S3){
+
+	// Create a new struct
+	Analog* AnalogObject = (Analog*) malloc(sizeof(Analog));
+
+	AnalogObject->adcPin = _adcPin;
+	AnalogObject->selectPins[0] = S0;
+	AnalogObject->selectPins[1] = S1;
+	AnalogObject->selectPins[2] = S2;
+	AnalogObject->selectPins[3] = S3;
+
+	return AnalogObject;
+
+}
+
+// EFFECTS: Get voltage data from a specific voltage sensor in Volts
+float getVoltageData(const Analog* _Analog){
+	// Read data from ADC, rawADCData is a number in [0, 4095]
+	uint32_t rawADCData = readFromADC(_Analog->adcPin);
+	// Convert from [0, 4095] to [0, 1] to [0, 3.3]
+	float steppedDownVoltage = (rawADCData / 4095.0) * 3.3;
+	// Convert steppedDownVoltage to actual output voltage
+	return steppedDownVoltage * 8.0;
+}
+
+// EFFECTS: Get current data from a specific current sensor in Amps
+float getCurrentData(const Analog* _Analog){
+	// Read data from ADC, rawADCData is a number in [0, 4095]
+	uint32_t rawADCData = readFromADC(_Analog->adcPin);
+	// Convert from [0, 4095] to [0, 1] to [0, 3.3]
+	float rawVolts = (rawADCData / 4095.0) * 3.3 * 8.0;
+	// Convert from [0, 3.3] to [-1.65, 1.65] to [-1650, -1650]
+	float rawMillivolts = (rawVolts - 1.65) * 1000.0;
+	// Convert based on sensitivity, which is 40 mV/A
+	return rawMillivolts / 40.0;
+}
+
+// EFFECTS: Delete the Analog object from memory
+void deleteAnalog(Analog* _Analog){
+	free(_Analog);
+}
+
+//
+//
+// All Private Functions
+
+// EFFECTS: Read from ADC object
+// Returns a number between 0 and 4095
+uint32_t readFromADC(ADC_HandleTypeDef* adcObject){
+	HAL_ADC_Start(adcObject);
+	HAL_ADC_PollForConversion(adcObject, HAL_MAX_DELAY);
+    uint32_t raw = HAL_ADC_GetValue(adcObject);
+    HAL_ADC_Stop(adcObject);
+    return raw;
+}
+
+#endif

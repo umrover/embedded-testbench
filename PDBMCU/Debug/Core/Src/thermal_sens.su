@@ -1,0 +1,3 @@
+thermal_sens.c:18:16:new_thermal_sensor	32	static
+thermal_sens.c:35:7:get_thermal_data	48	static
+thermal_sens.c:67:6:delete_thermal_sensor	16	static

@@ -1,0 +1,29 @@
+09:44:11 **** Incremental Build of configuration Debug for project PDBMCU ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m0plus -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32G050xx -c -I../Core/Inc -I../Drivers/STM32G0xx_HAL_Driver/Inc -I../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32G0xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:271:23: warning: passing argument 1 of 'get_analog_data' from incompatible pointer type [-Wincompatible-pointer-types]
+  271 |       get_analog_data(analog_channels);
+      |                       ^~~~~~~~~~~~~~~
+      |                       |
+      |                       Analog ** {aka struct <anonymous> **}
+../Core/Src/main.c:147:36: note: expected 'const Analog **' {aka 'const struct <anonymous> **'} but argument is of type 'Analog **' {aka 'struct <anonymous> **'}
+  147 | void get_analog_data(const Analog* _analog_channels[ANALOG_DEVICES]) {
+      |                      ~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "PDBMCU.elf" @"objects.list"   -mcpu=cortex-m0plus -T"C:\Users\gutst\Documents\pdbmcu\PDBMCU\STM32G050C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="PDBMCU.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: PDBMCU.elf
+ 
+arm-none-eabi-size   PDBMCU.elf 
+arm-none-eabi-objdump -h -S  PDBMCU.elf  > "PDBMCU.list"
+arm-none-eabi-objcopy  -O binary  PDBMCU.elf  "PDBMCU.bin"
+   text	   data	    bss	    dec	    hex	filename
+  31924	    120	   1952	  33996	   84cc	PDBMCU.elf
+Finished building: default.size.stdout
+ 
+Finished building: PDBMCU.bin
+ 
+Finished building: PDBMCU.list
+ 
+
+09:44:12 Build Finished. 0 errors, 1 warnings. (took 702ms)
+
