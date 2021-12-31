@@ -64,6 +64,8 @@ void Error_Handler(void);
 #define Analog_Select_GPIO_Port GPIOA
 #define Analog_SelectA9_Pin GPIO_PIN_9
 #define Analog_SelectA9_GPIO_Port GPIOA
+#define Analog_SelectC6_Pin GPIO_PIN_6
+#define Analog_SelectC6_GPIO_Port GPIOC
 #define Analog_SelectC7_Pin GPIO_PIN_7
 #define Analog_SelectC7_GPIO_Port GPIOC
 /* USER CODE BEGIN Private defines */

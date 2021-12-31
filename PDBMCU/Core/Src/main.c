@@ -492,7 +492,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, Analog_Select_Pin|Analog_SelectA9_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6|Analog_SelectC7_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, Analog_SelectC6_Pin|Analog_SelectC7_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : PB12 Analog_Enable_Pin */
   GPIO_InitStruct.Pin = GPIO_PIN_12|Analog_Enable_Pin;
@@ -508,8 +508,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PC6 Analog_SelectC7_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_6|Analog_SelectC7_Pin;
+  /*Configure GPIO pins : Analog_SelectC6_Pin Analog_SelectC7_Pin */
+  GPIO_InitStruct.Pin = Analog_SelectC6_Pin|Analog_SelectC7_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
