@@ -70,20 +70,25 @@ SMBus* i2cBus;
 
 #ifdef ANALOG_ENABLE
 
+ enum {
+ 	VOLTAGE_DIVIDER_3_3_V = 0,
+ 	VOLTAGE_DIVIDER_5_V = 1,
+ 	VOLTAGE_DIVIDER_12_V = 2,
+	VOLTAGE_DEVICES = 3
+ };
+
 enum {
-  ANALOG_CS1_12_V = 0,
-	ANALOG_VOLTAGE_DIVIDER_12_V = 1,
-  ANALOG_CS2_5_V = 2,
-	ANALOG_VOLTAGE_DIVIDER_5_V = 3,
-  ANALOG_CS3_3_3_V = 4,
-	ANALOG_VOLTAGE_DIVIDER_3_3_V = 5,
-  ANALOG_DEVICES = 6
+  CS3_3_3_V = 0,
+  CS2_5_V = 1,
+  CS1_12_V = 2,
+  CURRENT_DEVICES = 3
 };
 
-Analog* analog_channels[ANALOG_DEVICES];
+Analog* voltage_channels[VOLTAGE_DEVICES];
+Analog* current_channels[CURRENT_DEVICES];
 
-float analog_voltage_data[ANALOG_DEVICES];
-float analog_current_data[ANALOG_DEVICES];
+float voltage_data[VOLTAGE_DEVICES];
+float current_data[CURRENT_DEVICES];
 
 #endif
 
@@ -100,20 +105,29 @@ static void MX_I2C2_Init(void);
 #ifdef THERMAL_ENABLE
 
 // EFFECTS: sends thermal data in the following format
-// FORMAT: THERMAL,x0,x1,x2,x3,
-void send_thermal_data(float _thermal_data[THERMAL_DEVICES]);
+// $THERMISTOR,<t0>,<t1>,<t2>
+void send_thermal_data();
 
 #endif
 
 #ifdef ANALOG_ENABLE
 
-// EFFECTS: get analog data in the following format
-// FORMAT: ANALOG,v0,v1,c0,c1,
-void get_analog_data(const Analog* _analog_channels[ANALOG_DEVICES]);
+// EFFECTS: select analog channel
+void select_analog_channel(const Analog* analog_device);
 
 // EFFECTS: get analog data in the following format
-// FORMAT: ANALOG,v0,v1,c0,c1,
-void send_analog_data(float _analog_voltage_data[ANALOG_DEVICES], float _analog_current_data[ANALOG_DEVICES]);
+// FORMAT: $CURRENT,<c0>,<c1>,<c2> and $VOLTAGE,<v0>,<v1>,<v2>
+void get_analog_data();
+
+// EFFECTS: send current data in the following format
+// FORMAT: $CURRENT,<c0>,<c1>,<c2>
+void send_current_data();
+
+// EFFECTS: send voltage data in the following format
+// FORMAT: $VOLTAGE,<v0>,<v1>,<v2>
+void send_voltage_data();
+
+
 
 #endif
 
@@ -125,57 +139,76 @@ void send_analog_data(float _analog_voltage_data[ANALOG_DEVICES], float _analog_
 #ifdef THERMAL_ENABLE
 
 // EFFECTS: sends thermal data in the following format
-// FORMAT: THERMAL,x0,x1,x2,x3,
-void send_thermal_data(float _thermal_data[THERMAL_DEVICES]) {
+// FORMAT: $THERMISTOR,<t0>,<t1>,<t2>
+void send_thermal_data() {
 
 	// TODO
 
-	uint8_t buffer[32] = "";
+	uint8_t buffer[50] = "";
 
-	for (int i = 0; i < THERMAL_DEVICES; ++i) {
-		memcpy(buffer, &(_thermal_data[i]), 4);
-		HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
-	}
+  sprintf((char *)buffer, "$THERMISTOR,%f,%f,%f\r\n",\
+			  thermal_data[0], thermal_data[1], thermal_data[2]);
+
+	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
+
 }
 
 #endif
 
 #ifdef ANALOG_ENABLE
 
-// EFFECTS: sends analog data in the following format
-// FORMAT: ANALOG,v0,v1,c0,c1,
-void get_analog_data(const Analog* _analog_channels[ANALOG_DEVICES]) {
-    for (int i = 0; i < ANALOG_DEVICES; ++i) {
-      const Analog* analog_device = _analog_channels[i];
-
-      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, analog_device->select_pins[0]); //S0
-      HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, analog_device->select_pins[1]); //S1
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, analog_device->select_pins[2]); //S2
-      HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, analog_device->select_pins[3]); //S3
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15,  1); //ENABLE
-
-      analog_voltage_data[i] = get_voltage_data(analog_device);
-      analog_current_data[i] = get_current_data(analog_device);
-    }
+// EFFECTS: select analog channel
+void select_analog_channel(const Analog* analog_device) {
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, analog_device->select_pins[0]); //S0
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, analog_device->select_pins[1]); //S1
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, analog_device->select_pins[2]); //S2
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, analog_device->select_pins[3]); //S3
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15,  1); //ENABLE
 }
 
 // EFFECTS: get analog data in the following format
-// FORMAT: ANALOG,v0,v1,c0,c1,
-void send_analog_data(float _analog_voltage_data[ANALOG_DEVICES], float _analog_current_data[ANALOG_DEVICES]) {
+// FORMAT: $CURRENT,<c0>,<c1>,<c2> and $VOLTAGE,<v0>,<v1>,<v2>
+void get_analog_data() {
+
+    for (int i = 0; i < CURRENT_DEVICES; ++i) {
+      const Analog* analog_device = current_channels[i];
+      select_analog_channel(analog_device);
+      current_data[i] = get_current_data(analog_device);
+    }
+
+    for (int i = 0; i < VOLTAGE_DEVICES; ++i) {
+	  const Analog* analog_device = voltage_channels[i];
+	  select_analog_channel(analog_device);
+	  voltage_data[i] = get_voltage_data(analog_device);
+	}
+}
+
+// EFFECTS: send current data in the following format
+// FORMAT: $CURRENT,<c0>,<c1>,<c2>
+void send_current_data() {
+
+	// TODO
+
+	uint8_t buffer[50] = "";
+
+	sprintf((char *)buffer, "CURRENT,%f,%f,%f\r\n",\
+			  current_data[0], current_data[1], current_data[2]);
+
+	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
+}
+
+// EFFECTS: send analog data in the following format
+// FORMAT: $VOLTAGE,<v0>,<v1>,<v2>
+void send_voltage_data() {
   
 	// TODO
 
-	uint8_t buffer[32] = "";
+	uint8_t buffer[50] = "";
 
-	for (int i = 0; i < ANALOG_DEVICES; ++i) {
-		memcpy(buffer, &(_analog_voltage_data[i]), 4);
-		HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
-	}
+	sprintf((char *)buffer, "VOLTAGE,%f,%f,%f\r\n",\
+			  voltage_data[0], voltage_data[1], voltage_data[2]);
 
-	for (int i = 0; i < ANALOG_DEVICES; ++i) {
-		memcpy(buffer, &(_analog_current_data[i]), 4);
-		HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
-	}
+	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
 }
 
 #endif
@@ -212,22 +245,13 @@ thermal_channels[THERMAL_12_V_CHANNEL] = new_thermal_sensor(i2cBus, 0, 1, 0);
 
 #ifdef ANALOG_ENABLE
 
-enum {
-  ANALOG_CS1_12_V = 0,
-	ANALOG_VOLTAGE_DIVIDER_12_V = 1,
-  ANALOG_CS2_5_V = 2,
-	ANALOG_VOLTAGE_DIVIDER_5_V = 3,
-  ANALOG_CS3_3_3_V = 4,
-	ANALOG_VOLTAGE_DIVIDER_3_3_V = 5,
-  ANALOG_DEVICES = 6
-};
+current_channels[CS3_3_3_V] = new_analog(&hadc1, 0, 0, 1, 0);
+current_channels[CS2_5_V] = new_analog(&hadc1, 0, 1, 0, 0);
+current_channels[CS1_12_V] = new_analog(&hadc1, 0, 0, 0, 0);
 
-analog_channels[ANALOG_CS1_12_V] = new_analog(&hadc1, 0, 0, 0, 0);
-analog_channels[ANALOG_VOLTAGE_DIVIDER_12_V] = new_analog(&hadc1, 1, 0, 0, 0);
-analog_channels[ANALOG_CS2_5_V] = new_analog(&hadc1, 0, 1, 0, 0);
-analog_channels[ANALOG_VOLTAGE_DIVIDER_5_V] = new_analog(&hadc1, 1, 1, 0, 0);
-analog_channels[ANALOG_CS3_3_3_V] = new_analog(&hadc1, 0, 0, 1, 0);
-analog_channels[ANALOG_VOLTAGE_DIVIDER_3_3_V] = new_analog(&hadc1, 1, 0, 1, 0);
+voltage_channels[VOLTAGE_DIVIDER_3_3_V] = new_analog(&hadc1, 1, 0, 1, 0);
+voltage_channels[VOLTAGE_DIVIDER_5_V] = new_analog(&hadc1, 1, 1, 0, 0);
+voltage_channels[VOLTAGE_DIVIDER_12_V] = new_analog(&hadc1, 1, 0, 0, 0);
 
 
 #endif
@@ -268,8 +292,9 @@ analog_channels[ANALOG_VOLTAGE_DIVIDER_3_3_V] = new_analog(&hadc1, 1, 0, 1, 0);
 #endif
 
 #ifdef ANALOG_ENABLE
-      get_analog_data(analog_channels);
-      send_analog_data(analog_voltage_data, analog_current_data);
+      get_analog_data();
+      send_current_data();
+      send_voltage_data();
 #endif
   }
   /* USER CODE END 3 */
