@@ -11,7 +11,7 @@
 #include "stm32g0xx.h"
 #include <stdlib.h>
 
-// Current Sensor: ACS758LCB-050B-PFF-T
+// Current Sensor: ACS722LLCTR-10AU-T
 
 // Analog Struct
 

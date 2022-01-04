@@ -18,12 +18,12 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
+#include <temperature_sens.h>
 #include "main.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "analog.h"
-#include "thermal_sens.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -38,7 +38,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
 
-#define THERMAL_ENABLE
+#define TEMPERATURE_ENABLE
 #define ANALOG_ENABLE
 
 /* USER CODE END PM */
@@ -51,18 +51,18 @@ I2C_HandleTypeDef hi2c2;
 
 /* USER CODE BEGIN PV */
 
-#ifdef THERMAL_ENABLE
+#ifdef TEMPERATURE_ENABLE
 
 enum {
-  THERMAL_3_3_V_CHANNEL = 0,
-	THERMAL_5_V_CHANNEL = 1,
-	THERMAL_12_V_CHANNEL = 2,
-  THERMAL_DEVICES = 3
+	TEMPERATURE_3_3_V_CHANNEL = 0,
+	TEMPERATURE_5_V_CHANNEL = 1,
+	TEMPERATURE_12_V_CHANNEL = 2,
+	TEMPERATURE_DEVICES = 3
 };
 
-ThermalSensor* thermal_channels[THERMAL_DEVICES];
+TemperatureSensor* temperature_channels[TEMPERATURE_DEVICES];
 
-float thermal_data[THERMAL_DEVICES];
+float temperature_data[TEMPERATURE_DEVICES];
 
 SMBus* i2cBus;
 
@@ -78,10 +78,10 @@ SMBus* i2cBus;
  };
 
 enum {
-  CS3_3_3_V = 0,
-  CS2_5_V = 1,
-  CS1_12_V = 2,
-  CURRENT_DEVICES = 3
+	CS3_3_3_V = 0,
+	CS2_5_V = 1,
+	CS1_12_V = 2,
+	CURRENT_DEVICES = 3
 };
 
 Analog* voltage_channels[VOLTAGE_DEVICES];
@@ -102,11 +102,11 @@ static void MX_I2C1_Init(void);
 static void MX_I2C2_Init(void);
 /* USER CODE BEGIN PFP */
 
-#ifdef THERMAL_ENABLE
+#ifdef TEMPERATURE_ENABLE
 
-// EFFECTS: sends thermal data in the following format
-// $THERMISTOR,<t0>,<t1>,<t2>
-void send_thermal_data();
+// EFFECTS: sends temperature data in the following format
+// $TEMPERATURE,<t0>,<t1>,<t2>
+void send_temperature_data();
 
 #endif
 
@@ -136,18 +136,18 @@ void send_voltage_data();
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-#ifdef THERMAL_ENABLE
+#ifdef TEMPERATURE_ENABLE
 
-// EFFECTS: sends thermal data in the following format
-// FORMAT: $THERMISTOR,<t0>,<t1>,<t2>
-void send_thermal_data() {
+// EFFECTS: sends temperature data in the following format
+// FORMAT: $TEMPERATURE,<t0>,<t1>,<t2>
+void send_temperature_data() {
 
 	// TODO
 
 	uint8_t buffer[50] = "";
 
-  sprintf((char *)buffer, "$THERMISTOR,%f,%f,%f\r\n",\
-			  thermal_data[0], thermal_data[1], thermal_data[2]);
+	sprintf((char *)buffer, "$TEMPERATURE,%f,%f,%f\r\n",\
+			temperature_data[0], temperature_data[1], temperature_data[2]);
 
 	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
 
@@ -171,15 +171,15 @@ void select_analog_channel(const Analog* analog_device) {
 void get_analog_data() {
 
     for (int i = 0; i < CURRENT_DEVICES; ++i) {
-      const Analog* analog_device = current_channels[i];
-      select_analog_channel(analog_device);
-      current_data[i] = get_current_data(analog_device);
+    	const Analog* analog_device = current_channels[i];
+    	select_analog_channel(analog_device);
+    	current_data[i] = get_current_data(analog_device);
     }
 
     for (int i = 0; i < VOLTAGE_DEVICES; ++i) {
-	  const Analog* analog_device = voltage_channels[i];
-	  select_analog_channel(analog_device);
-	  voltage_data[i] = get_voltage_data(analog_device);
+    	const Analog* analog_device = voltage_channels[i];
+    	select_analog_channel(analog_device);
+    	voltage_data[i] = get_voltage_data(analog_device);
 	}
 }
 
@@ -192,7 +192,7 @@ void send_current_data() {
 	uint8_t buffer[50] = "";
 
 	sprintf((char *)buffer, "CURRENT,%f,%f,%f\r\n",\
-			  current_data[0], current_data[1], current_data[2]);
+			current_data[0], current_data[1], current_data[2]);
 
 	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
 }
@@ -206,7 +206,7 @@ void send_voltage_data() {
 	uint8_t buffer[50] = "";
 
 	sprintf((char *)buffer, "VOLTAGE,%f,%f,%f\r\n",\
-			  voltage_data[0], voltage_data[1], voltage_data[2]);
+			voltage_data[0], voltage_data[1], voltage_data[2]);
 
 	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
 }
@@ -232,14 +232,14 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-#ifdef THERMAL_ENABLE
+#ifdef TEMPERATURE_ENABLE
 
-i2cBus = new_smbus(&hi2c1); // TODO (not using huart1)
+i2cBus = new_smbus(&hi2c1);
 disable_DMA(i2cBus);
 
-thermal_channels[THERMAL_3_3_V_CHANNEL] = new_thermal_sensor(i2cBus, 0, 0, 0);
-thermal_channels[THERMAL_5_V_CHANNEL] = new_thermal_sensor(i2cBus, 1, 0, 0);
-thermal_channels[THERMAL_12_V_CHANNEL] = new_thermal_sensor(i2cBus, 0, 1, 0);
+temperature_channels[TEMPERATURE_3_3_V_CHANNEL] = new_temperature_sensor(i2cBus, 0, 0, 0);
+temperature_channels[TEMPERATURE_5_V_CHANNEL] = new_temperature_sensor(i2cBus, 1, 0, 0);
+temperature_channels[TEMPERATURE_12_V_CHANNEL] = new_temperature_sensor(i2cBus, 0, 1, 0);
 
 #endif
 
@@ -281,13 +281,13 @@ voltage_channels[VOLTAGE_DIVIDER_12_V] = new_analog(&hadc1, 1, 0, 0, 0);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-#ifdef THERMAL_ENABLE
+#ifdef TEMPERATURE_ENABLE
 
-      for (int i = 0; i < THERMAL_DEVICES; ++i) {
-          thermal_data[i] = get_thermal_data(thermal_channels[i]);
+      for (int i = 0; i < TEMPERATURE_DEVICES; ++i) {
+          temperature_data[i] = get_temperature_data(temperature_channels[i]);
       }
 
-      send_thermal_data(thermal_data);
+      send_temperature_data(temperature_data);
 
 #endif
 

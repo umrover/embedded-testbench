@@ -1,4 +1,4 @@
-main.c:143:6:send_thermal_data	104	static
+main.c:143:6:send_temperature_data	104	static
 main.c:161:6:select_analog_channel	16	static
 main.c:171:6:get_analog_data	24	static
 main.c:188:6:send_current_data	104	static

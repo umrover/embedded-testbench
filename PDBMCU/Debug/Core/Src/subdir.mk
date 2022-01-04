@@ -13,7 +13,7 @@ C_SRCS += \
 ../Core/Src/syscalls.c \
 ../Core/Src/sysmem.c \
 ../Core/Src/system_stm32g0xx.c \
-../Core/Src/thermal_sens.c 
+../Core/Src/temperature_sens.c 
 
 OBJS += \
 ./Core/Src/analog.o \
@@ -24,7 +24,7 @@ OBJS += \
 ./Core/Src/syscalls.o \
 ./Core/Src/sysmem.o \
 ./Core/Src/system_stm32g0xx.o \
-./Core/Src/thermal_sens.o 
+./Core/Src/temperature_sens.o 
 
 C_DEPS += \
 ./Core/Src/analog.d \
@@ -35,7 +35,7 @@ C_DEPS += \
 ./Core/Src/syscalls.d \
 ./Core/Src/sysmem.d \
 ./Core/Src/system_stm32g0xx.d \
-./Core/Src/thermal_sens.d 
+./Core/Src/temperature_sens.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

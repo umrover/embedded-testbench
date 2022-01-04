@@ -5,7 +5,7 @@
 - [Current Status](#Current_Status)
 - [About](#About)
 - [Relevant Links](#Relevant_Links)
-- [Thermal](#Thermal)
+- [Temperature](#Temperature)
 - [Current](#Current)
 - [Voltage](#Voltage)
 - [TODO](#TODO)
@@ -26,11 +26,11 @@ Check the ESW - EHW ICD of 2021 (in MRover drive) for more information.
 
 The corresponding bridge will be on the pdb_bridge branch on tabiosg/mrover-workspace.
 
-## Thermal
+## Temperature
 ### I2C data string (current plan)
 
 - Format of the data string
-  - `$THERMISTOR,<t0>,<t1>,<t2>`
+  - `$TEMPERATURE,<t0>,<t1>,<t2>`
   - String is 50 characters long
 
 The information will represent temperature in Celsius.
@@ -60,8 +60,8 @@ The information will represent voltage in Volts.
 It will be information on the voltage dividers for the 3.3V, 5V, and 12V rails. 
 
 ## TODO
- - [x] Create analog.c and thermal_sens.c
- - [ ] Test analog.c and thermal_sens.c to obtain values
+ - [x] Create analog.c and temperature_sens.c
+ - [ ] Test analog.c and temperature_sens.c to obtain values
  - [x] Update the .ioc
  - [x] Create read data functions in main.c
  - [ ] Test read data functions in main.c

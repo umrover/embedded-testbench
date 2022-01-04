@@ -9,7 +9,7 @@
 
 #include "analog.h"
 
-// Current Sensor: ACS758LCB-050B-PFF-T
+// Current Sensor: ACS722LLCTR-10AU-T
 
 //
 //
@@ -37,20 +37,20 @@ float get_voltage_data(const Analog* _Analog){
 	uint32_t raw_ADC_data = read_from_ADC(_Analog->adc_pin);
 	// Convert from [0, 4095] to [0, 1] to [0, 3.3]
 	float steppedDownVoltage = (raw_ADC_data / 4095.0) * 3.3;
-	// Convert steppedDownVoltage to actual output voltage
-	return steppedDownVoltage * 8.0;
+	// Convert steppedDownVoltage to actual output voltage (multiplier of 14)
+	return steppedDownVoltage * 14.0;
 }
 
 // EFFECTS: Get current data from a specific current sensor in Amps
 float get_current_data(const Analog* _Analog){
-	// Read data from ADC, raw_ADC_data is a number in [0, 4095]
-	uint32_t raw_ADC_data = read_from_ADC(_Analog->adc_pin);
-	// Convert from [0, 4095] to [0, 1] to [0, 3.3]
-	float raw_volts = (raw_ADC_data / 4095.0) * 3.3 * 8.0;
-	// Convert from [0, 3.3] to [-1.65, 1.65] to [-1650, -1650]
-	float raw_millivolts = (raw_volts - 1.65) * 1000.0;
-	// Convert based on sensitivity, which is 40 mV/A
-	return raw_millivolts / 40.0;
+	// Get offset voltage
+	float offsetVolts = get_voltage_data(_Analog);
+	// Account for offset which is zero current output voltage (3.3 * 0.1)
+	float volts = offsetVolts - 3.3 * 0.1;
+	// Convert from volts to millivolts
+	float millivolts = (volts) * 1000.0;
+	// Convert based on sensitivity, which is 264 mV/A
+	return millivolts / 264.0;
 }
 
 // EFFECTS: Delete the Analog object from memory
