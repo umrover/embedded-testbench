@@ -156,7 +156,7 @@ void updateLogic() {
 			output = ((channel->KP * error) + (channel->KI * integratedError) + (channel->KD * derivativeError) + channel->FF);
 			output = output <  channel->speedMax ? output : channel->speedMax;
 			output = output > -channel->speedMax ? output : -channel->speedMax;
-			channel->speed = output;
+			channel->speed = -output;
 		}
 		else {
 			channel->speed = channel->open_setpoint * channel->speedMax; //scales it
@@ -364,7 +364,7 @@ static void MX_I2C1_Init(void)
   hi2c1.Init.OwnAddress1 = 254;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-  hi2c1.Init.OwnAddress2 = 64;
+  hi2c1.Init.OwnAddress2 = 96;
   hi2c1.Init.OwnAddress2Masks = I2C_OA2_MASK04;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;

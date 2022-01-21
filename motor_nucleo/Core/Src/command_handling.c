@@ -99,7 +99,7 @@ void CH_process_received() {
 void CH_reset() {
 	HAL_I2C_DeInit(i2c_bus_handle);
 	i2c_bus.operation = UNKNOWN;
-    for (int i = 0; i < CHANNELS; ++i){channels[i].open_setpoint = 0;}
+    for (int i = 0; i < CHANNELS; ++i){channels[i].open_setpoint = 0; channels[i].mode = 0x00; }
 	HAL_I2C_Init(i2c_bus_handle);
 	HAL_I2C_EnableListen_IT(i2c_bus_handle);
 }
