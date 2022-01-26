@@ -76,7 +76,7 @@ float get_angle_radians(AbsEncoder* encoder) {
 	return degrees * 3.141529/180.0;
 }
 
-void deleteEncoder(AbsEncoder* abs_encoder){
+void del_encoder(AbsEncoder* abs_encoder){
     free(abs_encoder);
 }
 

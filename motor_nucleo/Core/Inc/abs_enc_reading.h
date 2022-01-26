@@ -55,7 +55,7 @@ float get_angle_degrees(AbsEncoder* abs_encoder);
 
 float get_angle_radians(AbsEncoder* encoder);
 
-void deleteEncoder(AbsEncoder*);
+void del_encoder(AbsEncoder*);
 
 AbsEncoder* abs_encoder_init(I2C_HandleTypeDef* abs_encoder_handle, uint8_t A1, uint8_t A2);
 

@@ -59,7 +59,7 @@ void CH_prepare_send() {
 	case OFF:
 	case ON:
 	case OPEN: return;
-	case OPEN_PLUS: memcpy(i2c_bus.buffer, &(channel->quad_enc_value), 4); return;
+	case OPEN_PLUS: I2C_ADDRESS == 0x10 && i2c_bus.channel == 1 ? memcpy(i2c_bus.buffer, &(channel->abs_enc_value), 4) : memcpy(i2c_bus.buffer, &(channel->quad_enc_value), 4); return;
 	case CLOSED: return;
 	case CLOSED_PLUS: I2C_ADDRESS == 0x10 && i2c_bus.channel == 1 ? memcpy(i2c_bus.buffer, &(channel->abs_enc_value), 4) : memcpy(i2c_bus.buffer, &(channel->quad_enc_value), 4); return;
 	case CONFIG_PWM:

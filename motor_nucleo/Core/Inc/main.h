@@ -58,6 +58,8 @@ typedef struct{
 	float speed; //
 	uint16_t quad_enc_raw_now;
 	uint16_t quad_enc_raw_last;
+
+	float abs_enc_value_last;
 	float integrated_error;
 	float last_error;
 
@@ -90,7 +92,7 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define CONTROL_LOOP_PERIOD 1000
-#define I2C_ADDRESS 0x30
+#define I2C_ADDRESS 0x10
 #define CHANNELS 6
 #define QUADRATURE_FILTER 8
 #define PWM_PERIOD 10000
