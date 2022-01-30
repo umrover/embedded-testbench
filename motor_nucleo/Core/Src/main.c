@@ -145,6 +145,14 @@ void updateLogic() {
 				float closed_set_point_rad;
 				memcpy(&closed_set_point_rad, &(channel->closed_setpoint), 4);
 				error = (float)(closed_set_point_rad - channel->abs_enc_value);
+
+				// error = (float)( ( (error + M_PI) % (2 * M_PI) ) - M_PI );
+				if (error > M_PI) {
+				  error = (float)(error - 2 * M_PI);
+				}
+				else if(error < -M_PI) {
+				  error = (float)(error + 2 * M_PI);
+				}
 			}
 			else
 			{
