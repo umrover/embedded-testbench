@@ -33,9 +33,6 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#ifndef M_PI
-	#define M_PI 3.14159265358979323846
-#endif
 
 Channel channelDefault = {
 	0x00, //mode
@@ -100,22 +97,17 @@ void updateQuadEnc() {
 
 	for (int i = 0; i < 3; i++){
 		Channel *channel = channels + i;
-		int32_t diff = ((int32_t)channel->quad_enc_raw_now) - ((int32_t)channel->quad_enc_raw_last);
-		if (diff < -32768 ) {
-			channel->quad_enc_value += (65535 + diff);
-		}
-		else if (diff > 32768){
-			channel->quad_enc_value -= (65535 - diff);
-		}
-		else {
-			channel->quad_enc_value += diff;
-		}
+
+		channel->quad_enc_value = (int16_t)(channel->quad_enc_raw_now - channel->quad_enc_raw_last) + channel->quad_enc_value;
 		channel->quad_enc_raw_last = channel->quad_enc_raw_now;
+
+
 	}
 }
 
 float absEncFilter(int channel, float raw_val)
 {
+	// TODO make filters that can handle wrap around
 	(channels + channel)->abs_enc_value_last = (channels + channel)->abs_enc_value;
 	return (raw_val * 0.7) + (0.3 * (channels + channel)->abs_enc_value_last);
 }
@@ -150,13 +142,6 @@ void updateLogic() {
 				memcpy(&closed_set_point_rad, &(channel->closed_setpoint), 4);
 				error = (float)(closed_set_point_rad - channel->abs_enc_value);
 
-				// error = (float)( ( (error + M_PI) % (2 * M_PI) ) - M_PI );
-				if (error > M_PI) {
-				  error = (float)(error - 2 * M_PI);
-				}
-				else if(error < -M_PI) {
-				  error = (float)(error + 2 * M_PI);
-				}
 			}
 			else
 			{
@@ -381,7 +366,7 @@ static void MX_I2C1_Init(void)
   hi2c1.Init.OwnAddress1 = 254;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-  hi2c1.Init.OwnAddress2 = 32;
+  hi2c1.Init.OwnAddress2 = 96;
   hi2c1.Init.OwnAddress2Masks = I2C_OA2_MASK04;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
