@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <math.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -106,8 +107,17 @@ void updateQuadEnc() {
 float absEncFilter(int channel, float raw_val)
 {
 	// TODO make filters that can handle wrap around
-	(channels + channel)->abs_enc_value_last = (channels + channel)->abs_enc_value;
-	return (raw_val * 0.7) + (0.3 * (channels + channel)->abs_enc_value_last);
+
+  float multiplier = 1;
+
+  if (fabs(raw_val - (channels + channel)->abs_enc_value) > 0.1) {  // TODO set 0.1 as constant ENCODER_ERROR_THRESHOLD
+    multiplier = 0.97;                                              // TODO set 0.97 as constant STABILIZER_BAD_MULTIPLIER
+  }
+  else {
+    multiplier = 0.5;                                               // TODO set 0.5 as constant STABILIZER_MULTIPLIER
+  }
+  
+  return multiplier * (channels + channel)->abs_enc_value + (1 - multiplier) * raw_val;
 }
 
 void updateAbsEnc() {
