@@ -97,10 +97,8 @@ void updateQuadEnc() {
 
 	for (int i = 0; i < 3; i++){
 		Channel *channel = channels + i;
-
 		channel->quad_enc_value = (int16_t)(channel->quad_enc_raw_now - channel->quad_enc_raw_last) + channel->quad_enc_value;
 		channel->quad_enc_raw_last = channel->quad_enc_raw_now;
-
 
 	}
 }
@@ -145,6 +143,7 @@ void updateLogic() {
 			}
 			else
 			{
+				// TODO add a dead zone?
 				error = (float)(channel->closed_setpoint - channel->quad_enc_value);
 			}
 
