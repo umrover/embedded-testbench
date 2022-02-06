@@ -159,7 +159,9 @@ void Error_Handler(void);
 #define J_I2C_SDA_Pin GPIO_PIN_9
 #define J_I2C_SDA_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
+#define ENCODER_ERROR_THRESHOLD 0.1
+#define STABILIZER_BAD_MULTIPLIER 0.97
+#define STABILIZER_MULTIPLIER 0.5
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

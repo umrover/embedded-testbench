@@ -20,7 +20,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include <math.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -110,11 +109,11 @@ float absEncFilter(int channel, float raw_val)
 
   float multiplier = 1;
 
-  if (fabs(raw_val - (channels + channel)->abs_enc_value) > 0.1) {  // TODO set 0.1 as constant ENCODER_ERROR_THRESHOLD
-    multiplier = 0.97;                                              // TODO set 0.97 as constant STABILIZER_BAD_MULTIPLIER
+  if (fabs(raw_val - (channels + channel)->abs_enc_value) > ENCODER_ERROR_THRESHOLD) {
+    multiplier = STABILIZER_BAD_MULTIPLIER;
   }
   else {
-    multiplier = 0.5;                                               // TODO set 0.5 as constant STABILIZER_MULTIPLIER
+    multiplier = STABILIZER_MULTIPLIER;
   }
   
   return multiplier * (channels + channel)->abs_enc_value + (1 - multiplier) * raw_val;
