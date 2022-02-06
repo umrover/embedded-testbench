@@ -48,7 +48,6 @@ Channel channelDefault = {
 	0, //pwmOutput
 	0, //quadEncRawNow
 	0, //quadEncRawLast
-	0, //absEncValLast
 	0, //integratedError
 	0 //lastError
 };
