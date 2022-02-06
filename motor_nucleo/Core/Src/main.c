@@ -48,7 +48,6 @@ Channel channelDefault = {
 	0, //pwmOutput
 	0, //quadEncRawNow
 	0, //quadEncRawLast
-	0, //absEncValLast
 	0, //integratedError
 	0 //lastError
 };
@@ -106,8 +105,21 @@ void updateQuadEnc() {
 float absEncFilter(int channel, float raw_val)
 {
 	// TODO make filters that can handle wrap around
-	(channels + channel)->abs_enc_value_last = (channels + channel)->abs_enc_value;
-	return (raw_val * 0.7) + (0.3 * (channels + channel)->abs_enc_value_last);
+
+  if (fabs((channels + channel)->abs_enc_value) < STABILIZER_EPSILON) {
+    return raw_val;
+  }
+
+  float multiplier = 1;
+  
+  if (fabs(raw_val - (channels + channel)->abs_enc_value) > ENCODER_ERROR_THRESHOLD) {
+    multiplier = STABILIZER_BAD_MULTIPLIER;
+  }
+  else {
+    multiplier = STABILIZER_MULTIPLIER;
+  }
+  
+  return multiplier * (channels + channel)->abs_enc_value + (1 - multiplier) * raw_val;
 }
 
 void updateAbsEnc() {
@@ -259,7 +271,6 @@ int main(void)
 	  channels[i].quad_enc_raw_now = 0;
 	  channels[i].quad_enc_raw_last = 0;
 	  channels[i].abs_enc_value = 0;
-	  channels[i].abs_enc_value_last = 0;
   }
 
   i2c_bus = i2c_bus_default;

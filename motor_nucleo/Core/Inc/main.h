@@ -59,7 +59,6 @@ typedef struct{
 	uint16_t quad_enc_raw_now;
 	uint16_t quad_enc_raw_last;
 
-	float abs_enc_value_last;
 	float integrated_error;
 	float last_error;
 
@@ -87,6 +86,7 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+float fabs(float);
 
 /* USER CODE END EFP */
 
@@ -159,7 +159,10 @@ void Error_Handler(void);
 #define J_I2C_SDA_Pin GPIO_PIN_9
 #define J_I2C_SDA_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
+#define ENCODER_ERROR_THRESHOLD 0.1
+#define STABILIZER_BAD_MULTIPLIER 0.97
+#define STABILIZER_MULTIPLIER 0.5
+#define STABILIZER_EPSILON 0.000001
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
