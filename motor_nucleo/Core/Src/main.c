@@ -107,8 +107,12 @@ float absEncFilter(int channel, float raw_val)
 {
 	// TODO make filters that can handle wrap around
 
-  float multiplier = 1;
+  if (fabs((channels + channel)->abs_enc_value) < STABILIZER_EPSILON) {
+    return raw_val;
+  }
 
+  float multiplier = 1;
+  
   if (fabs(raw_val - (channels + channel)->abs_enc_value) > ENCODER_ERROR_THRESHOLD) {
     multiplier = STABILIZER_BAD_MULTIPLIER;
   }
@@ -268,7 +272,6 @@ int main(void)
 	  channels[i].quad_enc_raw_now = 0;
 	  channels[i].quad_enc_raw_last = 0;
 	  channels[i].abs_enc_value = 0;
-	  channels[i].abs_enc_value_last = 0;
   }
 
   i2c_bus = i2c_bus_default;
