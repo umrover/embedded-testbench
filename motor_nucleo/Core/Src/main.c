@@ -192,12 +192,14 @@ float fabs(float i) {
 }
 
 void updatePWM() {
-	for (uint8_t i = 0; i < 6; i++) {
-		Channel *channel = channels + i;
-		if (channel->limit == 0xFF){
-			channel->speed = 0;
-		}
-	}
+
+	// if reached forward limit for channel 2 motor, don't go forwards
+	channels[2].speed =
+			channels[0].limit == 0xFF && channels[2].speed > 0 ? 0 : channels[2].speed;
+
+	// if reached backward limit for channel 2, don't go backwards
+	channels[2].speed =
+			channels[1].limit == 0xFF && channels[2].speed < 0 ? 0 : channels[2].speed;
 
 	TIM1->CCR1 = (uint32_t)(fabs(channels[0].speed) * TIM1->ARR);
 	TIM1->CCR2 = (uint32_t)(fabs(channels[1].speed) * TIM1->ARR);
