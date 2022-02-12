@@ -68,6 +68,10 @@ void Error_Handler(void);
 #define Analog_SelectC6_GPIO_Port GPIOC
 #define Analog_SelectC7_Pin GPIO_PIN_7
 #define Analog_SelectC7_GPIO_Port GPIOC
+#define TEMPERATURE_SDA_Pin GPIO_PIN_10
+#define TEMPERATURE_SDA_GPIO_Port GPIOA
+#define TEMPERATURE_SCL_Pin GPIO_PIN_6
+#define TEMPERATURE_SCL_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

@@ -161,18 +161,18 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     PA10     ------> I2C1_SDA
     PB6     ------> I2C1_SCL
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_10;
+    GPIO_InitStruct.Pin = TEMPERATURE_SDA_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(TEMPERATURE_SDA_GPIO_Port, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_6;
+    GPIO_InitStruct.Pin = TEMPERATURE_SCL_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.Alternate = GPIO_AF6_I2C1;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    HAL_GPIO_Init(TEMPERATURE_SCL_GPIO_Port, &GPIO_InitStruct);
 
     /* Peripheral clock enable */
     __HAL_RCC_I2C1_CLK_ENABLE();
@@ -227,9 +227,9 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c)
     PA10     ------> I2C1_SDA
     PB6     ------> I2C1_SCL
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_10);
+    HAL_GPIO_DeInit(TEMPERATURE_SDA_GPIO_Port, TEMPERATURE_SDA_Pin);
 
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_6);
+    HAL_GPIO_DeInit(TEMPERATURE_SCL_GPIO_Port, TEMPERATURE_SCL_Pin);
 
   /* USER CODE BEGIN I2C1_MspDeInit 1 */
 
