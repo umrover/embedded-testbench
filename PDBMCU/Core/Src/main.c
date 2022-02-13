@@ -146,10 +146,6 @@ void send_temperature_data() {
 	// Total length of output of string $TEMPERATURE,x,x,x
 	uint8_t buffer[50] = "";
 
-	for(int i = 0; i < TEMPERATURE_DEVICES; i++){
-		temperature_data[i] = get_temperature_data(temperature_channels[i]);
-	}
-
 	sprintf((char *)buffer, "$TEMPERATURE,%f,%f,%f\r\n",\
 			temperature_data[0], temperature_data[1], temperature_data[2]);
 
@@ -195,11 +191,7 @@ void send_current_data() {
 	// Total length of output of string $CURRENT,x,x,x
 	uint8_t buffer[50] = "";
 
-	for(int i = 0; i < CURRENT_DEVICES; i++){
-		current_data[i] = get_current_data(current_channels[i]);
-	}
-
-	sprintf((char *)buffer, "CURRENT,%f,%f,%f\r\n",\
+	sprintf((char *)buffer, "$CURRENT,%f,%f,%f\r\n",\
 			current_data[0], current_data[1], current_data[2]);
 
 	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
@@ -213,11 +205,7 @@ void send_voltage_data() {
 	// Total length of output of string $VOLTAGE,x,x,x
 	uint8_t buffer[50] = "";
 
-	for(int i = 0; i< VOLTAGE_DEVICES; i++) {
-		voltage_data[i] = get_voltage_data(voltage_channels[i]);
-	}
-
-	sprintf((char *)buffer, "VOLTAGE,%f,%f,%f\r\n",\
+	sprintf((char *)buffer, "$VOLTAGE,%f,%f,%f\r\n",\
 			voltage_data[0], voltage_data[1], voltage_data[2]);
 
 	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
