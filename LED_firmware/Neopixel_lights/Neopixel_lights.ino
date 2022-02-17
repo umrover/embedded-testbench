@@ -1,56 +1,63 @@
 #include <Adafruit_NeoPixel.h>
 #include <SoftwareSerial.h>
-#ifdef _AVR_
-#include <avr/power.h>
+#ifdef __AVR__
+ #include <avr/power.h> // Required for 16 MHz Adafruit Trinket
 #endif
 
-#define PIN 3
-#define NUMPIXELS 64
+#define PIN 3 // Pin on arduino that is connected to NeoPixel
+#define NUMPIXELS 64 // Number of NeoPixels attached to Arduino
 
-Adafruit_NeoPixel matrix(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
-SoftwareSerial uart(10,11);
+SoftwareSerial uart(10, 11); // This is pin of RX and TX 
 
 void setup() {
-  matrix.begin();
-  uart.begin(9600);
+  pixels.begin();
   Serial.begin(9600);
+  while (!Serial) {
+     ; // waiting for serial port to connect
+  }
+  // set data rate for uart serial port
+  uart.begin(9600);
 }
 
-char command = 'M';
+// command can either be Default (off), Red, Green, Blue, or Off (for flashing state)
+char command = 'D';
 
 void loop() {
-   if(uart.available()){
+
+   if (!uart.available() && command != 'O' && command != 'G') {
+      return;
+   }
+   else if (uart.available()) {
       command = char(uart.read());
    }
-   
-   //auton
-   if (command == 'A') {
-      fillScreen(matrix.Color(64, 0, 0));
-      command = 'N';
-   }
-  
-   //manual
-   else if (command == 'M') {
-      fillScreen(matrix.Color(0, 0, 64));
-      command = 'N';
-   }
-  
-   //mission leg done
-   else if (command == 'D') {
-   command = 'A';
-      for (int i=0; i<3; i++){
-          fillScreen(matrix.Color(0, 64, 0));
-          delay(400);
-          fillScreen(matrix.Color(0, 0, 0));
-          delay(400);
-      }
+
+   switch (command) {
+      case 'R':
+         fillScreen(pixels.Color(64, 0, 0));
+         break;
+      case 'G':
+         fillScreen(pixels.Color(0, 64, 0));
+         delay(1000);
+         command = 'O';
+         break;
+      case 'B':
+         fillScreen(pixels.Color(0, 0, 64));
+         break;
+      case 'O':
+         fillScreen(pixels.Color(0, 0, 0));
+         delay(1000);
+         command = 'G';
+         break;
+      default:
+         command = 'D';  // If an invalid command is sent, turn off anyway
    }
 }
 
 void fillScreen(uint32_t color){
-  for(int i = 0; i < matrix.numPixels(); i++){
-     matrix.setPixelColor(i, color);
+  for(int i = 0; i < pixels.numPixels(); i++){
+     pixels.setPixelColor(i, color);
   }
-  matrix.show();
+  pixels.show();
 }
