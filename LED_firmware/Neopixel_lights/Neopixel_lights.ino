@@ -9,7 +9,10 @@
 
 Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 
-SoftwareSerial uart(10, 11); // This is pin of RX and TX 
+SoftwareSerial uart(0, 1); // This is pin of RX and TX (just use usb)
+
+// command can either be Default (off), Red, Green, Blue, or Off (for flashing state)
+char command;
 
 void setup() {
   pixels.begin();
@@ -19,18 +22,18 @@ void setup() {
   }
   // set data rate for uart serial port
   uart.begin(9600);
-}
+  fillScreen(pixels.Color(0, 0, 0));
 
-// command can either be Default (off), Red, Green, Blue, or Off (for flashing state)
-char command = 'D';
+  command = 'D';
+}
 
 void loop() {
 
-   if (!uart.available() && command != 'O' && command != 'G') {
-      return;
-   }
-   else if (uart.available()) {
-      command = char(uart.read());
+   if (uart.available()) {
+      char char_read = char(uart.read());
+      if (char_read == 'R' || char_read == 'G' || char_read == 'B' || char_read == 'O') {
+        command = char_read;
+      }
    }
 
    switch (command) {
@@ -56,7 +59,7 @@ void loop() {
 }
 
 void fillScreen(uint32_t color){
-  for(int i = 0; i < pixels.numPixels(); i++){
+  for(int i = 0; i < pixels.numPixels(); ++i){
      pixels.setPixelColor(i, color);
   }
   pixels.show();
