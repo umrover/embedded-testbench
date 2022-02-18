@@ -1,3 +1,5 @@
+
+   
 #include <Adafruit_NeoPixel.h>
 #include <SoftwareSerial.h>
 #ifdef __AVR__
@@ -42,7 +44,7 @@ void loop() {
          break;
       case 'G':
          fillScreen(pixels.Color(0, 64, 0));
-         delay(1000);
+         delay(500);
          command = 'O';
          break;
       case 'B':
@@ -50,12 +52,14 @@ void loop() {
          break;
       case 'O':
          fillScreen(pixels.Color(0, 0, 0));
-         delay(1000);
+         delay(500);
          command = 'G';
          break;
       default:
          command = 'D';  // If an invalid command is sent, turn off anyway
    }
+
+   delay(100);
 }
 
 void fillScreen(uint32_t color){
