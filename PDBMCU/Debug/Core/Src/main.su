@@ -1,0 +1,12 @@
+main.c:143:6:send_temperature_data	104	static
+main.c:162:6:select_analog_channel	16	static
+main.c:172:6:get_analog_data	24	static
+main.c:189:6:send_current_data	104	static
+main.c:203:6:send_voltage_data	104	static
+main.c:223:5:main	24	static
+main.c:308:6:SystemClock_Config	112	static
+main.c:356:13:MX_ADC1_Init	24	static
+main.c:413:13:MX_I2C1_Init	8	static
+main.c:459:13:MX_I2C2_Init	8	static
+main.c:505:13:MX_GPIO_Init	48	static
+main.c:554:6:Error_Handler	8	static,ignoring_inline_asm

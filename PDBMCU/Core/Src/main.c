@@ -22,6 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "temperature_sens.h"
 #include "analog.h"
 /* USER CODE END Includes */
 
@@ -187,7 +188,7 @@ void get_analog_data() {
 // FORMAT: $CURRENT,<c0>,<c1>,<c2>
 void send_current_data() {
 
-	// TODO
+	// TODO - verify that we are sending i2c messages properly
 	// Total length of output of string $CURRENT,x,x,x
 	uint8_t buffer[50] = "";
 
@@ -201,7 +202,7 @@ void send_current_data() {
 // FORMAT: $VOLTAGE,<v0>,<v1>,<v2>
 void send_voltage_data() {
   
-	// TODO
+	// TODO - verify that we are sending i2c messages properly
 	// Total length of output of string $VOLTAGE,x,x,x
 	uint8_t buffer[50] = "";
 

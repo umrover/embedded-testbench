@@ -58,6 +58,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define JETSON_SCL_Pin GPIO_PIN_10
+#define JETSON_SCL_GPIO_Port GPIOB
+#define JETSON_SDA_Pin GPIO_PIN_11
+#define JETSON_SDA_GPIO_Port GPIOB
 #define Analog_Enable_Pin GPIO_PIN_15
 #define Analog_Enable_GPIO_Port GPIOB
 #define Analog_Select_Pin GPIO_PIN_8
@@ -68,10 +72,10 @@ void Error_Handler(void);
 #define Analog_SelectC6_GPIO_Port GPIOC
 #define Analog_SelectC7_Pin GPIO_PIN_7
 #define Analog_SelectC7_GPIO_Port GPIOC
-#define TEMPERATURE_SDA_Pin GPIO_PIN_10
-#define TEMPERATURE_SDA_GPIO_Port GPIOA
-#define TEMPERATURE_SCL_Pin GPIO_PIN_6
-#define TEMPERATURE_SCL_GPIO_Port GPIOB
+#define TEMP_SDA_Pin GPIO_PIN_10
+#define TEMP_SDA_GPIO_Port GPIOA
+#define TEMP_SCL_Pin GPIO_PIN_6
+#define TEMP_SCL_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

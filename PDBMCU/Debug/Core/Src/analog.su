@@ -2,4 +2,4 @@ analog.c:19:9:new_analog	32	static
 analog.c:35:7:get_voltage_data	24	static
 analog.c:45:7:get_current_data	32	static
 analog.c:57:6:delete_analog	16	static
-analog.c:67:10:read_from_ADC	24	static
+analog.c:67:10:read_from_ADC	32	static
