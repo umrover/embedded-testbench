@@ -41,6 +41,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
+DMA_HandleTypeDef hdma_adc1;
 
 I2C_HandleTypeDef hi2c1;
 
@@ -52,13 +53,93 @@ I2C_HandleTypeDef hi2c1;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
+static void MX_DMA_Init(void);
 static void MX_ADC1_Init(void);
 /* USER CODE BEGIN PFP */
+
+#ifdef ANALOG_ENABLE
+
+// EFFECTS: select analog channel
+void select_analog_channel(const Analog* analog_device);
+
+// EFFECTS: get analog data in the following format
+// FORMAT: $CURRENT,<c0>,<c1>,<c2> and $VOLTAGE,<v0>,<v1>,<v2>
+void get_analog_data();
+
+// EFFECTS: send current data in the following format
+// FORMAT: $CURRENT,<c0>,<c1>,<c2>
+void send_current_data();
+
+// EFFECTS: send voltage data in the following format
+// FORMAT: $VOLTAGE,<v0>,<v1>,<v2>
+void send_voltage_data();
+
+
+
+#endif
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+#ifdef ANALOG_ENABLE
+
+// EFFECTS: select analog channel
+void select_analog_channel(const Analog* analog_device) {
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, analog_device->select_pins[0]); //S0
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, analog_device->select_pins[1]); //S1
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, analog_device->select_pins[2]); //S2
+	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, analog_device->select_pins[3]); //S3
+	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15,  1); //ENABLE
+}
+
+// EFFECTS: get analog data in the following format
+// FORMAT: $CURRENT,<c0>,<c1>,<c2> and $VOLTAGE,<v0>,<v1>,<v2>
+void get_analog_data() {
+
+    for (int i = 0; i < CURRENT_DEVICES; ++i) {
+    	const Analog* analog_device = current_channels[i];
+    	select_analog_channel(analog_device);
+    	current_data[i] = get_current_data(analog_device);
+    }
+
+    for (int i = 0; i < VOLTAGE_DEVICES; ++i) {
+    	const Analog* analog_device = voltage_channels[i];
+    	select_analog_channel(analog_device);
+    	voltage_data[i] = get_voltage_data(analog_device);
+	}
+}
+
+// EFFECTS: send current data in the following format
+// FORMAT: $CURRENT,<c0>,<c1>,<c2>
+void send_current_data() {
+
+	// TODO - verify that we are sending i2c messages properly
+	// Total length of output of string $CURRENT,x,x,x
+	uint8_t buffer[50] = "";
+
+	sprintf((char *)buffer, "$CURRENT,%f,%f,%f\r\n",\
+			current_data[0], current_data[1], current_data[2]);
+
+	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
+}
+
+// EFFECTS: send analog data in the following format
+// FORMAT: $VOLTAGE,<v0>,<v1>,<v2>
+void send_voltage_data() {
+
+	// TODO - verify that we are sending i2c messages properly
+	// Total length of output of string $VOLTAGE,x,x,x
+	uint8_t buffer[50] = "";
+
+	sprintf((char *)buffer, "$VOLTAGE,%f,%f,%f\r\n",\
+			voltage_data[0], voltage_data[1], voltage_data[2]);
+
+	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
+}
+
+#endif
 
 /* USER CODE END 0 */
 
@@ -79,6 +160,19 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
+#ifdef ANALOG_ENABLE
+
+current_channels[CS3_3_3_V] = new_analog(&hadc1, 0, 0, 1, 0);
+current_channels[CS2_5_V] = new_analog(&hadc1, 0, 1, 0, 0);
+current_channels[CS1_12_V] = new_analog(&hadc1, 0, 0, 0, 0);
+
+voltage_channels[VOLTAGE_DIVIDER_3_3_V] = new_analog(&hadc1, 1, 0, 1, 0);
+voltage_channels[VOLTAGE_DIVIDER_5_V] = new_analog(&hadc1, 1, 1, 0, 0);
+voltage_channels[VOLTAGE_DIVIDER_12_V] = new_analog(&hadc1, 1, 0, 0, 0);
+
+
+#endif
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -91,6 +185,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_I2C1_Init();
+  MX_DMA_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
 
@@ -103,6 +198,14 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+	#ifdef ANALOG_ENABLE
+		  get_analog_data();
+		  send_current_data();
+		  send_voltage_data();
+	#endif
+
+
   }
   /* USER CODE END 3 */
 }
@@ -254,6 +357,22 @@ static void MX_I2C1_Init(void)
   /* USER CODE BEGIN I2C1_Init 2 */
 
   /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Channel1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 
 }
 
