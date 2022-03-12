@@ -60,8 +60,8 @@ all: main-build
 main-build: amt103.elf secondary-outputs
 
 # Tool invocations
-amt103.elf: $(OBJS) $(USER_OBJS) C:\Users\gutst\Documents\embedded-testbench\amt103\STM32F303RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "amt103.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\gutst\Documents\embedded-testbench\amt103\STM32F303RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="amt103.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+amt103.elf: $(OBJS) $(USER_OBJS) C:\Users\alan1\embedded-testbench\amt103\STM32F303RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "amt103.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\alan1\embedded-testbench\amt103\STM32F303RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="amt103.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
