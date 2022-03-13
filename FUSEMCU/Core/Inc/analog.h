@@ -4,6 +4,12 @@
 #include "stm32g0xx.h"
 #include <stdlib.h>
 
+#define VOLTAGE_DEVICES = 12
+#define CURRENT_DEVICES = 12
+
+extern uint16_t pin_array[10];
+extern GPIO_TypeDef* port_array[10];
+
 // Current Sensor: ACS722LLCTR-10AU-T
 
 // Analog Struct
@@ -19,8 +25,9 @@ typedef struct {
 // All Public Functions
 
 // NOTE: the way we get stuff from ADC is different here than in the PDB code
-// EFFECTS: Create a new Analog struct and returns pointer to struct.
-Analog* new_analog(ADC_HandleTypeDef* in, uint8_t* select_pins);
+// EFFECTS: Create a new Analog object and returns pointer to object.
+// TODO
+Analog* new_analog(ADC_HandleTypeDef* in, uint8_t* select_pins, size_t sz);
 
 // EFFECTS: Get voltage data from a specific voltage sensor in Volts
 float get_voltage_data(const Analog* _Analog);

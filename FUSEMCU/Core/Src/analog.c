@@ -1,11 +1,41 @@
 #ifndef INC_ANALOG_H_
 
 #include "analog.h"
+#include "main.h"
 
 // Current Sensor: ACS722LLCTR-10AU-T
 
-// EFFECTS: Create a new Analog struct and returns pointer to struct.
-Analog* new_analog(ADC_HandleTypeDef* in, uint8_t* select_pins){
+// Pin and Port arrays for the analog devices
+// Voltage and current pins and ports
+uint16_t pin_array[10] = {
+	Voltage_Select_Pin,					// 0
+	Voltage_SelectA3_Pin,				// 1
+	Voltage_SelectA4_Pin,				// 2
+	Voltage_SelectA5_Pin,				// 3
+	Voltage_Enable_Pin,					// 4
+	Current_SelectA8_Pin				// 5
+	Current_SelectB15_Pin,				// 6
+	Current_SelectB14_Pin,				// 7
+	Current_Select_Pin,					// 8
+	Current_Enable_Pin					// 9
+};
+
+GPIO_TypeDef* port_array[10] = {
+	Voltage_Select_GPIO_Port,			// 0
+	Voltage_SelectA3_GPIO_Port,			// 1
+	Voltage_SelectA4_GPIO_Port,			// 2
+	Voltage_SelectA5_GPIO_Port,			// 3
+	Voltage_Enable_GPIO_Port,			// 4
+	Current_SelectA8_GPIO_Port,			// 5
+	Current_SelectB15_GPIO_Port,		// 6
+	Current_SelectB14_GPIO_Port,		// 7
+	Current_Select_GPIO_Port,			// 8
+	Current_Enable_GPIO_Port			// 9
+};
+
+// EFFECTS: Create a new Analog object and returns pointer to object.
+// TODO
+Analog* new_analog(ADC_HandleTypeDef* in, uint8_t* select_pins, size_t sz){
 
 	// Create a new struct
 	Analog* Analog_object = (Analog*) malloc(sizeof(Analog));
