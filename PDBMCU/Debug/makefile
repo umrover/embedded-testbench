@@ -61,8 +61,8 @@ all: main-build
 main-build: PDBMCU.elf secondary-outputs
 
 # Tool invocations
-PDBMCU.elf: $(OBJS) $(USER_OBJS) C:\Users\gutst\Documents\embedded-testbench\PDBMCU\STM32G050C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "PDBMCU.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\Users\gutst\Documents\embedded-testbench\PDBMCU\STM32G050C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="PDBMCU.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+PDBMCU.elf: $(OBJS) $(USER_OBJS) C:\Users\ASD\Documents\MROVER\embedded-testbench\PDBMCU\STM32G050C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "PDBMCU.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\Users\ASD\Documents\MROVER\embedded-testbench\PDBMCU\STM32G050C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="PDBMCU.map" -Wl,--gc-sections -static -u _printf_float --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

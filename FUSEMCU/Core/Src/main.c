@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "analog.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -81,6 +82,34 @@ enum {
 	CURRENT_11 = 11
 };
 
+// Port and Pin arrays for the analog devices
+// Voltage and current ports and pins
+GPIO_TypeDef* port_array[10] = {
+	Voltage_Select_GPIO_Port,			// 0
+	Voltage_SelectA3_GPIO_Port,			// 1
+	Voltage_SelectA4_GPIO_Port,			// 2
+	Voltage_SelectA5_GPIO_Port,			// 3
+	Voltage_Enable_GPIO_Port,			// 4
+	Current_SelectA8_GPIO_Port,			// 5
+	Current_SelectB15_GPIO_Port,		// 6
+	Current_SelectB14_GPIO_Port,		// 7
+	Current_Select_GPIO_Port,			// 8
+	Current_Enable_GPIO_Port			// 9
+};
+
+uint16_t pin_array[10] = {
+	Voltage_Select_Pin,					// 0
+	Voltage_SelectA3_Pin,				// 1
+	Voltage_SelectA4_Pin,				// 2
+	Voltage_SelectA5_Pin,				// 3
+	Voltage_Enable_Pin,					// 4
+	Current_SelectA8_Pin				// 5
+	Current_SelectB15_Pin,				// 6
+	Current_SelectB14_Pin,				// 7
+	Current_Select_Pin,					// 8
+	Current_Enable_Pin					// 9
+};
+
 Analog* voltage_channels[VOLTAGE_DEVICES];
 Analog* current_channels[CURRENT_DEVICES];
 
@@ -131,38 +160,39 @@ void send_voltage_data();
 // EFFECTS: select voltage channel
 // TODO: fix this for fuse
 void select_voltage_channel(const Analog* analog_device) {
-	HAL_GPIO_WritePin(pin_array[0], pin_array[0], analog_device->select_pins[0]); //v select 0
-	HAL_GPIO_WritePin(pin_array[1], pin_array[1], analog_device->select_pins[1]); //v select 1
-	HAL_GPIO_WritePin(pin_array[2], pin_array[2], analog_device->select_pins[2]); //v select 2
-	HAL_GPIO_WritePin(pin_array[3], pin_array[3], analog_device->select_pins[3]); //v select 3
-	HAL_GPIO_WritePin(pin_array[4], pin_array[4],  1); //ENABLE
+	HAL_GPIO_WritePin(port_array[0], pin_array[0], analog_device->select_pins[0]); //v select 0
+	HAL_GPIO_WritePin(port_array[1], pin_array[1], analog_device->select_pins[1]); //v select 1
+	HAL_GPIO_WritePin(port_array[2], pin_array[2], analog_device->select_pins[2]); //v select 2
+	HAL_GPIO_WritePin(port_array[3], pin_array[3], analog_device->select_pins[3]); //v select 3
+	HAL_GPIO_WritePin(port_array[4], pin_array[4],  1); //ENABLE
 }
 
 // EFFECTS: select current channel
 // TODO: fix this for fuse AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa
-void select_voltage_channel(const Analog* analog_device) {
-	HAL_GPIO_WritePin(pin_array[0], pin_array[0], analog_device->select_pins[0]); //c select 0
-	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9, analog_device->select_pins[1]); //c select 1
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_6, analog_device->select_pins[2]); //c select 2
-	HAL_GPIO_WritePin(GPIOC, GPIO_PIN_7, analog_device->select_pins[3]); //c select 3
-	HAL_GPIO_WritePin(GPIOB, GPIO_PIN_15,  1); //ENABLE
+void select_current_channel(const Analog* analog_device) {
+	HAL_GPIO_WritePin(port_array[5], pin_array[5], analog_device->select_pins[0]); //c select 0
+	HAL_GPIO_WritePin(port_array[6], pin_array[6], analog_device->select_pins[1]); //c select 1
+	HAL_GPIO_WritePin(port_array[7], pin_array[7], analog_device->select_pins[2]); //c select 2
+	HAL_GPIO_WritePin(port_array[8], pin_array[8], analog_device->select_pins[3]); //c select 3
+	HAL_GPIO_WritePin(port_array[9], pin_array[9],  1); //ENABLE
 }
 
 // EFFECTS: get analog data in the following format
 // FORMAT: $CURRENT,<c0>,<c1>,<c2> and $VOLTAGE,<v0>,<v1>,<v2>
 void get_analog_data() {
 
+    for (int i = 0; i < VOLTAGE_DEVICES; ++i) {
+    	const Analog* analog_device = voltage_channels[i];
+    	select_voltage_channel(analog_device);
+    	vd[i] = get_voltage_data(analog_device);
+	}
+
     for (int i = 0; i < CURRENT_DEVICES; ++i) {
     	const Analog* analog_device = current_channels[i];
-    	select_analog_channel(analog_device);
+    	select_current_channel(analog_device);
     	cd[i] = get_current_data(analog_device);
     }
 
-    for (int i = 0; i < VOLTAGE_DEVICES; ++i) {
-    	const Analog* analog_device = voltage_channels[i];
-    	select_analog_channel(analog_device);
-    	vd[i] = get_voltage_data(analog_device);
-	}
 }
 
 // EFFECTS: send current data in the following format
@@ -178,7 +208,7 @@ void send_current_data() {
 			cd[4], cd[5], cd[6], cd[7], \
 			cd[8], cd[9], cd[10], cd[11]);
 
-	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
+	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c1, buffer, sizeof(buffer), I2C_LAST_FRAME);
 }
 
 // EFFECTS: send analog data in the following format
@@ -194,7 +224,7 @@ void send_voltage_data() {
 			vd[4], vd[5], vd[6], vd[7], \
 			vd[8], vd[9], vd[10], vd[11]);
 
-	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c2, buffer, sizeof(buffer), I2C_LAST_FRAME);
+	HAL_I2C_Slave_Seq_Transmit_IT(&hi2c1, buffer, sizeof(buffer), I2C_LAST_FRAME);
 }
 
 #endif
@@ -222,13 +252,13 @@ int main(void)
 
 // The numbered parameters going into new_analog is the device number in binary
 // ex: device 5 is 0,1,0,1
-current_channels[CURRENT_0] = new_analog(&hadc1, 0, 0, 1, 0);
-current_channels[CURRENT_1] = new_analog(&hadc1, 0, 1, 0, 0);
-current_channels[CURRENT_2] = new_analog(&hadc1, 0, 0, 0, 0);
+// Creates a new analog device for each voltage, current device
+// Takes in device "id" into the function
 
-voltage_channels[VOLTAGE_0] = new_analog(&hadc1, 1, 0, 1, 0);
-voltage_channels[VOLTAGE_1] = new_analog(&hadc1, 1, 1, 0, 0);
-voltage_channels[VOLTAGE_2] = new_analog(&hadc1, 1, 0, 0, 0);
+for (int i = 0; i < 12; ++i) {
+	current_channels[i] = new_analog(&hadc1, i | 0b1000, i | 0b0100, i | 0b0010, i | 0b0001);
+	voltage_channels[i] = new_analog(&hadc1, i | 0b1000, i | 0b0100, i | 0b0010, i | 0b0001);
+}
 
 
 #endif
