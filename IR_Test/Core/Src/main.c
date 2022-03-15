@@ -31,6 +31,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define THRESHOLD 5 // TODO - TBD, CAN ONLY FIGURE OUT BY TESTING
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -45,6 +47,10 @@ I2C_HandleTypeDef hi2c2;
 
 /* USER CODE BEGIN PV */
 
+uint16_t values[8];
+uint8_t turn_count = 0;
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -58,90 +64,82 @@ static void MX_I2C2_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void ADC_Select_CH(uint32_t inChannel)
+void ADC_Select_CH(uint32_t sensor)
 {
-	  /** Configure Regular Channel
-	  */
-	  switch(inChannel){
+	uint32_t in_channel;
+	switch(sensor)
+	{
+	case 0:
+		in_channel = ADC_CHANNEL_3;
+		break;
+	case 1:
+		in_channel = ADC_CHANNEL_4;
+		break;
+	case 2:
+		in_channel = ADC_CHANNEL_5;
+		break;
+	case 3:
+		in_channel = ADC_CHANNEL_6;
+		break;
+	case 4:
+		in_channel = ADC_CHANNEL_7;
+		break;
+	}
 
-	  case 3:
-		  inChannel = ADC_CHANNEL_3;
-		  break;
-	  case 4:
-		  inChannel = ADC_CHANNEL_4;
-	  	  break;
-	  case 5:
-		  inChannel = ADC_CHANNEL_5;
-		  break;
-	  case 6:
-		  inChannel = ADC_CHANNEL_6;
-		  break;
-	  case 7:
-		  inChannel = ADC_CHANNEL_7;
-		  break;
-	  }
-	  ADC_ChannelConfTypeDef sConfig = {0};
-	  sConfig.Channel = inChannel;
+	ADC_ChannelConfTypeDef sConfig = {0};
+	sConfig.Channel = in_channel;
 
-	  sConfig.Rank = ADC_REGULAR_RANK_1;
-	  sConfig.SamplingTime = ADC_SAMPLINGTIME_COMMON_1;
-	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	  {
-	    Error_Handler();
-	  }
+	sConfig.Rank = ADC_REGULAR_RANK_1;
+	sConfig.SamplingTime = ADC_SAMPLINGTIME_COMMON_1;
+	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+	{
+	Error_Handler();
+	}
 }
 
-void ADC_Select_CH4(void)
-{
-	  /** Configure Regular Channel
-	  */
-	  ADC_ChannelConfTypeDef sConfig = {0};
-	  sConfig.Channel = ADC_CHANNEL_4;
-	  sConfig.Rank = ADC_REGULAR_RANK_1;
-	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	  {
-	    Error_Handler();
-	  }
+void read_values_sensor(uint16_t* values, uint8_t channel) {
+	ADC_Select_CH(channel + 3);
+	HAL_ADC_Start(&hadc1);
+	HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+	*(values + channel) = HAL_ADC_GetValue(&hadc1);
+	HAL_ADC_Stop(&hadc1);
+	HAL_Delay(100);
 }
 
-void ADC_Select_CH5(void)
-{
-	  /** Configure Regular Channel
-	  */
-	  ADC_ChannelConfTypeDef sConfig = {0};
-	  sConfig.Channel = ADC_CHANNEL_5;
-	  sConfig.Rank = ADC_REGULAR_RANK_1;
-	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	  {
-	    Error_Handler();
-	  }
+uint8_t sensor_blocked(uint16_t* values, uint8_t channel, uint32_t threshold) {
+	// if it is blocked, ADC value is very low
+	// (if more light is reflected, lower the value)
+	return *(values + channel) < threshold;
 }
 
-void ADC_Select_CH6(void)
-{
-	  /** Configure Regular Channel
-	  */
-	  ADC_ChannelConfTypeDef sConfig = {0};
-	  sConfig.Channel = ADC_CHANNEL_6;
-	  sConfig.Rank = ADC_REGULAR_RANK_1;
-	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	  {
-	    Error_Handler();
-	  }
+uint8_t calculate_turn_count(uint16_t* values, uint32_t threshold) {
+	// When wrist has not been turned, assume all sensors except sensor 0 is blocked
+	// Call this turn count = 0
+
+	// As soon as wrist turns once, sensor 0 and 1 should be blocked.
+	// This is turn count = 1
+
+	// Turn count = 2 means sensors 0-2 are blocked.
+
+	// Can count up to turn count = 4.
+
+
+	for (int8_t i = 4; i >= 0; --i) {
+		if (sensor_blocked(values, i, threshold)) {
+			return i;
+		}
+	}
+	return 10; // If all sensors are not blocked, then something is seriously wrong.
 }
 
-void ADC_Select_CH7(void)
-{
-	  /** Configure Regular Channel
-	  */
-	  ADC_ChannelConfTypeDef sConfig = {0};
-	  sConfig.Channel = ADC_CHANNEL_7;
-	  sConfig.Rank = ADC_REGULAR_RANK_1;
-	  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-	  {
-	    Error_Handler();
-	  }
+void refresh_turn_count() {
+	for(uint8_t i = 0; i < 5; ++i)
+	{
+	  read_values_sensor(values, i);
+	}
+	turn_count = calculate_turn_count(values, THRESHOLD);
 }
+
 /* USER CODE END 0 */
 
 /**
@@ -151,7 +149,6 @@ void ADC_Select_CH7(void)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-	uint16_t buffer[8];
 
   /* USER CODE END 1 */
 
@@ -176,7 +173,7 @@ int main(void)
   MX_ADC1_Init();
   MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
-	  uint32_t i = 3;
+
 
   /* USER CODE END 2 */
 
@@ -184,24 +181,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  /*for(i = 3; i < 8; ++i)
-	  {
-		  ADC_Select_CH(i);
-		  HAL_ADC_Start(&hadc1);
-		  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-		  buffer[i-3] = HAL_ADC_GetValue(&hadc1);
-		  HAL_ADC_Stop(&hadc1);
-		  HAL_Delay(100);
-	  }*/
-	  	  HAL_Delay(1000);
-	  	  ADC_Select_CH(i);
-	  	  HAL_ADC_Start(&hadc1);
-	  	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-	  	  buffer[i-3] = HAL_ADC_GetValue(&hadc1);
-		  HAL_ADC_Stop(&hadc1);
-		  buffer[6] = 19;
-		  ++i;
-		  if(i>7)i=3;
+	  refresh_turn_count();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
