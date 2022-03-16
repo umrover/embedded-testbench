@@ -61,7 +61,7 @@ static void MX_USART2_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+int index_hit = 0;
 /* USER CODE END 0 */
 
 /**
@@ -98,6 +98,13 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
 
+  void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+	  printf("Index Hit \n\r");
+
+
+
+  }
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -107,6 +114,7 @@ int main(void)
   uint16_t quad_enc_raw_now = 0;
   float current_angle = 0;
   float quad_cpr = 8192.0;
+
   while (1)
   {
     /* USER CODE END WHILE */
@@ -121,6 +129,7 @@ int main(void)
 	   * Device is AMT103 2048 N4000.
 	   *
 	   */
+
 		quad_enc_raw_now = TIM3->CNT;
 		quad_enc_value = (int16_t)(quad_enc_raw_now - quad_enc_raw_last) + quad_enc_value;
 		quad_enc_raw_last = quad_enc_raw_now;
@@ -136,6 +145,14 @@ int main(void)
 		HAL_UART_Transmit_IT(&huart1, (uint8_t *)string, sizeof(string));
 		HAL_Delay(15);
 
+	  	if(index_hit == 1){
+	  		// joint b quad encoder is on channel 1 of nucleo 1
+	  		// change this to if limit switch is hit - then set the angle to 90
+	  		printf("Index Hit == 1 \n\r");
+	  		index_hit = 0;
+	  		quad_enc_value = (45.0/360) * 4096;
+	  		for(int i = 0; i < 1000; i++);
+	  	}
   }
   /* USER CODE END 3 */
 }
@@ -311,10 +328,21 @@ static void MX_USART2_UART_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+
+  /*Configure GPIO pin : PC0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
 
 }
 

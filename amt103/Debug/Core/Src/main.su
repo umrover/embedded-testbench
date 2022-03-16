@@ -1,8 +1,8 @@
-main.c:71:5:main	104	static
-main.c:147:6:SystemClock_Config	160	static
-main.c:193:13:MX_TIM3_Init	56	static
-main.c:242:13:MX_USART1_UART_Init	8	static
-main.c:277:13:MX_USART2_UART_Init	8	static
-main.c:312:13:MX_GPIO_Init	16	static
-main.c:328:1:__io_putchar	16	static
-main.c:341:6:Error_Handler	4	static,ignoring_inline_asm
+main.c:71:5:main	112	static
+main.c:162:6:SystemClock_Config	160	static
+main.c:208:13:MX_TIM3_Init	56	static
+main.c:257:13:MX_USART1_UART_Init	8	static
+main.c:292:13:MX_USART2_UART_Init	8	static
+main.c:327:13:MX_GPIO_Init	40	static
+main.c:354:1:__io_putchar	16	static
+main.c:367:6:Error_Handler	4	static,ignoring_inline_asm
