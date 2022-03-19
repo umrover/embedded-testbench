@@ -201,6 +201,14 @@ void updatePWM() {
 	channels[2].speed =
 			channels[1].limit == 0xFF && channels[2].speed < 0 ? 0 : channels[2].speed;
 
+	// if reached forward limit for channel 1 motor on nucleo 2, don't go forwards
+	// If statement is not really necessary since all pins for limit switches are pulled high but
+	// it's useful to make distinction that this is only for joint b.
+	if (I2C_ADDRESS == 0x20) {
+		channels[1].speed =
+				channels[2].limit == 0xFF && channels[1].speed > 0 ? 0 : channels[1].speed;
+	}
+
 	TIM1->CCR1 = (uint32_t)(fabs(channels[0].speed) * TIM1->ARR);
 	TIM1->CCR2 = (uint32_t)(fabs(channels[1].speed) * TIM1->ARR);
 	TIM1->CCR3 = (uint32_t)(fabs(channels[2].speed) * TIM1->ARR);
