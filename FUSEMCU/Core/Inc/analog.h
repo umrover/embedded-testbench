@@ -8,7 +8,7 @@
 #define CURRENT_DEVICES 12
 
 // There are 10 pins and ports used to get data
-extern int16_t pin_array[10];
+extern uint16_t pin_array[10];
 extern GPIO_TypeDef* port_array[10];
 
 typedef enum {
