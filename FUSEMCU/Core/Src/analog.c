@@ -5,6 +5,34 @@
 
 // Current Sensor: ACS722LLCTR-10AU-T
 
+// Port and Pin arrays for the analog devices
+// Voltage and current ports and pins
+GPIO_TypeDef* port_array[10] = {
+	Voltage_Select_0_GPIO_Port,			// 0
+	Voltage_Select_1_GPIO_Port,			// 1
+	Voltage_Select_2_GPIO_Port,			// 2
+	Voltage_Select_3_GPIO_Port,			// 3
+	Voltage_Enable_GPIO_Port,			// 4
+	Current_Enable_GPIO_Port,			// 5
+	Current_Select_3_GPIO_Port,			// 6
+	Current_Select_2_GPIO_Port,			// 7
+	Current_Select_1_GPIO_Port,			// 8
+	Current_Select_0_GPIO_Port			// 9
+};
+
+uint16_t pin_array[10] = {
+	Voltage_Select_0_Pin,				// 0
+	Voltage_Select_1_Pin,				// 1
+	Voltage_Select_2_Pin,				// 2
+	Voltage_Select_3_Pin,				// 3
+	Voltage_Enable_Pin,					// 4
+	Current_Enable_Pin,					// 5
+	Current_Select_3_Pin,				// 6
+	Current_Select_2_Pin,				// 7
+	Current_Select_1_Pin,				// 8
+	Current_Select_0_Pin				// 9
+};
+
 // EFFECTS: Create a new Analog object and returns pointer to object.
 // Takes in 'pins' array that specify which of the 4 pins are selected,
 // depending on device number

@@ -62,26 +62,26 @@ void Error_Handler(void);
 #define CUR_IN_GPIO_Port GPIOA
 #define VOL_IN_Pin GPIO_PIN_1
 #define VOL_IN_GPIO_Port GPIOA
-#define Voltage_Select_Pin GPIO_PIN_2
-#define Voltage_Select_GPIO_Port GPIOA
-#define Voltage_SelectA3_Pin GPIO_PIN_3
-#define Voltage_SelectA3_GPIO_Port GPIOA
-#define Voltage_SelectA4_Pin GPIO_PIN_4
-#define Voltage_SelectA4_GPIO_Port GPIOA
-#define Voltage_SelectA5_Pin GPIO_PIN_5
-#define Voltage_SelectA5_GPIO_Port GPIOA
+#define Voltage_Select_0_Pin GPIO_PIN_2
+#define Voltage_Select_0_GPIO_Port GPIOA
+#define Voltage_Select_1_Pin GPIO_PIN_3
+#define Voltage_Select_1_GPIO_Port GPIOA
+#define Voltage_Select_2_Pin GPIO_PIN_4
+#define Voltage_Select_2_GPIO_Port GPIOA
+#define Voltage_Select_3_Pin GPIO_PIN_5
+#define Voltage_Select_3_GPIO_Port GPIOA
 #define Voltage_Enable_Pin GPIO_PIN_6
 #define Voltage_Enable_GPIO_Port GPIOA
 #define Current_Enable_Pin GPIO_PIN_12
 #define Current_Enable_GPIO_Port GPIOB
-#define Current_Select_Pin GPIO_PIN_13
-#define Current_Select_GPIO_Port GPIOB
-#define Current_SelectB14_Pin GPIO_PIN_14
-#define Current_SelectB14_GPIO_Port GPIOB
-#define Current_SelectB15_Pin GPIO_PIN_15
-#define Current_SelectB15_GPIO_Port GPIOB
-#define Current_SelectA8_Pin GPIO_PIN_8
-#define Current_SelectA8_GPIO_Port GPIOA
+#define Current_Select_3_Pin GPIO_PIN_13
+#define Current_Select_3_GPIO_Port GPIOB
+#define Current_Select_2_Pin GPIO_PIN_14
+#define Current_Select_2_GPIO_Port GPIOB
+#define Current_Select_1_Pin GPIO_PIN_15
+#define Current_Select_1_GPIO_Port GPIOB
+#define Current_Select_0_Pin GPIO_PIN_8
+#define Current_Select_0_GPIO_Port GPIOA
 #define JETSON_SCL_Pin GPIO_PIN_9
 #define JETSON_SCL_GPIO_Port GPIOA
 #define JETSON_SDA_Pin GPIO_PIN_10
@@ -95,5 +95,3 @@ void Error_Handler(void);
 #endif
 
 #endif /* __MAIN_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

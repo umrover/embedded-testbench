@@ -19,7 +19,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "analog.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -43,7 +42,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1;
+ ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
 I2C_HandleTypeDef hi2c1;
@@ -80,34 +79,6 @@ enum {
 	CURRENT_9 = 9,
 	CURRENT_10 = 10,
 	CURRENT_11 = 11
-};
-
-// Port and Pin arrays for the analog devices
-// Voltage and current ports and pins
-GPIO_TypeDef* port_array[10] = {
-	Voltage_Select_GPIO_Port,			// 0
-	Voltage_SelectA3_GPIO_Port,			// 1
-	Voltage_SelectA4_GPIO_Port,			// 2
-	Voltage_SelectA5_GPIO_Port,			// 3
-	Voltage_Enable_GPIO_Port,			// 4
-	Current_SelectA8_GPIO_Port,			// 5
-	Current_SelectB15_GPIO_Port,		// 6
-	Current_SelectB14_GPIO_Port,		// 7
-	Current_Select_GPIO_Port,			// 8
-	Current_Enable_GPIO_Port			// 9
-};
-
-uint16_t pin_array[10] = {
-	Voltage_Select_Pin,					// 0
-	Voltage_SelectA3_Pin,				// 1
-	Voltage_SelectA4_Pin,				// 2
-	Voltage_SelectA5_Pin,				// 3
-	Voltage_Enable_Pin,					// 4
-	Current_SelectA8_Pin				// 5
-	Current_SelectB15_Pin,				// 6
-	Current_SelectB14_Pin,				// 7
-	Current_Select_Pin,					// 8
-	Current_Enable_Pin					// 9
 };
 
 Analog* voltage_channels[VOLTAGE_DEVICES];
@@ -160,21 +131,21 @@ void send_voltage_data();
 // EFFECTS: select voltage channel
 // TODO: fix this for fuse
 void select_voltage_channel(const Analog* analog_device) {
-	HAL_GPIO_WritePin(port_array[0], pin_array[0], analog_device->select_pins[0]); //v select 0
-	HAL_GPIO_WritePin(port_array[1], pin_array[1], analog_device->select_pins[1]); //v select 1
-	HAL_GPIO_WritePin(port_array[2], pin_array[2], analog_device->select_pins[2]); //v select 2
-	HAL_GPIO_WritePin(port_array[3], pin_array[3], analog_device->select_pins[3]); //v select 3
-	HAL_GPIO_WritePin(port_array[4], pin_array[4],  1); //ENABLE
+	HAL_GPIO_WritePin(Voltage_Select_0_GPIO_Port, Voltage_Select_0_Pin, analog_device->select_pins[0]); //v select 0
+	HAL_GPIO_WritePin(Voltage_Select_1_GPIO_Port, Voltage_Select_1_Pin, analog_device->select_pins[1]); //v select 1
+	HAL_GPIO_WritePin(Voltage_Select_2_GPIO_Port, Voltage_Select_2_Pin, analog_device->select_pins[2]); //v select 2
+	HAL_GPIO_WritePin(Voltage_Select_3_GPIO_Port, Voltage_Select_3_Pin, analog_device->select_pins[3]); //v select 3
+	HAL_GPIO_WritePin(Voltage_Enable_GPIO_Port, Voltage_Enable_Pin,  1); //ENABLE
 }
 
 // EFFECTS: select current channel
 // TODO: fix this for fuse AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAa
 void select_current_channel(const Analog* analog_device) {
-	HAL_GPIO_WritePin(port_array[5], pin_array[5], analog_device->select_pins[0]); //c select 0
-	HAL_GPIO_WritePin(port_array[6], pin_array[6], analog_device->select_pins[1]); //c select 1
-	HAL_GPIO_WritePin(port_array[7], pin_array[7], analog_device->select_pins[2]); //c select 2
-	HAL_GPIO_WritePin(port_array[8], pin_array[8], analog_device->select_pins[3]); //c select 3
-	HAL_GPIO_WritePin(port_array[9], pin_array[9],  1); //ENABLE
+	HAL_GPIO_WritePin(Current_Enable_GPIO_Port, Current_Enable_Pin, analog_device->select_pins[0]); //c select 0
+	HAL_GPIO_WritePin(Current_Select_3_GPIO_Port, Current_Select_3_Pin, analog_device->select_pins[1]); //c select 1
+	HAL_GPIO_WritePin(Current_Select_2_GPIO_Port, Current_Select_2_Pin, analog_device->select_pins[2]); //c select 2
+	HAL_GPIO_WritePin(Current_Select_1_GPIO_Port, Current_Select_1_Pin, analog_device->select_pins[3]); //c select 3
+	HAL_GPIO_WritePin(Current_Select_0_GPIO_Port, Current_Select_0_Pin,  1); //ENABLE
 }
 
 // EFFECTS: get analog data in the following format
@@ -308,11 +279,11 @@ void SystemClock_Config(void)
 {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
-  RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
   /** Configure the main internal regulator output voltage
   */
   HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1);
+
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
@@ -325,6 +296,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -334,14 +306,6 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /** Initializes the peripherals clocks
-  */
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_I2C1;
-  PeriphClkInit.I2c1ClockSelection = RCC_I2C1CLKSOURCE_PCLK1;
-  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
   }
@@ -364,6 +328,7 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 1 */
 
   /* USER CODE END ADC1_Init 1 */
+
   /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
   */
   hadc1.Instance = ADC1;
@@ -376,7 +341,6 @@ static void MX_ADC1_Init(void)
   hadc1.Init.LowPowerAutoPowerOff = DISABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
   hadc1.Init.NbrOfConversion = 1;
-  hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc1.Init.DMAContinuousRequests = DISABLE;
@@ -389,6 +353,7 @@ static void MX_ADC1_Init(void)
   {
     Error_Handler();
   }
+
   /** Configure Regular Channel
   */
   sConfig.Channel = ADC_CHANNEL_0;
@@ -432,12 +397,14 @@ static void MX_I2C1_Init(void)
   {
     Error_Handler();
   }
+
   /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
+
   /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
@@ -480,23 +447,23 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, Voltage_Select_Pin|Voltage_SelectA3_Pin|Voltage_SelectA4_Pin|Voltage_SelectA5_Pin
-                          |Voltage_Enable_Pin|Current_SelectA8_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, Voltage_Select_0_Pin|Voltage_Select_1_Pin|Voltage_Select_2_Pin|Voltage_Select_3_Pin
+                          |Voltage_Enable_Pin|Current_Select_0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, Current_Enable_Pin|Current_Select_Pin|Current_SelectB14_Pin|Current_SelectB15_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, Current_Enable_Pin|Current_Select_3_Pin|Current_Select_2_Pin|Current_Select_1_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : Voltage_Select_Pin Voltage_SelectA3_Pin Voltage_SelectA4_Pin Voltage_SelectA5_Pin
-                           Voltage_Enable_Pin Current_SelectA8_Pin */
-  GPIO_InitStruct.Pin = Voltage_Select_Pin|Voltage_SelectA3_Pin|Voltage_SelectA4_Pin|Voltage_SelectA5_Pin
-                          |Voltage_Enable_Pin|Current_SelectA8_Pin;
+  /*Configure GPIO pins : Voltage_Select_0_Pin Voltage_Select_1_Pin Voltage_Select_2_Pin Voltage_Select_3_Pin
+                           Voltage_Enable_Pin Current_Select_0_Pin */
+  GPIO_InitStruct.Pin = Voltage_Select_0_Pin|Voltage_Select_1_Pin|Voltage_Select_2_Pin|Voltage_Select_3_Pin
+                          |Voltage_Enable_Pin|Current_Select_0_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : Current_Enable_Pin Current_Select_Pin Current_SelectB14_Pin Current_SelectB15_Pin */
-  GPIO_InitStruct.Pin = Current_Enable_Pin|Current_Select_Pin|Current_SelectB14_Pin|Current_SelectB15_Pin;
+  /*Configure GPIO pins : Current_Enable_Pin Current_Select_3_Pin Current_Select_2_Pin Current_Select_1_Pin */
+  GPIO_InitStruct.Pin = Current_Enable_Pin|Current_Select_3_Pin|Current_Select_2_Pin|Current_Select_1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -539,5 +506,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

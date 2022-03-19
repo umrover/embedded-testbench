@@ -4,14 +4,28 @@
 #include "stm32g0xx.h"
 #include <stdlib.h>
 
-//int VOLTAGE_DEVICES = 12;
 #define VOLTAGE_DEVICES 12
 #define CURRENT_DEVICES 12
-// extern int VOLTAGE_DEVICES;
-//int CURRENT_DEVICES = 12;
 
-uint16_t pin_array[10];
-GPIO_TypeDef* port_array[10];
+// There are 10 pins and ports used to get data
+extern int16_t pin_array[10];
+extern GPIO_TypeDef* port_array[10];
+
+typedef enum {
+	Voltage_Select_0,		// 0
+	Voltage_Select_1,		// 1
+	Voltage_Select_2,		// 2
+	Voltage_Select_3,		// 3
+	Voltage_Enable			// 4
+} VOLTAGE_NAME;
+
+typedef enum {
+	Current_Enable,			// 0
+	Current_Select_3,		// 1
+	Current_Select_2,		// 2
+	Current_Select_1,		// 3
+	Current_Select_0		// 4
+} CURRENT_NAME;
 
 // Current Sensor: ACS722LLCTR-10AU-T
 
