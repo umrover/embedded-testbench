@@ -94,7 +94,7 @@ float fabs(float);
 
 /* Private defines -----------------------------------------------------------*/
 #define CONTROL_LOOP_PERIOD 1000
-#define I2C_ADDRESS 0x30
+#define I2C_ADDRESS 0x20
 #define CHANNELS 6
 #define QUADRATURE_FILTER 8
 #define PWM_PERIOD 10000
@@ -156,6 +156,8 @@ float fabs(float);
 #define M1_NDIR_GPIO_Port GPIOC
 #define M2_NDIR_Pin GPIO_PIN_12
 #define M2_NDIR_GPIO_Port GPIOC
+#define M4_DIR_Pin GPIO_PIN_6
+#define M4_DIR_GPIO_Port GPIOB
 #define J_I2C_SCL_Pin GPIO_PIN_8
 #define J_I2C_SCL_GPIO_Port GPIOB
 #define J_I2C_SDA_Pin GPIO_PIN_9
