@@ -33,6 +33,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
+
 Channel channelDefault = {
 	0x00, //mode
 	0, //openSetpoint
@@ -50,6 +51,8 @@ Channel channelDefault = {
 	0, //integratedError
 	0 //lastError
 };
+
+Channel channels[6];
 
 #define DT 0.001
 /* USER CODE END PD */

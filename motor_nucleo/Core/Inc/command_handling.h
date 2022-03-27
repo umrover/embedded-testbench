@@ -13,13 +13,13 @@
 #include "main.h"
 #include "abs_enc_reading.h"
 
-I2C_HandleTypeDef *i2c_bus_handle;
+extern I2C_HandleTypeDef *i2c_bus_handle;
 //IWDG_HandleTypeDef *watch_dog_handle;
 
-SMBus* i2cBus;
-I2C_HandleTypeDef* abs_encoder_handle;
-AbsEncoder* abs_enc_0;
-AbsEncoder* abs_enc_1;
+extern SMBus* i2cBus;
+extern I2C_HandleTypeDef* abs_encoder_handle;
+extern AbsEncoder* abs_enc_0;
+extern AbsEncoder* abs_enc_1;
 
 typedef struct {
 	enum {
@@ -43,7 +43,7 @@ typedef struct {
 
 extern I2CBus i2c_bus_default;
 
-I2CBus i2c_bus;
+extern I2CBus i2c_bus;
 
 uint8_t CH_num_receive();
 uint8_t CH_num_send();

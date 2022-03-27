@@ -7,12 +7,23 @@
 
 #include "command_handling.h"
 
+I2C_HandleTypeDef *i2c_bus_handle;
+//IWDG_HandleTypeDef *watch_dog_handle;
+
+SMBus* i2cBus;
+I2C_HandleTypeDef* abs_encoder_handle;
+AbsEncoder* abs_enc_0;
+AbsEncoder* abs_enc_1;
+
+
 I2CBus i2c_bus_default = {
 	UNKNOWN, //operation
 	0xFF, //channel
 	{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //buffer
 	0
 };
+
+I2CBus i2c_bus;
 
 uint8_t CH_num_receive() {
 	switch(i2c_bus.operation) {

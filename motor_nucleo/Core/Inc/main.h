@@ -33,11 +33,16 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "command_handling.h"
-#include "abs_enc_reading.h"
+//#include "abs_enc_reading.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
+/* USER CODE END ET */
+
+/* Exported constants --------------------------------------------------------*/
+/* USER CODE BEGIN EC */
+
 typedef struct{
 	//REGISTERS
 	uint8_t mode;
@@ -66,13 +71,10 @@ typedef struct{
 
 
 extern Channel channelDefault;
-/* USER CODE END ET */
 
-/* Exported constants --------------------------------------------------------*/
-/* USER CODE BEGIN EC */
+extern Channel channels[6];
 
 //reserved_area = (const char *) 0x20000088;
-Channel channels[6];
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
