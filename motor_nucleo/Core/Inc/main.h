@@ -98,10 +98,10 @@ float fabs(float);
 #define CHANNELS 6
 #define QUADRATURE_FILTER 8
 #define PWM_PERIOD 10000
-#define M3_NDIR_Pin GPIO_PIN_13
-#define M3_NDIR_GPIO_Port GPIOC
-#define M4_NDIR_Pin GPIO_PIN_14
+#define M4_NDIR_Pin GPIO_PIN_13
 #define M4_NDIR_GPIO_Port GPIOC
+#define M3_NDIR_Pin GPIO_PIN_14
+#define M3_NDIR_GPIO_Port GPIOC
 #define M5_NDIR_Pin GPIO_PIN_15
 #define M5_NDIR_GPIO_Port GPIOC
 #define M_I2C_SDA_Pin GPIO_PIN_0

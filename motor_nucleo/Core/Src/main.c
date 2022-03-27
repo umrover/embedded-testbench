@@ -794,7 +794,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin
+  HAL_GPIO_WritePin(GPIOC, M4_NDIR_Pin|M3_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin
                           |M1_NDIR_Pin|M2_NDIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
@@ -804,9 +804,9 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(M3_DIR_GPIO_Port, M3_DIR_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : M3_NDIR_Pin M4_NDIR_Pin M5_NDIR_Pin M0_NDIR_Pin
+  /*Configure GPIO pins : M4_NDIR_Pin M3_NDIR_Pin M5_NDIR_Pin M0_NDIR_Pin
                            M1_NDIR_Pin M2_NDIR_Pin */
-  GPIO_InitStruct.Pin = M3_NDIR_Pin|M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin
+  GPIO_InitStruct.Pin = M4_NDIR_Pin|M3_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin
                           |M1_NDIR_Pin|M2_NDIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
