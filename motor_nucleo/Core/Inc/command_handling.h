@@ -35,6 +35,8 @@ typedef struct {
 		ADJUST=0x4F,
 		ABS_ENC=0x50,
 		LIMIT=0x60,
+		CALIBRATED=0x6F,
+		LIMIT_ON=0x7F,
 		UNKNOWN=0xFF} operation;
 	uint8_t channel;
 	uint8_t buffer[32];

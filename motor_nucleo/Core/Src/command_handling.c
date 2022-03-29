@@ -39,6 +39,8 @@ uint8_t CH_num_receive() {
 	case ADJUST: return 4;
 	case ABS_ENC:
 	case LIMIT:
+	case CALIBRATED: return 0;
+	case LIMIT_ON: return 1;
 	case UNKNOWN: return 0;
 	}
 	return 0;
@@ -57,7 +59,9 @@ uint8_t CH_num_send() {
 	case QUAD_ENC: return 4;
 	case ADJUST: return 0;
 	case ABS_ENC: return 4;
-	case LIMIT: return 1;
+	case LIMIT:
+	case CALIBRATED: return 1;
+	case LIMIT_ON:
 	case UNKNOWN: return 0;
 	}
 	return 0;
@@ -79,6 +83,8 @@ void CH_prepare_send() {
 	case ADJUST: return;
 	case ABS_ENC: memcpy(i2c_bus.buffer, &(channel->abs_enc_value), 4); return;
 	case LIMIT: memcpy(i2c_bus.buffer, &(channel->limit), 1); return;
+	case CALIBRATED: memcpy(i2c_bus.buffer, &(channel->calibrated), 1); return;
+	case LIMIT_ON:
 	case UNKNOWN: return;
 	}
 }
@@ -103,6 +109,8 @@ void CH_process_received() {
 	case ADJUST: memcpy(&(channel->quad_enc_value), i2c_bus.buffer, 4);
 	case ABS_ENC:
 	case LIMIT:
+	case CALIBRATED: return;
+	case LIMIT_ON: memcpy(&(channel->limit_enabled), i2c_bus.buffer, 1);
 	case UNKNOWN: return;
 	}
 }

@@ -67,6 +67,9 @@ typedef struct{
 	float integrated_error;
 	float last_error;
 
+	uint8_t calibrated;
+	uint8_t limit_enabled;
+
 } Channel;
 
 

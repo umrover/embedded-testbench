@@ -49,7 +49,9 @@ Channel channelDefault = {
 	0, //quadEncRawNow
 	0, //quadEncRawLast
 	0, //integratedError
-	0 //lastError
+	0, //lastError
+	0, //calibrated
+	0xFF // limit_enabled
 };
 
 Channel channels[6];
@@ -141,13 +143,20 @@ void updateLimit() {
 	// Nucleo 3 Channel 1 is limit switch bottom/back for scope+triad (LS2)
 	// Nucleo 1 Channel 2 is used for joint b calibration
 
+	// Our limit switches are active low, but channels[x].limit is equal to 0xFF if the switch is active.
 
 	channels[0].limit = (HAL_GPIO_ReadPin(M0_LIMIT_GPIO_Port, M0_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
-	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
+	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_RESET) && !channels[2].limit_enabled ? 0xFF : 0x00;
 	channels[3].limit = (HAL_GPIO_ReadPin(M3_LIMIT_GPIO_Port, M3_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[4].limit = (HAL_GPIO_ReadPin(M4_LIMIT_GPIO_Port, M4_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[5].limit = (HAL_GPIO_ReadPin(M5_LIMIT_GPIO_Port, M5_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
+
+	// If joint b is at the end, calibrate it
+	if (channels[2].limit == 0xFF) {
+		channels[1].quad_enc_value = 0;
+		channels[1].calibrated = 0xFF;
+	}
 }
 
 void updateLogic() {
@@ -205,11 +214,11 @@ void updatePWM() {
 
 	// if reached forward limit for channel 2 motor, don't go forwards
 	channels[2].speed =
-			channels[0].limit == 0xFF && channels[2].speed > 0 ? 0 : channels[2].speed;
+			channels[0].limit == 0xFF && channels[2].speed > 0 && channels[2].limit_enabled == 0xFF ? 0 : channels[2].speed;
 
 	// if reached backward limit for channel 2, don't go backwards
 	channels[2].speed =
-			channels[1].limit == 0xFF && channels[2].speed < 0 ? 0 : channels[2].speed;
+			channels[1].limit == 0xFF && channels[2].speed < 0 && channels[2].limit_enabled == 0xFF ? 0 : channels[2].speed;
 
 	// if reached forward limit for channel 1 motor on nucleo 1, don't go forwards
 	// If statement is not really necessary since all pins for limit switches are pulled high but
