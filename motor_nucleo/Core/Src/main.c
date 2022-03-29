@@ -135,6 +135,13 @@ void updateAbsEnc() {
 }
 
 void updateLimit() {
+	// Nucleo 2 Channel 0 is limit switch front for scoop (LS3)
+	// Nucleo 2 Channel 1 is limit switch back for scoop (LS4)
+	// Nucleo 3 Channel 0 is limit switch top/front for scope+triad (LS1)
+	// Nucleo 3 Channel 1 is limit switch bottom/back for scope+triad (LS2)
+	// Nucleo 1 Channel 2 is used for joint b calibration
+
+
 	channels[0].limit = (HAL_GPIO_ReadPin(M0_LIMIT_GPIO_Port, M0_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
@@ -204,10 +211,10 @@ void updatePWM() {
 	channels[2].speed =
 			channels[1].limit == 0xFF && channels[2].speed < 0 ? 0 : channels[2].speed;
 
-	// if reached forward limit for channel 1 motor on nucleo 2, don't go forwards
+	// if reached forward limit for channel 1 motor on nucleo 1, don't go forwards
 	// If statement is not really necessary since all pins for limit switches are pulled high but
 	// it's useful to make distinction that this is only for joint b.
-	if (I2C_ADDRESS == 0x20) {
+	if (I2C_ADDRESS == 0x10) {
 		channels[1].speed =
 				channels[2].limit == 0xFF && channels[1].speed > 0 ? 0 : channels[1].speed;
 	}
