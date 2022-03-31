@@ -47,6 +47,8 @@ extern I2CBus i2c_bus_default;
 
 extern I2CBus i2c_bus;
 
+extern int WATCHDOG_TIMEOUT;
+
 uint8_t CH_num_receive();
 uint8_t CH_num_send();
 void CH_prepare_send();

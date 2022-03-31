@@ -57,6 +57,11 @@ Channel channelDefault = {
 Channel channels[6];
 
 #define DT 0.001
+
+// NUCLEO 2 MOTOR 2 IS GRIPPER, NUCLEO 3 MOTOR 2 IS FINGER	
+#define MOTOR_2_FORWARD_LIMIT channels[0].limit	
+#define MOTOR_2_BACKWARD_LIMIT channels[1].limit	
+#define MOTOR_1_CALIBRATION_POSITIVE_LIMIT channels[2].limit
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -147,13 +152,14 @@ void updateLimit() {
 
 	channels[0].limit = (HAL_GPIO_ReadPin(M0_LIMIT_GPIO_Port, M0_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
-	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_RESET) && !channels[2].limit_enabled ? 0xFF : 0x00;
+	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_RESET) &&
+			!channels[2].limit_enabled ? 0xFF : 0x00;
 	channels[3].limit = (HAL_GPIO_ReadPin(M3_LIMIT_GPIO_Port, M3_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[4].limit = (HAL_GPIO_ReadPin(M4_LIMIT_GPIO_Port, M4_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[5].limit = (HAL_GPIO_ReadPin(M5_LIMIT_GPIO_Port, M5_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 
 	// If joint b is at the end, calibrate it
-	if (channels[2].limit == 0xFF) {
+	if (MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF) {
 		channels[1].quad_enc_value = 0;
 		channels[1].calibrated = 0xFF;
 	}
@@ -214,18 +220,20 @@ void updatePWM() {
 
 	// if reached forward limit for channel 2 motor, don't go forwards
 	channels[2].speed =
-			channels[0].limit == 0xFF && channels[2].speed > 0 && channels[2].limit_enabled == 0xFF ? 0 : channels[2].speed;
+			MOTOR_2_FORWARD_LIMIT && channels[2].speed > 0 &&
+			channels[2].limit_enabled == 0xFF ? 0 : channels[2].speed;
 
 	// if reached backward limit for channel 2, don't go backwards
 	channels[2].speed =
-			channels[1].limit == 0xFF && channels[2].speed < 0 && channels[2].limit_enabled == 0xFF ? 0 : channels[2].speed;
+			MOTOR_2_BACKWARD_LIMIT && channels[2].speed < 0 &&
+			channels[2].limit_enabled == 0xFF ? 0 : channels[2].speed;
 
 	// if reached forward limit for channel 1 motor on nucleo 1, don't go forwards
 	// If statement is not really necessary since all pins for limit switches are pulled high but
 	// it's useful to make distinction that this is only for joint b.
 	if (I2C_ADDRESS == 0x10) {
 		channels[1].speed =
-				channels[2].limit == 0xFF && channels[1].speed > 0 ? 0 : channels[1].speed;
+				MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF && channels[1].speed > 0 ? 0 : channels[1].speed;
 	}
 
 	TIM1->CCR1 = (uint32_t)(fabs(channels[0].speed) * TIM1->ARR);
@@ -410,7 +418,7 @@ static void MX_I2C1_Init(void)
   hi2c1.Init.OwnAddress1 = 254;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-  hi2c1.Init.OwnAddress2 = 64;
+  hi2c1.Init.OwnAddress2 = 32;
   hi2c1.Init.OwnAddress2Masks = I2C_OA2_MASK04;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
