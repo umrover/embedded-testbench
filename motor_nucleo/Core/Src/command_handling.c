@@ -25,6 +25,9 @@ I2CBus i2c_bus_default = {
 
 I2CBus i2c_bus;
 
+// timeout ~half a second, prime number to avoid hitting unit testing reset bug again
+int WATCHDOG_TIMEOUT = 443;
+
 uint8_t CH_num_receive() {
 	switch(i2c_bus.operation) {
 	case OFF:
@@ -117,7 +120,7 @@ void CH_reset() {
 
 void CH_tick() {
 	i2c_bus.tick += 1;
-	if (i2c_bus.tick >= 500) {
+	if (i2c_bus.tick >= WATCHDOG_TIMEOUT) {
 		i2c_bus.tick = 0;
 		CH_reset();
 	}
