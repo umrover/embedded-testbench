@@ -138,12 +138,12 @@ float absEncFilter(int channel, float raw_val)
 
 void updateAbsEnc0()
 {
-	(channels + 0)->abs_enc_value = get_angle_radians(abs_enc_0);
+	(channels + 0)->abs_enc_value = absEncFilter(0, get_angle_radians(abs_enc_0));
 }
 
 void updateAbsEnc1()
 {
-	(channels + 1)->abs_enc_value = get_angle_radians(abs_enc_1);
+	(channels + 1)->abs_enc_value = absEncFilter(1, get_angle_radians(abs_enc_1));
 }
 
 void updateBothAbsEnc() {
@@ -354,7 +354,7 @@ int main(void)
 	  while (1)
 	  {
 		  updateAbsEnc0();
-		  HAL_Delay(10);
+		  HAL_Delay(90);
 	  }
   }
   while (1)
@@ -363,7 +363,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	updateBothAbsEnc();
-	HAL_Delay(10);
+	HAL_Delay(90);
   }
   /* USER CODE END 3 */
 }
@@ -437,7 +437,7 @@ static void MX_I2C1_Init(void)
   hi2c1.Init.OwnAddress1 = 254;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-  hi2c1.Init.OwnAddress2 = 64;
+  hi2c1.Init.OwnAddress2 = 32;
   hi2c1.Init.OwnAddress2Masks = I2C_OA2_MASK04;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
