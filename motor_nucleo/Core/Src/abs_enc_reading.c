@@ -73,7 +73,7 @@ float get_angle_degrees(AbsEncoder* encoder) {
 
 float get_angle_radians(AbsEncoder* encoder) {
 	int angle_raw = read_raw_angle(encoder);
-	float radians = angle_raw * RAW_TO_RADIANS_CONVERSION_FACTOR;
+	float radians = (float)angle_raw / RAW_TO_RADIANS_CONVERSION_FACTOR;
 	return radians;
 }
 

@@ -97,7 +97,7 @@ float fabs(float);
 
 /* Private defines -----------------------------------------------------------*/
 #define CONTROL_LOOP_PERIOD 1000
-#define I2C_ADDRESS 0x10
+#define I2C_ADDRESS 0x20
 #define CHANNELS 6
 #define QUADRATURE_FILTER 8
 #define PWM_PERIOD 10000
