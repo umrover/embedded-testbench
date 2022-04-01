@@ -93,7 +93,6 @@ long read_byte_data(SMBus *smbus, uint8_t addr, char cmd) {
 }
 
 float get_angle_radians(AbsEncoder* encoder) {
-	int test = read_byte_data(encoder->i2cBus, encoder->address, 0xFA);
 	int angle_raw = read_raw_angle(encoder);
 	float radians = (float)angle_raw / RAW_TO_RADIANS_CONVERSION_FACTOR;
 	return radians;
