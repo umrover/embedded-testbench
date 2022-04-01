@@ -136,9 +136,19 @@ float absEncFilter(int channel, float raw_val)
 	return multiplier * (channels + channel)->abs_enc_value + (1 - multiplier) * raw_val;
 }
 
-void updateAbsEnc() {
-	(channels + 0)->abs_enc_value = absEncFilter(0, get_angle_radians(abs_enc_0));
-	(channels + 1)->abs_enc_value = absEncFilter(1, get_angle_radians(abs_enc_1));
+void updateAbsEnc0()
+{
+	(channels + 0)->abs_enc_value = get_angle_radians(abs_enc_0);
+}
+
+void updateAbsEnc1()
+{
+	(channels + 1)->abs_enc_value = get_angle_radians(abs_enc_1);
+}
+
+void updateBothAbsEnc() {
+	updateAbsEnc0();
+	updateAbsEnc1();
 }
 
 void updateLimit() {
@@ -231,7 +241,8 @@ void updatePWM() {
 	// if reached forward limit for channel 1 motor on nucleo 1, don't go forwards
 	// If statement is not really necessary since all pins for limit switches are pulled high but
 	// it's useful to make distinction that this is only for joint b.
-	if (I2C_ADDRESS == 0x10) {
+	if (I2C_ADDRESS == 0x10)
+	{
 		channels[1].speed =
 				MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF && channels[1].speed > 0 ? 0 : channels[1].speed;
 	}
@@ -338,13 +349,21 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  if (I2C_ADDRESS == 0x10)
+  {
+	  while (1)
+	  {
+		  updateAbsEnc0();
+		  HAL_Delay(10);
+	  }
+  }
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	updateAbsEnc();
-	HAL_Delay(90);
+	updateBothAbsEnc();
+	HAL_Delay(10);
   }
   /* USER CODE END 3 */
 }

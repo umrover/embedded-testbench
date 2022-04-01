@@ -47,7 +47,7 @@ void del_smbus(SMBus *smbus) {
 // A1/A2 is 1 if pin connected to power, 0 if pin connected to ground
 AbsEncoder* new_abs_encoder(SMBus* i2cBus, uint8_t A1, uint8_t A2){
 	AbsEncoder* abs_encoder = (AbsEncoder*) malloc(sizeof(AbsEncoder));
-    if ((A1) && (A2)) abs_encoder->address = device_slave_address_both_power;
+    if (A1 && A2) abs_encoder->address = device_slave_address_both_power;
     else if (A1) abs_encoder->address = device_slave_address_a1_power;
     else if (A2) abs_encoder->address = device_slave_address_a2_power;
     else abs_encoder->address = device_slave_address_none_power;
@@ -67,13 +67,14 @@ int read_raw_angle(AbsEncoder* abs_encoder) {
 float get_angle_degrees(AbsEncoder* encoder) {
     int angle_raw = read_raw_angle(encoder);
     float degrees_proportion = 180.0 * angle_raw;
-    float degrees = degrees_proportion / (RAW_TO_180_DEGREES_CONVERSION_FACTOR);
+    float degrees = degrees_proportion / RAW_TO_180_DEGREES_CONVERSION_FACTOR;
     return degrees;
 }
 
 float get_angle_radians(AbsEncoder* encoder) {
-	float degrees = get_angle_degrees(encoder);
-	return degrees * 3.141529/180.0;
+	int angle_raw = read_raw_angle(encoder);
+	float radians = angle_raw * RAW_TO_RADIANS_CONVERSION_FACTOR;
+	return radians;
 }
 
 void del_encoder(AbsEncoder* abs_encoder){
