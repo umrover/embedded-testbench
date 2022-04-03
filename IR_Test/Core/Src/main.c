@@ -32,6 +32,9 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 #define THRESHOLD 5 // TODO - TBD, CAN ONLY FIGURE OUT BY TESTING
+#define I2C_SLAVE_ADDR				0b10000000
+
+#define NUM_SENSORS					5
 
 /* USER CODE END PD */
 
@@ -47,7 +50,8 @@ I2C_HandleTypeDef hi2c2;
 
 /* USER CODE BEGIN PV */
 
-uint16_t values[8];
+uint32_t channels[NUM_SENSORS] = {ADC_CHANNEL_3, ADC_CHANNEL_4, ADC_CHANNEL_5, ADC_CHANNEL_6, ADC_CHANNEL_7};
+uint16_t values[NUM_SENSORS];
 uint8_t turn_count = 0;
 
 
@@ -59,11 +63,61 @@ static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_I2C2_Init(void);
 /* USER CODE BEGIN PFP */
+ADC_ChannelConfTypeDef sConfig;
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+void ADC_Channel_Config()
+{
+	sConfig.Channel = ADC_CHANNEL_3;
+	sConfig.Rank = 1;
+	sConfig.SamplingTime = ADC_SAMPLETIME_1CYCLE_5;
+
+	if(HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+	{
+		Error_Handler();
+	}
+}
+
+void Read_Sensors()
+{
+	for(int i = 0; i < NUM_SENSORS; ++i)
+	{
+		sConfig.Channel = channels[i];
+		if(HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+		{
+			Error_Handler();
+		}
+
+		HAL_ADC_Start(&hadc1);
+		if(HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY) == HAL_OK)
+		{
+			values[i] = HAL_ADC_GetValue(&hadc1);
+		}
+	}
+}
+
+uint8_t Determine_Turns()
+{
+	Read_Sensors();
+
+	uint8_t turn = 10;
+
+	for(int i = 0; i < NUM_SENSORS; ++i)
+	{
+		if(values[i] > THRESHOLD && turn > 5)
+		{
+			turn = i;
+		}
+	}
+
+	return turn;
+}
+
+/*
 void ADC_Select_CH(uint32_t sensor)
 {
 	uint32_t in_channel;
@@ -96,6 +150,7 @@ void ADC_Select_CH(uint32_t sensor)
 	Error_Handler();
 	}
 }
+
 
 void read_values_sensor(uint16_t* values, uint8_t channel) {
 	ADC_Select_CH(channel + 3);
@@ -139,6 +194,7 @@ void refresh_turn_count() {
 	}
 	turn_count = calculate_turn_count(values, THRESHOLD);
 }
+*/
 
 /* USER CODE END 0 */
 
@@ -173,15 +229,17 @@ int main(void)
   MX_ADC1_Init();
   MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
-
-
+  ADC_Channel_Config();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  refresh_turn_count();
+	  turn_count = Determine_Turns();
+
+	  HAL_I2C_Slave_Transmit(&hi2c2, &turn_count, 1, 100);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -251,7 +309,7 @@ static void MX_ADC1_Init(void)
   */
   hadc1.Instance = ADC1;
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
-  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.Resolution = ADC_RESOLUTION_6B;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
@@ -272,7 +330,15 @@ static void MX_ADC1_Init(void)
     Error_Handler();
   }
 
-
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_7;
+  sConfig.Rank = ADC_REGULAR_RANK_1;
+  sConfig.SamplingTime = ADC_SAMPLINGTIME_COMMON_1;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
@@ -296,7 +362,7 @@ static void MX_I2C2_Init(void)
   /* USER CODE END I2C2_Init 1 */
   hi2c2.Instance = I2C2;
   hi2c2.Init.Timing = 0x00303D5B;
-  hi2c2.Init.OwnAddress1 = 0;
+  hi2c2.Init.OwnAddress1 = 128;
   hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
   hi2c2.Init.OwnAddress2 = 0;
