@@ -31,7 +31,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define THRESHOLD 5 // TODO - TBD, CAN ONLY FIGURE OUT BY TESTING
+#define THRESHOLD 15 // TODO - TBD, CAN ONLY FIGURE OUT BY TESTING
 #define I2C_SLAVE_ADDR				0b10000000
 
 #define NUM_SENSORS					5
@@ -97,7 +97,30 @@ void Read_Sensors()
 		{
 			values[i] = HAL_ADC_GetValue(&hadc1);
 		}
+//		HAL_ADC_Stop(&hadc1);
+//		HAL_Delay(100);
 	}
+	/*
+	 *
+	 * void read_values_sensor(uint16_t* values, uint8_t channel) {
+	 *
+		ADC_ChannelConfTypeDef sConfig = {0};
+	sConfig.Channel = in_channel;
+
+	sConfig.Rank = ADC_REGULAR_RANK_1;
+	sConfig.SamplingTime = ADC_SAMPLINGTIME_COMMON_1;
+	if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+	{
+	Error_Handler();
+	}
+
+	HAL_ADC_Start(&hadc1);
+	HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+	*(values + channel) = HAL_ADC_GetValue(&hadc1);
+	HAL_ADC_Stop(&hadc1);
+	HAL_Delay(100);
+}
+	 */
 }
 
 uint8_t Determine_Turns()
@@ -108,6 +131,10 @@ uint8_t Determine_Turns()
 
 	for(int i = 0; i < NUM_SENSORS; ++i)
 	{
+		// going through each sensor.
+		// turn = 0 is bottom is all is covered
+		// values go lower if they are blocked.
+		// Assume that all are blocked.
 		if(values[i] > THRESHOLD && turn > 5)
 		{
 			turn = i;
@@ -311,12 +338,13 @@ static void MX_ADC1_Init(void)
   hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
   hadc1.Init.Resolution = ADC_RESOLUTION_6B;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.ScanConvMode = ADC_SCAN_DISABLE;
+  hadc1.Init.ScanConvMode = ADC_SCAN_ENABLE;
   hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
   hadc1.Init.LowPowerAutoWait = DISABLE;
   hadc1.Init.LowPowerAutoPowerOff = DISABLE;
   hadc1.Init.ContinuousConvMode = DISABLE;
-  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.NbrOfConversion = 5;
+  hadc1.Init.DiscontinuousConvMode = ENABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
   hadc1.Init.DMAContinuousRequests = DISABLE;
@@ -332,9 +360,45 @@ static void MX_ADC1_Init(void)
 
   /** Configure Regular Channel
   */
-  sConfig.Channel = ADC_CHANNEL_7;
+  sConfig.Channel = ADC_CHANNEL_3;
   sConfig.Rank = ADC_REGULAR_RANK_1;
   sConfig.SamplingTime = ADC_SAMPLINGTIME_COMMON_1;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_4;
+  sConfig.Rank = ADC_REGULAR_RANK_2;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_5;
+  sConfig.Rank = ADC_REGULAR_RANK_3;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_6;
+  sConfig.Rank = ADC_REGULAR_RANK_4;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure Regular Channel
+  */
+  sConfig.Channel = ADC_CHANNEL_7;
+  sConfig.Rank = ADC_REGULAR_RANK_5;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();

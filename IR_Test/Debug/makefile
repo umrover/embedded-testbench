@@ -60,8 +60,8 @@ all: main-build
 main-build: IR_Test.elf secondary-outputs
 
 # Tool invocations
-IR_Test.elf IR_Test.map: $(OBJS) $(USER_OBJS) C:\Users\Havel\ Liu\Documents\GitHub\embedded-testbench\IR_Test\STM32G050C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "IR_Test.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\Users\Havel Liu\Documents\GitHub\embedded-testbench\IR_Test\STM32G050C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="IR_Test.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+IR_Test.elf IR_Test.map: $(OBJS) $(USER_OBJS) C:\Users\gutst\Documents\embedded-testbench\IR_Test\STM32G050C8TX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "IR_Test.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\Users\gutst\Documents\embedded-testbench\IR_Test\STM32G050C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="IR_Test.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
