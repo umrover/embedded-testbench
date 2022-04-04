@@ -51,6 +51,7 @@ I2C_HandleTypeDef hi2c2;
 /* USER CODE BEGIN PV */
 
 uint32_t channels[NUM_SENSORS] = {ADC_CHANNEL_3, ADC_CHANNEL_4, ADC_CHANNEL_5, ADC_CHANNEL_6, ADC_CHANNEL_7};
+uint32_t ranks[NUM_SENSORS] = {ADC_REGULAR_RANK_1, ADC_REGULAR_RANK_2, ADC_REGULAR_RANK_3, ADC_REGULAR_RANK_4, ADC_REGULAR_RANK_5};
 uint16_t values[NUM_SENSORS];
 uint8_t turn_count = 0;
 
@@ -87,6 +88,7 @@ void Read_Sensors()
 	for(int i = 0; i < NUM_SENSORS; ++i)
 	{
 		sConfig.Channel = channels[i];
+		sConfig.Rank = ranks[i];
 		if(HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
 		{
 			Error_Handler();
