@@ -184,19 +184,7 @@ void updateLogic() {
 
 			float error = 0;
 
-			if (I2C_ADDRESS == 0x10 && i == 1)
-			{
-				// gets floating point representation
-				float closed_set_point_rad;
-				memcpy(&closed_set_point_rad, &(channel->closed_setpoint), 4);
-				error = (float)(closed_set_point_rad - channel->abs_enc_value);
-
-			}
-			else
-			{
-				// TODO add a dead zone?
-				error = (float)(channel->closed_setpoint - channel->quad_enc_value);
-			}
+			error = (float)(channel->closed_setpoint - channel->quad_enc_value);
 
 			float integratedError = channel->integrated_error + (error * DT);
 			float derivativeError = (error - channel->last_error) / DT;
