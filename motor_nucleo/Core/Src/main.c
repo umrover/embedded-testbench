@@ -49,12 +49,19 @@ Channel channelDefault = {
 	0, //quadEncRawNow
 	0, //quadEncRawLast
 	0, //integratedError
-	0 //lastError
+	0, //lastError
+	0, //calibrated
+	0xFF // limit_enabled
 };
 
 Channel channels[6];
 
 #define DT 0.001
+
+// NUCLEO 2 MOTOR 2 IS GRIPPER, NUCLEO 3 MOTOR 2 IS FINGER	
+#define MOTOR_2_FORWARD_LIMIT channels[0].limit	
+#define MOTOR_2_BACKWARD_LIMIT channels[1].limit	
+#define MOTOR_1_CALIBRATION_POSITIVE_LIMIT channels[2].limit
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -130,18 +137,43 @@ float absEncFilter(int channel, float raw_val)
 	return multiplier * (channels + channel)->abs_enc_value + (1 - multiplier) * raw_val;
 }
 
-void updateAbsEnc() {
+void updateAbsEnc0()
+{
 	(channels + 0)->abs_enc_value = absEncFilter(0, get_angle_radians(abs_enc_0));
+}
+
+void updateAbsEnc1()
+{
 	(channels + 1)->abs_enc_value = absEncFilter(1, get_angle_radians(abs_enc_1));
 }
 
+void updateBothAbsEnc() {
+	updateAbsEnc0();
+	updateAbsEnc1();
+}
+
 void updateLimit() {
+	// Nucleo 2 Channel 0 is limit switch front for scoop (LS3)
+	// Nucleo 2 Channel 1 is limit switch back for scoop (LS4)
+	// Nucleo 3 Channel 0 is limit switch top/front for scope+triad (LS1)
+	// Nucleo 3 Channel 1 is limit switch bottom/back for scope+triad (LS2)
+	// Nucleo 1 Channel 2 is used for joint b calibration
+
+	// Our limit switches are active low, but channels[x].limit is equal to 0xFF if the switch is active.
+
 	channels[0].limit = (HAL_GPIO_ReadPin(M0_LIMIT_GPIO_Port, M0_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
-	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
+	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_RESET) &&
+			!channels[2].limit_enabled ? 0xFF : 0x00;
 	channels[3].limit = (HAL_GPIO_ReadPin(M3_LIMIT_GPIO_Port, M3_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[4].limit = (HAL_GPIO_ReadPin(M4_LIMIT_GPIO_Port, M4_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
 	channels[5].limit = (HAL_GPIO_ReadPin(M5_LIMIT_GPIO_Port, M5_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
+
+	// If joint b is at the end, calibrate it
+	if (MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF) {
+		channels[1].quad_enc_value = 0;
+		channels[1].calibrated = 0xFF;
+	}
 }
 
 void updateLogic() {
@@ -153,19 +185,7 @@ void updateLogic() {
 
 			float error = 0;
 
-			if (I2C_ADDRESS == 0x10 && i == 1)
-			{
-				// gets floating point representation
-				float closed_set_point_rad;
-				memcpy(&closed_set_point_rad, &(channel->closed_setpoint), 4);
-				error = (float)(closed_set_point_rad - channel->abs_enc_value);
-
-			}
-			else
-			{
-				// TODO add a dead zone?
-				error = (float)(channel->closed_setpoint - channel->quad_enc_value);
-			}
+			error = (float)(channel->closed_setpoint - channel->quad_enc_value);
 
 			float integratedError = channel->integrated_error + (error * DT);
 			float derivativeError = (error - channel->last_error) / DT;
@@ -199,18 +219,21 @@ void updatePWM() {
 
 	// if reached forward limit for channel 2 motor, don't go forwards
 	channels[2].speed =
-			channels[0].limit == 0xFF && channels[2].speed > 0 ? 0 : channels[2].speed;
+			MOTOR_2_FORWARD_LIMIT && channels[2].speed > 0 &&
+			channels[2].limit_enabled == 0xFF ? 0 : channels[2].speed;
 
 	// if reached backward limit for channel 2, don't go backwards
 	channels[2].speed =
-			channels[1].limit == 0xFF && channels[2].speed < 0 ? 0 : channels[2].speed;
+			MOTOR_2_BACKWARD_LIMIT && channels[2].speed < 0 &&
+			channels[2].limit_enabled == 0xFF ? 0 : channels[2].speed;
 
-	// if reached forward limit for channel 1 motor on nucleo 2, don't go forwards
+	// if reached forward limit for channel 1 motor on nucleo 1, don't go forwards
 	// If statement is not really necessary since all pins for limit switches are pulled high but
 	// it's useful to make distinction that this is only for joint b.
-	if (I2C_ADDRESS == 0x20) {
+	if (I2C_ADDRESS == 0x10)
+	{
 		channels[1].speed =
-				channels[2].limit == 0xFF && channels[1].speed > 0 ? 0 : channels[1].speed;
+				MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF && channels[1].speed > 0 ? 0 : channels[1].speed;
 	}
 
 	TIM1->CCR1 = (uint32_t)(fabs(channels[0].speed) * TIM1->ARR);
@@ -315,12 +338,20 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  if (I2C_ADDRESS == 0x10)
+  {
+	  while (1)
+	  {
+		  updateAbsEnc0();
+		  HAL_Delay(90);
+	  }
+  }
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	updateAbsEnc();
+	updateBothAbsEnc();
 	HAL_Delay(90);
   }
   /* USER CODE END 3 */

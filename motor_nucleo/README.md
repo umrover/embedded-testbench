@@ -3,7 +3,8 @@
 [Overview](#Overview) \
 [Registers](#Registers) \
 [Commands](#Commands) \
-[IO](#IO)
+[IO](#IO) \
+[Issues](#Issues)
 
 ## Overview
 This firmware configures one nucleo f303re to act as a "motor nucleo".
@@ -126,3 +127,8 @@ If any PWM output IO is disconnected, there will be no internal effects on the c
 If any quadrature input IO is disconnected, the affected channel will sense incorrect or no quadrature encoder input.
 
 If any encoder I2C IO is disconnected, all channels will not respond to commands. It is imperative this interface is connected.
+
+## Issues
+### Linker failing 'multiple instances of...' CubeIDE version 1.9.0
+Useful stackoverflow link: [link](https://stackoverflow.com/questions/71409313/stm-cubeide-1-9-0-has-linker-issues)
+
