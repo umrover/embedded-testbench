@@ -28,14 +28,15 @@ long read_word_data(SMBus *smbus, uint8_t addr, char cmd) {
     if (!smbus->DMA) smbus->ret = HAL_I2C_Master_Receive(smbus->i2c, (addr << 1) | 1, smbus->buf, 2, 500);
     else smbus->ret = HAL_I2C_Master_Receive_DMA(smbus->i2c, (addr << 1) | 1, smbus->buf, 2);
 
+    long data = smbus->buf[0] | (smbus->buf[1] << 8);
     if (smbus->ret != HAL_OK)
     {
     	HAL_I2C_DeInit(smbus->i2c);
     	HAL_Delay(5);
     	HAL_I2C_Init(smbus->i2c);
+    	data = 0;
     }
 
-    long data = smbus->buf[0] | (smbus->buf[1] << 8);
     return data;
 }
 
