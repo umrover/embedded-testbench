@@ -36,6 +36,7 @@ typedef struct {
 		ABS_ENC=0x50,
 		LIMIT=0x60,
 		CALIBRATED=0x6F,
+		TURN_COUNT=0x70,
 		LIMIT_ON=0x7F,
 		UNKNOWN=0xFF} operation;
 	uint8_t channel;
@@ -51,8 +52,8 @@ extern int WATCHDOG_TIMEOUT;
 
 uint8_t CH_num_receive();
 uint8_t CH_num_send();
-void CH_prepare_send();
 void CH_process_received();
+void CH_prepare_send();
 void CH_reset();
 void CH_tick();
 

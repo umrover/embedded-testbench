@@ -43,6 +43,7 @@ uint8_t CH_num_receive() {
 	case ABS_ENC:
 	case LIMIT:
 	case CALIBRATED: return 0;
+	case TURN_COUNT: return 0;
 	case LIMIT_ON: return 1;
 	case UNKNOWN: return 0;
 	}
@@ -63,11 +64,40 @@ uint8_t CH_num_send() {
 	case ADJUST: return 0;
 	case ABS_ENC: return 4;
 	case LIMIT:
-	case CALIBRATED: return 1;
+	case CALIBRATED:
+	case TURN_COUNT: return 1;
 	case LIMIT_ON:
 	case UNKNOWN: return 0;
 	}
 	return 0;
+}
+
+
+void CH_process_received() {
+	if (i2c_bus.channel > 5) {return;}
+	Channel *channel = channels + i2c_bus.channel;
+	switch(i2c_bus.operation) {
+	case OFF: channel->speed_max = 0; return;
+	case ON: return;
+	case OPEN:
+	case OPEN_PLUS: channel->mode = 0x00; memcpy(&(channel->open_setpoint), i2c_bus.buffer, 4); return;
+	case CLOSED:
+	case CLOSED_PLUS: channel->mode = 0xFF; memcpy(&(channel->FF), i2c_bus.buffer, 4); memcpy(&(channel->closed_setpoint),i2c_bus.buffer+4,4); return;
+	case CONFIG_PWM: {
+		int max = 0;
+		memcpy(&(max),i2c_bus.buffer,2);
+		channel->speed_max = (float)(max)/100; return; //UPDATED
+	}
+	case CONFIG_K: memcpy(&(channel->KP),i2c_bus.buffer,4); memcpy(&(channel->KI),i2c_bus.buffer+4,4); memcpy(&(channel->KD),i2c_bus.buffer+8,4); return;
+	case QUAD_ENC: return;
+	case ADJUST: memcpy(&(channel->quad_enc_value), i2c_bus.buffer, 4); return;
+	case ABS_ENC:
+	case LIMIT:
+	case CALIBRATED:
+	case TURN_COUNT: return;
+	case LIMIT_ON: memcpy(&(channel->limit_enabled), i2c_bus.buffer, 1);
+	case UNKNOWN: return;
+	}
 }
 
 void CH_prepare_send() {
@@ -87,33 +117,8 @@ void CH_prepare_send() {
 	case ABS_ENC: memcpy(i2c_bus.buffer, &(channel->abs_enc_value), 4); return;
 	case LIMIT: memcpy(i2c_bus.buffer, &(channel->limit), 1); return;
 	case CALIBRATED: memcpy(i2c_bus.buffer, &(channel->calibrated), 1); return;
+	case TURN_COUNT: memcpy(i2c_bus.buffer, &(channel->turn_count), 1); return;
 	case LIMIT_ON:
-	case UNKNOWN: return;
-	}
-}
-
-void CH_process_received() {
-	if (i2c_bus.channel > 5) {return;}
-	Channel *channel = channels + i2c_bus.channel;
-	switch(i2c_bus.operation) {
-	case OFF: channel->speedMax = 0; return;
-	case ON: return;
-	case OPEN:
-	case OPEN_PLUS: channel->mode = 0x00; memcpy(&(channel->open_setpoint), i2c_bus.buffer, 4); return;
-	case CLOSED:
-	case CLOSED_PLUS: channel->mode = 0xFF; memcpy(&(channel->FF), i2c_bus.buffer, 4); memcpy(&(channel->closed_setpoint),i2c_bus.buffer+4,4); return;
-	case CONFIG_PWM: {
-		int max = 0;
-		memcpy(&(max),i2c_bus.buffer,2);
-		channel->speedMax = (float)(max)/100; return; //UPDATED
-	}
-	case CONFIG_K: memcpy(&(channel->KP),i2c_bus.buffer,4); memcpy(&(channel->KI),i2c_bus.buffer+4,4); memcpy(&(channel->KD),i2c_bus.buffer+8,4); return;
-	case QUAD_ENC: return;
-	case ADJUST: memcpy(&(channel->quad_enc_value), i2c_bus.buffer, 4);
-	case ABS_ENC:
-	case LIMIT:
-	case CALIBRATED: return;
-	case LIMIT_ON: memcpy(&(channel->limit_enabled), i2c_bus.buffer, 1);
 	case UNKNOWN: return;
 	}
 }

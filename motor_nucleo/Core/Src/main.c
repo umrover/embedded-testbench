@@ -34,24 +34,25 @@
 /* USER CODE BEGIN PD */
 
 
-Channel channelDefault = {
+Channel channel_default = {
 	0x00, //mode
-	0, //openSetpoint
-	0, //closedSetpoint
+	0, //open_setpoint
+	0, //closed_setpoint
 	0, //FF
 	0, //KP
 	0, //KI
 	0, //KD
-	0, //absEnc
-	0, //quadEnc
-	0, //pwmMax
-	0, //pwmOutput
-	0, //quadEncRawNow
-	0, //quadEncRawLast
-	0, //integratedError
-	0, //lastError
+	0, //abs_enc_value
+	0, //quad_enc_value
+	0, //speed_max
+	0, //speed
+	0, //quad_enc_raw_now
+	0, //quad_enc_raw_last
+	0, //integrated_error
+	0, //last_error
 	0, //calibrated
-	0xFF // limit_enabled
+	0xFF, // limit_enabled
+	0xFF // turn_count
 };
 
 Channel channels[6];
@@ -99,7 +100,7 @@ static void MX_TIM6_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void updateQuadEnc() {
+void update_quad_enc() {
 	channels[0].quad_enc_raw_now = TIM2->CNT;
 	channels[1].quad_enc_raw_now = TIM3->CNT;
 
@@ -111,7 +112,7 @@ void updateQuadEnc() {
 	}
 }
 
-float absEncFilter(int channel, float raw_val)
+float abs_enc_filter(int channel, float raw_val)
 {
 	// TODO make filters that can handle wrap around
 
@@ -136,22 +137,22 @@ float absEncFilter(int channel, float raw_val)
 	return multiplier * (channels + channel)->abs_enc_value + (1 - multiplier) * raw_val;
 }
 
-void updateAbsEnc0()
+void update_abs_enc_0()
 {
-	(channels + 0)->abs_enc_value = absEncFilter(0, get_angle_radians(abs_enc_0));
+	(channels + 0)->abs_enc_value = abs_enc_filter(0, get_angle_radians(abs_enc_0));
 }
 
-void updateAbsEnc1()
+void update_abs_enc_1()
 {
-	(channels + 1)->abs_enc_value = absEncFilter(1, get_angle_radians(abs_enc_1));
+	(channels + 1)->abs_enc_value = abs_enc_filter(1, get_angle_radians(abs_enc_1));
 }
 
-void updateBothAbsEnc() {
-	updateAbsEnc0();
-	updateAbsEnc1();
+void update_both_abs_enc() {
+	update_abs_enc_0();
+	update_abs_enc_1();
 }
 
-void updateLimit() {
+void update_limit() {
 	// Nucleo 2 Channel 0 is limit switch front for scoop (LS3)
 	// Nucleo 2 Channel 1 is limit switch back for scoop (LS4)
 	// Nucleo 3 Channel 0 is limit switch top/front for scope+triad (LS1)
@@ -175,7 +176,7 @@ void updateLimit() {
 	}
 }
 
-void updateLogic() {
+void update_logic() {
 	for (uint8_t i = 0; i < 6; i++){
 		Channel *channel = channels + i;
 		float output;
@@ -193,18 +194,18 @@ void updateLogic() {
 			channel->last_error = error;
 
 			output = ((channel->KP * error) + (channel->KI * integratedError) + (channel->KD * derivativeError) + channel->FF);
-			output = output <  channel->speedMax ? output : channel->speedMax;
-			output = output > -channel->speedMax ? output : -channel->speedMax;
+			output = output <  channel->speed_max ? output : channel->speed_max;
+			output = output > -channel->speed_max ? output : -channel->speed_max;
 			channel->speed = -output;
 		}
 		else {
-			channel->speed = channel->open_setpoint * channel->speedMax; //scales it
+			channel->speed = channel->open_setpoint * channel->speed_max; //scales it
 		}
 
 	}
 }
 
-void setDir(float speed, GPIO_TypeDef *fwd_port, uint16_t fwd_pin, GPIO_TypeDef *bwd_port,
+void set_dir(float speed, GPIO_TypeDef *fwd_port, uint16_t fwd_pin, GPIO_TypeDef *bwd_port,
 		uint16_t bwd_pin) {
 	HAL_GPIO_WritePin(fwd_port, fwd_pin, (speed > 0) | (speed == 0));
 	HAL_GPIO_WritePin(bwd_port, bwd_pin, (speed < 0) | (speed == 0));
@@ -214,14 +215,16 @@ float fabs(float i) {
 	return i < 0 ? i * -1.0 : i;
 }
 
-void updatePWM() {
+void update_PWM() {
 
 	// if reached forward limit for channel 2 motor, don't go forwards
+	// TODO - verify that sign is correct
 	channels[2].speed =
 			MOTOR_2_FORWARD_LIMIT && channels[2].speed > 0 &&
 			channels[2].limit_enabled == 0xFF ? 0 : channels[2].speed;
 
 	// if reached backward limit for channel 2, don't go backwards
+	// TODO - verify that sign is correct
 	channels[2].speed =
 			MOTOR_2_BACKWARD_LIMIT && channels[2].speed < 0 &&
 			channels[2].limit_enabled == 0xFF ? 0 : channels[2].speed;
@@ -229,6 +232,7 @@ void updatePWM() {
 	// if reached forward limit for channel 1 motor on nucleo 1, don't go forwards
 	// If statement is not really necessary since all pins for limit switches are pulled high but
 	// it's useful to make distinction that this is only for joint b.
+	// TODO - verify that sign is correct
 	if (I2C_ADDRESS == 0x10)
 	{
 		channels[1].speed =
@@ -239,26 +243,26 @@ void updatePWM() {
 	TIM1->CCR2 = (uint32_t)(fabs(channels[1].speed) * TIM1->ARR);
 	TIM1->CCR3 = (uint32_t)(fabs(channels[2].speed) * TIM1->ARR);
 
-	setDir(channels[0].speed, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
-	setDir(channels[1].speed, M1_DIR_GPIO_Port, M1_DIR_Pin, M1_NDIR_GPIO_Port, M1_NDIR_Pin);
-	setDir(channels[2].speed, M2_DIR_GPIO_Port, M2_DIR_Pin, M2_NDIR_GPIO_Port, M2_NDIR_Pin);
+	set_dir(channels[0].speed, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
+	set_dir(channels[1].speed, M1_DIR_GPIO_Port, M1_DIR_Pin, M1_NDIR_GPIO_Port, M1_NDIR_Pin);
+	set_dir(channels[2].speed, M2_DIR_GPIO_Port, M2_DIR_Pin, M2_NDIR_GPIO_Port, M2_NDIR_Pin);
 
 	TIM8->CCR1 = (uint32_t)(fabs(channels[3].speed) * TIM8->ARR);
 	TIM8->CCR2 = (uint32_t)(fabs(channels[4].speed) * TIM8->ARR);
 	TIM8->CCR3 = (uint32_t)(fabs(channels[5].speed) * TIM8->ARR);
 
 	//after SAR fix
-	setDir(channels[3].speed, M3_DIR_GPIO_Port, M3_DIR_Pin, M3_NDIR_GPIO_Port, M3_NDIR_Pin);
-	setDir(channels[4].speed, M4_DIR_GPIO_Port, M4_DIR_Pin, M4_NDIR_GPIO_Port, M4_NDIR_Pin);
-	setDir(channels[5].speed, M5_DIR_GPIO_Port, M5_DIR_Pin, M5_NDIR_GPIO_Port, M5_NDIR_Pin);
+	set_dir(channels[3].speed, M3_DIR_GPIO_Port, M3_DIR_Pin, M3_NDIR_GPIO_Port, M3_NDIR_Pin);
+	set_dir(channels[4].speed, M4_DIR_GPIO_Port, M4_DIR_Pin, M4_NDIR_GPIO_Port, M4_NDIR_Pin);
+	set_dir(channels[5].speed, M5_DIR_GPIO_Port, M5_DIR_Pin, M5_NDIR_GPIO_Port, M5_NDIR_Pin);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
 	if (htim == &htim6) {
-		updateQuadEnc();
-		updateLimit();
-		updateLogic();
-		updatePWM();
+		update_quad_enc();
+		update_limit();
+		update_logic();
+		update_PWM();
 		CH_tick();
 	}
 }
@@ -341,16 +345,39 @@ int main(void)
   {
 	  while (1)
 	  {
-		  updateAbsEnc0();
+		  update_abs_enc_0();
 		  HAL_Delay(90);
 	  }
   }
+  else if (I2C_ADDRESS == 0x20)
+  {
+	  while (1)
+	  {
+		  update_both_abs_enc();
+		  HAL_Delay(90);
+	  }
+  }
+  else if (I2C_ADDRESS == 0x30)
+	{
+	  while (1)
+	  {
+		  update_abs_enc_0();
+		  HAL_Delay(90);
+
+		  // TODO - uncomment this code once the IR_encoder is implemented and tested
+		  /*
+		  uint8_t buffer = 0xFF;
+		  HAL_I2C_Master_Transmit(&hi2c2, 0x80, &buffer, sizeof(buffer), 100);
+		  channels[5].turn_count = buffer;
+		  */
+	  }
+	}
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	updateBothAbsEnc();
+	update_both_abs_enc();
 	HAL_Delay(90);
   }
   /* USER CODE END 3 */

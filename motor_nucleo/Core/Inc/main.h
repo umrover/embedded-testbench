@@ -57,7 +57,7 @@ typedef struct{
 	float abs_enc_value;
 	int32_t quad_enc_value;
 
-	float speedMax; //max percent
+	float speed_max; //max percent
 
 	//INTERNAL
 	float speed; //
@@ -70,10 +70,12 @@ typedef struct{
 	uint8_t calibrated;
 	uint8_t limit_enabled;
 
+	uint8_t turn_count;
+
 } Channel;
 
 
-extern Channel channelDefault;
+extern Channel channel_default;
 
 extern Channel channels[6];
 
