@@ -153,21 +153,21 @@ void update_both_abs_enc() {
 }
 
 void update_limit() {
-	// Nucleo 2 Channel 0 is limit switch front for scoop (LS3)
-	// Nucleo 2 Channel 1 is limit switch back for scoop (LS4)
+	// Nucleo 2 Channel 0 is limit switch front (open) for scoop (LS3)
+	// Nucleo 2 Channel 1 is limit switch back (closed) for scoop (LS4)
 	// Nucleo 3 Channel 0 is limit switch top/front for scope+triad (LS1)
 	// Nucleo 3 Channel 1 is limit switch bottom/back for scope+triad (LS2)
 	// Nucleo 1 Channel 2 is used for joint b calibration
 
-	// Our limit switches are active low, but channels[x].limit is equal to 0xFF if the switch is active.
+	// Our limit switches are active high, so the channels[x].limit is equal to 0xFF if the switch is active.
 
-	channels[0].limit = (HAL_GPIO_ReadPin(M0_LIMIT_GPIO_Port, M0_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
-	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
-	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_RESET) &&
+	channels[0].limit = (HAL_GPIO_ReadPin(M0_LIMIT_GPIO_Port, M0_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
+	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
+	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_SET) &&
 			!channels[2].limit_enabled ? 0xFF : 0x00;
-	channels[3].limit = (HAL_GPIO_ReadPin(M3_LIMIT_GPIO_Port, M3_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
-	channels[4].limit = (HAL_GPIO_ReadPin(M4_LIMIT_GPIO_Port, M4_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
-	channels[5].limit = (HAL_GPIO_ReadPin(M5_LIMIT_GPIO_Port, M5_LIMIT_Pin) == GPIO_PIN_RESET) ? 0xFF : 0x00;
+	channels[3].limit = (HAL_GPIO_ReadPin(M3_LIMIT_GPIO_Port, M3_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
+	channels[4].limit = (HAL_GPIO_ReadPin(M4_LIMIT_GPIO_Port, M4_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
+	channels[5].limit = (HAL_GPIO_ReadPin(M5_LIMIT_GPIO_Port, M5_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
 
 	// If joint b is at the end, calibrate it
 	if (MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF) {
@@ -892,7 +892,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pin = M0_LIMIT_Pin|M1_LIMIT_Pin|M2_LIMIT_Pin|M3_LIMIT_Pin
                           |M4_LIMIT_Pin|M5_LIMIT_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
 }
