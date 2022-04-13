@@ -60,9 +60,9 @@ Channel channels[6];
 #define DT 0.001
 
 // NUCLEO 2 MOTOR 2 IS GRIPPER, NUCLEO 3 MOTOR 2 IS FINGER	
-#define MOTOR_2_FORWARD_LIMIT channels[0].limit	
+#define MOTOR_2_FORWARD_LIMIT channels[2].limit
 #define MOTOR_2_BACKWARD_LIMIT channels[1].limit	
-#define MOTOR_1_CALIBRATION_POSITIVE_LIMIT channels[2].limit
+#define MOTOR_1_CALIBRATION_POSITIVE_LIMIT channels[3].limit
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
