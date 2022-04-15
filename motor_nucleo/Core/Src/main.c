@@ -128,10 +128,10 @@ float absEncFilter(int channel, float raw_val)
 		multiplier = 1;
 	}
 
-	// If value is far from current value
-	else if (fabs(raw_val - (channels + channel)->abs_enc_value) > ENCODER_ERROR_THRESHOLD) {
-		multiplier = STABILIZER_BAD_MULTIPLIER;
-	}
+//	// If value is far from current value
+//	else if (fabs(raw_val - (channels + channel)->abs_enc_value) > ENCODER_ERROR_THRESHOLD) {
+//		multiplier = STABILIZER_BAD_MULTIPLIER;
+//	}
 
 	// Return combination of new and old values
 	return multiplier * (channels + channel)->abs_enc_value + (1 - multiplier) * raw_val;
