@@ -99,14 +99,12 @@ float fabs(float);
 
 /* Private defines -----------------------------------------------------------*/
 #define CONTROL_LOOP_PERIOD 1000
-#define I2C_ADDRESS 0x20
+#define I2C_ADDRESS 0x30
 #define CHANNELS 6
 #define QUADRATURE_FILTER 8
 #define PWM_PERIOD 10000
-#define M4_NDIR_Pin GPIO_PIN_13
+#define M4_NDIR_Pin GPIO_PIN_14
 #define M4_NDIR_GPIO_Port GPIOC
-#define M3_NDIR_Pin GPIO_PIN_14
-#define M3_NDIR_GPIO_Port GPIOC
 #define M5_NDIR_Pin GPIO_PIN_15
 #define M5_NDIR_GPIO_Port GPIOC
 #define M_I2C_SDA_Pin GPIO_PIN_0
@@ -127,6 +125,8 @@ float fabs(float);
 #define M1_QUAD_B_GPIO_Port GPIOA
 #define M1_QUAD_A_Pin GPIO_PIN_6
 #define M1_QUAD_A_GPIO_Port GPIOA
+#define M3_NDIR_Pin GPIO_PIN_7
+#define M3_NDIR_GPIO_Port GPIOA
 #define M3_DIR_Pin GPIO_PIN_2
 #define M3_DIR_GPIO_Port GPIOB
 #define M0_LIMIT_Pin GPIO_PIN_10
@@ -179,3 +179,5 @@ float fabs(float);
 #endif
 
 #endif /* __MAIN_H */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

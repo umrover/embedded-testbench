@@ -71,7 +71,7 @@ Channel channels[6];
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
- I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
 
 TIM_HandleTypeDef htim1;
@@ -405,7 +405,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -454,7 +453,7 @@ static void MX_I2C1_Init(void)
   hi2c1.Init.OwnAddress1 = 254;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-  hi2c1.Init.OwnAddress2 = 64;
+  hi2c1.Init.OwnAddress2 = 96;
   hi2c1.Init.OwnAddress2Masks = I2C_OA2_MASK04;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
@@ -462,14 +461,12 @@ static void MX_I2C1_Init(void)
   {
     Error_Handler();
   }
-
   /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
-
   /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
@@ -510,14 +507,12 @@ static void MX_I2C2_Init(void)
   {
     Error_Handler();
   }
-
   /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c2, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
-
   /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c2, 0) != HAL_OK)
@@ -858,29 +853,29 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, M4_NDIR_Pin|M3_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin
-                          |M1_NDIR_Pin|M2_NDIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin|M1_NDIR_Pin
+                          |M2_NDIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5|M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin
-                          |M5_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5|M3_NDIR_Pin|M0_DIR_Pin|M1_DIR_Pin
+                          |M2_DIR_Pin|M5_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, M3_DIR_Pin|M4_DIR_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : M4_NDIR_Pin M3_NDIR_Pin M5_NDIR_Pin M0_NDIR_Pin
-                           M1_NDIR_Pin M2_NDIR_Pin */
-  GPIO_InitStruct.Pin = M4_NDIR_Pin|M3_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin
-                          |M1_NDIR_Pin|M2_NDIR_Pin;
+  /*Configure GPIO pins : M4_NDIR_Pin M5_NDIR_Pin M0_NDIR_Pin M1_NDIR_Pin
+                           M2_NDIR_Pin */
+  GPIO_InitStruct.Pin = M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin|M1_NDIR_Pin
+                          |M2_NDIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PA5 M0_DIR_Pin M1_DIR_Pin M2_DIR_Pin
-                           M5_DIR_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_5|M0_DIR_Pin|M1_DIR_Pin|M2_DIR_Pin
-                          |M5_DIR_Pin;
+  /*Configure GPIO pins : PA5 M3_NDIR_Pin M0_DIR_Pin M1_DIR_Pin
+                           M2_DIR_Pin M5_DIR_Pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_5|M3_NDIR_Pin|M0_DIR_Pin|M1_DIR_Pin
+                          |M2_DIR_Pin|M5_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -935,3 +930,5 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
