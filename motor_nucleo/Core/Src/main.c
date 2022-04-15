@@ -71,7 +71,7 @@ Channel channels[6];
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-I2C_HandleTypeDef hi2c1;
+ I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c2;
 
 TIM_HandleTypeDef htim1;
@@ -124,14 +124,15 @@ float abs_enc_filter(int channel, float raw_val)
 	float multiplier = STABILIZER_MULTIPLIER;
 
 	// If value is outside 6.25 rad
-	if (fabs(raw_val) > 6.25) {
+	// If value is zero the i2c transaction failed
+	if (fabs(raw_val) > 6.25 || raw_val == 0) {
 		multiplier = 1;
 	}
 
-	// If value is far from current value
-	else if (fabs(raw_val - (channels + channel)->abs_enc_value) > ENCODER_ERROR_THRESHOLD) {
-		multiplier = STABILIZER_BAD_MULTIPLIER;
-	}
+//	// If value is far from current value
+//	else if (fabs(raw_val - (channels + channel)->abs_enc_value) > ENCODER_ERROR_THRESHOLD) {
+//		multiplier = STABILIZER_BAD_MULTIPLIER;
+//	}
 
 	// Return combination of new and old values
 	return multiplier * (channels + channel)->abs_enc_value + (1 - multiplier) * raw_val;
@@ -404,6 +405,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -460,12 +462,14 @@ static void MX_I2C1_Init(void)
   {
     Error_Handler();
   }
+
   /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
+
   /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
@@ -506,12 +510,14 @@ static void MX_I2C2_Init(void)
   {
     Error_Handler();
   }
+
   /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c2, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
+
   /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c2, 0) != HAL_OK)
@@ -929,5 +935,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

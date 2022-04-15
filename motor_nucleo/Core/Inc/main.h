@@ -170,7 +170,7 @@ float fabs(float);
 /* USER CODE BEGIN Private defines */
 #define ENCODER_ERROR_THRESHOLD 0.05
 #define STABILIZER_BAD_MULTIPLIER 0.97
-#define STABILIZER_MULTIPLIER 0.65
+#define STABILIZER_MULTIPLIER 0.80
 #define STABILIZER_EPSILON 0.000001
 /* USER CODE END Private defines */
 
@@ -179,5 +179,3 @@ float fabs(float);
 #endif
 
 #endif /* __MAIN_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
