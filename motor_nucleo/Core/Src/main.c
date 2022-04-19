@@ -52,7 +52,6 @@ Channel channel_default = {
 	0, //last_error
 	0, //calibrated
 	0xFF, // limit_enabled
-	0xFF // turn_count
 };
 
 Channel channels[6];
@@ -218,17 +217,24 @@ float fabs(float i) {
 
 void update_PWM() {
 
+	float speed_0 = channels[0].speed;
+	float speed_1 = channels[1].speed;
+	float speed_2 = channels[2].speed;
+	float speed_3 = channels[3].speed;
+	float speed_4 = channels[4].speed;
+	float speed_5 = channels[5].speed;
 	// if reached forward limit for channel 2 motor, don't go forwards
 	// TODO - verify that sign is correct
-	channels[2].speed =
-			MOTOR_2_FORWARD_LIMIT && channels[2].speed > 0 &&
-			channels[2].limit_enabled == 0xFF ? 0 : channels[2].speed;
+
+	speed_2 =
+			MOTOR_2_FORWARD_LIMIT && speed_2 > 0 &&
+			channels[2].limit_enabled == 0xFF ? 0 : speed_2;
 
 	// if reached backward limit for channel 2, don't go backwards
 	// TODO - verify that sign is correct
-	channels[2].speed =
-			MOTOR_2_BACKWARD_LIMIT && channels[2].speed < 0 &&
-			channels[2].limit_enabled == 0xFF ? 0 : channels[2].speed;
+	speed_2 =
+			MOTOR_2_BACKWARD_LIMIT && speed_2 < 0 &&
+			channels[2].limit_enabled == 0xFF ? 0 : speed_2;
 
 	// if reached forward limit for channel 1 motor on nucleo 1, don't go forwards
 	// If statement is not really necessary since all pins for limit switches are pulled high but
@@ -236,26 +242,25 @@ void update_PWM() {
 	// TODO - verify that sign is correct
 	if (I2C_ADDRESS == 0x10)
 	{
-		channels[1].speed =
-				MOTOR_1_CALIBRATION_NEGATIVE_LIMIT == 0xFF && channels[1].speed < 0 ? 0 : channels[1].speed;
+		speed_1 =
+				MOTOR_1_CALIBRATION_NEGATIVE_LIMIT == 0xFF && speed_1 < 0 ? 0 : speed_1;
 	}
 
-	TIM1->CCR1 = (uint32_t)(fabs(channels[0].speed) * TIM1->ARR);
-	TIM1->CCR2 = (uint32_t)(fabs(channels[1].speed) * TIM1->ARR);
-	TIM1->CCR3 = (uint32_t)(fabs(channels[2].speed) * TIM1->ARR);
+	TIM1->CCR1 = (uint32_t)(fabs(speed_0) * TIM1->ARR);
+	TIM1->CCR2 = (uint32_t)(fabs(speed_1) * TIM1->ARR);
+	TIM1->CCR3 = (uint32_t)(fabs(speed_2) * TIM1->ARR);
 
-	set_dir(channels[0].speed, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
-	set_dir(channels[1].speed, M1_DIR_GPIO_Port, M1_DIR_Pin, M1_NDIR_GPIO_Port, M1_NDIR_Pin);
-	set_dir(channels[2].speed, M2_DIR_GPIO_Port, M2_DIR_Pin, M2_NDIR_GPIO_Port, M2_NDIR_Pin);
+	set_dir(speed_0, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
+	set_dir(speed_1, M1_DIR_GPIO_Port, M1_DIR_Pin, M1_NDIR_GPIO_Port, M1_NDIR_Pin);
+	set_dir(speed_2, M2_DIR_GPIO_Port, M2_DIR_Pin, M2_NDIR_GPIO_Port, M2_NDIR_Pin);
 
-	TIM8->CCR1 = (uint32_t)(fabs(channels[3].speed) * TIM8->ARR);
-	TIM8->CCR2 = (uint32_t)(fabs(channels[4].speed) * TIM8->ARR);
-	TIM8->CCR3 = (uint32_t)(fabs(channels[5].speed) * TIM8->ARR);
+	TIM8->CCR1 = (uint32_t)(fabs(speed_3) * TIM8->ARR);
+	TIM8->CCR2 = (uint32_t)(fabs(speed_4) * TIM8->ARR);
+	TIM8->CCR3 = (uint32_t)(fabs(speed_5) * TIM8->ARR);
 
-	//after SAR fix
-	set_dir(channels[3].speed, M3_DIR_GPIO_Port, M3_DIR_Pin, M3_NDIR_GPIO_Port, M3_NDIR_Pin);
-	set_dir(channels[4].speed, M4_DIR_GPIO_Port, M4_DIR_Pin, M4_NDIR_GPIO_Port, M4_NDIR_Pin);
-	set_dir(channels[5].speed, M5_DIR_GPIO_Port, M5_DIR_Pin, M5_NDIR_GPIO_Port, M5_NDIR_Pin);
+	set_dir(speed_3, M3_DIR_GPIO_Port, M3_DIR_Pin, M3_NDIR_GPIO_Port, M3_NDIR_Pin);
+	set_dir(speed_4, M4_DIR_GPIO_Port, M4_DIR_Pin, M4_NDIR_GPIO_Port, M4_NDIR_Pin);
+	set_dir(speed_5, M5_DIR_GPIO_Port, M5_DIR_Pin, M5_NDIR_GPIO_Port, M5_NDIR_Pin);
 }
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
@@ -364,13 +369,6 @@ int main(void)
 	  {
 		  update_abs_enc_0();
 		  HAL_Delay(90);
-
-		  // TODO - uncomment this code once the IR_encoder is implemented and tested
-		  /*
-		  uint8_t buffer = 0xFF;
-		  HAL_I2C_Master_Transmit(&hi2c2, 0x80, &buffer, sizeof(buffer), 100);
-		  channels[5].turn_count = buffer;
-		  */
 	  }
 	}
   while (1)

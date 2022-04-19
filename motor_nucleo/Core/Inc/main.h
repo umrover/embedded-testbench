@@ -70,8 +70,6 @@ typedef struct{
 	uint8_t calibrated;
 	uint8_t limit_enabled;
 
-	uint8_t turn_count;
-
 } Channel;
 
 
