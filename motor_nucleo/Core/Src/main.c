@@ -162,10 +162,8 @@ void update_limit() {
 	// Our limit switches are active high, so the channels[x].limit is equal to 0xFF if the switch is active.
 
 	channels[0].limit = (HAL_GPIO_ReadPin(M0_LIMIT_GPIO_Port, M0_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
-	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_SET)
-			&& channels[2].limit_enabled ? 0xFF : 0x00;
-	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_SET)
-			&& channels[2].limit_enabled ? 0xFF : 0x00;
+	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
+	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
 	channels[3].limit = (HAL_GPIO_ReadPin(M3_LIMIT_GPIO_Port, M3_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
 	channels[4].limit = (HAL_GPIO_ReadPin(M4_LIMIT_GPIO_Port, M4_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
 	channels[5].limit = (HAL_GPIO_ReadPin(M5_LIMIT_GPIO_Port, M5_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
@@ -224,16 +222,6 @@ void update_PWM() {
 	float speed_3 = channels[3].speed;
 	float speed_4 = channels[4].speed;
 	float speed_5 = channels[5].speed;
-	// if reached forward limit for channel 2 motor, don't go forwards
-	// TODO - verify that sign is correct
-
-	speed_2 = MOTOR_2_FORWARD_LIMIT == 0xFF && speed_2 > 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
-//	speed_2 = channels[2].limit == 0xFF && speed_2 > 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
-
-	// if reached backward limit for channel 2, don't go backwards
-	// TODO - verify that sign is correct
-	speed_2 = MOTOR_2_BACKWARD_LIMIT == 0xFF && speed_2 < 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
-//	speed_2 = channels[1].limit == 0xFF && speed_2 > 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
 
 	// if reached forward limit for channel 1 motor on nucleo 1, don't go forwards
 	// If statement is not really necessary since all pins for limit switches are pulled high but
@@ -243,6 +231,20 @@ void update_PWM() {
 	{
 		speed_1 =
 				MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF && speed_1 > 0 ? 0 : speed_1;
+	}
+	else if (I2C_ADDRESS == 0x20)
+	{
+		// if reached forward limit for channel 2 motor, don't go forwards
+		speed_2 = MOTOR_2_BACKWARD_LIMIT == 0xFF && speed_2 > 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
+		// if reached backward limit for channel 2, don't go backwards
+		speed_2 = MOTOR_2_FORWARD_LIMIT == 0xFF && speed_2 < 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
+	}
+	else if (I2C_ADDRESS == 0x30)
+	{
+		// if reached forward limit for channel 2 motor, don't go forwards
+		speed_2 = MOTOR_2_FORWARD_LIMIT == 0xFF && speed_2 > 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
+		// if reached backward limit for channel 2, don't go backwards
+		speed_2 = MOTOR_2_BACKWARD_LIMIT == 0xFF && speed_2 < 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
 	}
 
 	TIM1->CCR1 = (uint32_t)(fabs(speed_0) * TIM1->ARR);
