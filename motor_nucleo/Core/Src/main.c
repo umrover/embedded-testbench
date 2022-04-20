@@ -33,7 +33,6 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-
 Channel channel_default = {
 	0x00, //mode
 	0, //open_setpoint
@@ -42,6 +41,7 @@ Channel channel_default = {
 	0, //KP
 	0, //KI
 	0, //KD
+	0, //limit
 	0, //abs_enc_value
 	0, //quad_enc_value
 	0, //speed_max
@@ -61,7 +61,7 @@ Channel channels[6];
 // NUCLEO 2 MOTOR 2 IS GRIPPER, NUCLEO 3 MOTOR 2 IS FINGER	
 #define MOTOR_2_FORWARD_LIMIT channels[2].limit
 #define MOTOR_2_BACKWARD_LIMIT channels[1].limit	
-#define MOTOR_1_CALIBRATION_NEGATIVE_LIMIT channels[3].limit
+#define MOTOR_1_CALIBRATION_POSITIVE_LIMIT channels[3].limit
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -162,15 +162,16 @@ void update_limit() {
 	// Our limit switches are active high, so the channels[x].limit is equal to 0xFF if the switch is active.
 
 	channels[0].limit = (HAL_GPIO_ReadPin(M0_LIMIT_GPIO_Port, M0_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
-	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
-	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_SET) &&
-			!channels[2].limit_enabled ? 0xFF : 0x00;
+	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_SET)
+			&& channels[2].limit_enabled ? 0xFF : 0x00;
+	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_SET)
+			&& channels[2].limit_enabled ? 0xFF : 0x00;
 	channels[3].limit = (HAL_GPIO_ReadPin(M3_LIMIT_GPIO_Port, M3_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
 	channels[4].limit = (HAL_GPIO_ReadPin(M4_LIMIT_GPIO_Port, M4_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
 	channels[5].limit = (HAL_GPIO_ReadPin(M5_LIMIT_GPIO_Port, M5_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
 
 	// If joint b is at the end, calibrate it
-	if (MOTOR_1_CALIBRATION_NEGATIVE_LIMIT == 0xFF) {
+	if (MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF) {
 		channels[1].quad_enc_value = 0;
 		channels[1].calibrated = 0xFF;
 	}
@@ -226,15 +227,13 @@ void update_PWM() {
 	// if reached forward limit for channel 2 motor, don't go forwards
 	// TODO - verify that sign is correct
 
-	speed_2 =
-			MOTOR_2_FORWARD_LIMIT && speed_2 > 0 &&
-			channels[2].limit_enabled == 0xFF ? 0 : speed_2;
+	speed_2 = MOTOR_2_FORWARD_LIMIT == 0xFF && speed_2 > 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
+//	speed_2 = channels[2].limit == 0xFF && speed_2 > 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
 
 	// if reached backward limit for channel 2, don't go backwards
 	// TODO - verify that sign is correct
-	speed_2 =
-			MOTOR_2_BACKWARD_LIMIT && speed_2 < 0 &&
-			channels[2].limit_enabled == 0xFF ? 0 : speed_2;
+	speed_2 = MOTOR_2_BACKWARD_LIMIT == 0xFF && speed_2 < 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
+//	speed_2 = channels[1].limit == 0xFF && speed_2 > 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
 
 	// if reached forward limit for channel 1 motor on nucleo 1, don't go forwards
 	// If statement is not really necessary since all pins for limit switches are pulled high but
@@ -243,7 +242,7 @@ void update_PWM() {
 	if (I2C_ADDRESS == 0x10)
 	{
 		speed_1 =
-				MOTOR_1_CALIBRATION_NEGATIVE_LIMIT == 0xFF && speed_1 < 0 ? 0 : speed_1;
+				MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF && speed_1 > 0 ? 0 : speed_1;
 	}
 
 	TIM1->CCR1 = (uint32_t)(fabs(speed_0) * TIM1->ARR);
@@ -316,11 +315,12 @@ int main(void)
 
   for (int i = 0; i < CHANNELS; ++i)
   {
-	  channels[i].open_setpoint = 0;
-	  channels[i].quad_enc_value = 0;
-	  channels[i].quad_enc_raw_now = 0;
-	  channels[i].quad_enc_raw_last = 0;
-	  channels[i].abs_enc_value = 0;
+	  channels[i] = channel_default;
+//	  channels[i].open_setpoint = 0;
+//	  channels[i].quad_enc_value = 0;
+//	  channels[i].quad_enc_raw_now = 0;
+//	  channels[i].quad_enc_raw_last = 0;
+//	  channels[i].abs_enc_value = 0;
   }
 
   i2c_bus = i2c_bus_default;
@@ -451,7 +451,7 @@ static void MX_I2C1_Init(void)
   hi2c1.Init.OwnAddress1 = 254;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-  hi2c1.Init.OwnAddress2 = 96;
+  hi2c1.Init.OwnAddress2 = 64;
   hi2c1.Init.OwnAddress2Masks = I2C_OA2_MASK04;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
