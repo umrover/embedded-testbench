@@ -169,7 +169,7 @@ void update_limit() {
 	channels[5].limit = (HAL_GPIO_ReadPin(M5_LIMIT_GPIO_Port, M5_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
 
 	// If joint b is at the end, calibrate it
-	if (MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF) {
+	if ((I2C_ADDRESS == 0x10 || I2C_ADDRESS == 0x30) && MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF) {
 		channels[1].quad_enc_value = 0;
 		channels[1].calibrated = 0xFF;
 	}
@@ -224,14 +224,21 @@ void update_PWM() {
 	float speed_5 = channels[5].speed;
 
 	// if reached forward limit for channel 1 motor on nucleo 1, don't go forwards
-	// If statement is not really necessary since all pins for limit switches are pulled high but
-	// it's useful to make distinction that this is only for joint b.
-	// TODO - verify that sign is correct
+	// this is for joint b
 	if (I2C_ADDRESS == 0x10)
 	{
 		speed_1 =
 				MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF && speed_1 > 0 ? 0 : speed_1;
 	}
+
+	// this is for the carousel motor
+	// TODO - verify that this is the correct direction
+	if (I2C_ADDRESS == 0x30)
+	{
+		speed_1 =
+				MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF && speed_1 > 0 ? 0 : speed_1;
+	}
+
 	else if (I2C_ADDRESS == 0x20)
 	{
 		// if reached forward limit for channel 2 motor, don't go forwards
