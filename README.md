@@ -26,11 +26,11 @@ clone embedded-testbench onto your beaglebone \
 checkout out to this branch and run the ansible playbook  \
 ```cd embedded-testbench``` \
 ```git checkout beaglebone-ansible-setup``` \
-```ansible-playbook -K -i "localhost," -c local beaglebone.yml --extra-vars "num = 2" ```\
+```ansible-playbook -K -i "localhost," -c local beaglebone.yml --extra-vars "num = 2" ```
 
 This should set up you beaglebone to have all the relevant apt packages and network configurations to be on the rover network and function as a stand in jetson for testing. 
 
-clone mrover-workspace onto your beaglebone\ 
+clone mrover-workspace onto your beaglebone \ 
 ```git clone https://github.com/umrover/mrover-workspace``` \
 Add any necessary pip requirements to pip_deps/beaglebone_requirements.txt \
 Run jarvis: \
