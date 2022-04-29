@@ -4,7 +4,7 @@
   vars:
       debian_release: stretch
       running_user: debian
-      workspace_dir: /home/debian/mrover-workspace
+      workspace_dir: /home/debian/embedded-testbench
       ansible_python_interpreter: /usr/bin/python3
   roles:
   - beaglebones
