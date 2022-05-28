@@ -1,7 +1,0 @@
-../Core/Src/hbridge.c:15:8:new_motor	24	static
-../Core/Src/hbridge.c:27:6:start	8	static
-../Core/Src/hbridge.c:36:6:set_speed	16	static
-../Core/Src/hbridge.c:72:6:receive_hbridge_cmd	24	static
-../Core/Src/hbridge.c:87:6:receive_carousel_openloop_cmd	24	static
-../Core/Src/hbridge.c:103:6:send_carousel_pos	32	static
-../Core/Src/hbridge.c:110:6:handle_new_pos	8	static

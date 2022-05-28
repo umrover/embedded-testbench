@@ -1,7 +1,0 @@
-../Core/Src/mosfet.c:55:6:enable_pin	8	static
-../Core/Src/mosfet.c:64:6:receive_mosfet_cmd	32	static
-../Core/Src/mosfet.c:83:6:receive_led_cmd	24	static
-../Core/Src/mosfet.c:101:6:receive_auto_shutoff_cmd	24	static
-../Core/Src/mosfet.c:116:6:send_auto_shutoff_state	40	static
-../Core/Src/mosfet.c:126:6:send_heater_state	48	static
-../Core/Src/mosfet.c:134:6:LED_tick	8	static

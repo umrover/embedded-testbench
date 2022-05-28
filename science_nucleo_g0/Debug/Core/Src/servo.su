@@ -1,2 +1,0 @@
-../Core/Src/servo.c:10:6:write_angle	8	static
-../Core/Src/servo.c:25:6:receive_servo_cmd	32	static

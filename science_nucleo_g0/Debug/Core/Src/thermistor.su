@@ -1,4 +1,0 @@
-../Core/Src/thermistor.c:31:14:new_thermistors	96	static
-../Core/Src/thermistor.c:60:7:get_temp	24	static
-../Core/Src/thermistor.c:98:6:deleteThermistors	8	static
-../Core/Src/thermistor.c:102:6:send_thermistor_data	96	static
