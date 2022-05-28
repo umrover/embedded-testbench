@@ -1,0 +1,12 @@
+../Core/Src/smbus.c:113:5:_check_error.part.0	16	static
+../Core/Src/smbus.c:3:8:new_smbus	16	static
+../Core/Src/smbus.c:13:6:disable_DMA	0	static
+../Core/Src/smbus.c:17:6:read_byte	16	static
+../Core/Src/smbus.c:28:6:write_byte	16	static
+../Core/Src/smbus.c:39:6:read_byte_data	24	static
+../Core/Src/smbus.c:61:6:write_byte_data	16	static
+../Core/Src/smbus.c:75:6:read_word_data	24	static
+../Core/Src/smbus.c:98:6:write_word_data	16	static
+../Core/Src/smbus.c:113:5:_check_error	8	static
+../Core/Src/smbus.c:126:6:reset	8	static
+../Core/Src/smbus.c:131:6:del_smbus	8	static

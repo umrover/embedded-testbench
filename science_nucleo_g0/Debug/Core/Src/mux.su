@@ -1,0 +1,4 @@
+../Core/Src/mux.c:8:6:new_mux	16	static
+../Core/Src/mux.c:19:6:add_channel	0	static
+../Core/Src/mux.c:27:6:channel_select	8	static
+../Core/Src/mux.c:31:6:del_mux	8	static

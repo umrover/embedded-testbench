@@ -1,0 +1,8 @@
+../Core/Src/triad.c:16:9:new_device	24	static
+../Core/Src/triad.c:28:9:virtual_read	16	static
+../Core/Src/triad.c:11:10:get_decimal	16	static
+../Core/Src/triad.c:71:6:virtual_write	24	static
+../Core/Src/triad.c:99:10:new_channel	16	static
+../Core/Src/triad.c:109:6:send_triad_data	352	static
+../Core/Src/triad.c:147:6:initialize_triad	8	static
+../Core/Src/triad.c:164:5:check_triad_ready	8	static
