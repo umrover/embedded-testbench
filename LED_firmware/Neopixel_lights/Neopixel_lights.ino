@@ -1,5 +1,3 @@
-
-   
 #include <Adafruit_NeoPixel.h>
 #include <SoftwareSerial.h>
 #ifdef __AVR__
@@ -14,43 +12,40 @@ Adafruit_NeoPixel pixels(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 SoftwareSerial uart(0, 1); // This is pin of RX and TX (just use usb)
 
 // command can either be Default (off), Red, Green, Blue, or Off (for flashing state)
-int* command;
+int command;
 const int BUFFER_SIZE = 30;
 char buf[BUFFER_SIZE];
 
 void setup() {
   pixels.begin();
   Serial.begin(9600);
-  while (!Serial) {
-     ; // waiting for serial port to connect
-  }
   // set data rate for uart serial port
   uart.begin(9600);
   fillScreen(pixels.Color(0, 0, 0));
 
-  command = 'D';
+  command = 3;
 }
 
 void loop() {
-   if (Serial.available() > 0) {
-      int rlen = Serial.readBytes(buf, BUFFER_SIZE);
+  //Serial.println(Serial.available());
+   if (uart.available() > 0) {
+      int rlen = uart.readBytes(buf, BUFFER_SIZE);
    }
 
    char delim[] = ",";
    char *identifier = strtok(buf,delim);
 
    if (!strcmp(identifier,"$LED")){
-      *command = atoi(strtok(NULL,delim));
+      command = atoi(strtok(NULL,delim));
    }
-
-   switch (*command) {
+   switch (command) {
       case 0:
          fillScreen(pixels.Color(64, 0, 0));
          break;
       case 1:
          fillScreen(pixels.Color(0, 64, 0));
          delay(500);
-         *command = 4;
+         command = 4;
          break;
       case 2:
          fillScreen(pixels.Color(0, 0, 64));
@@ -61,12 +56,11 @@ void loop() {
       case 4:
          fillScreen(pixels.Color(0, 0, 0));
          delay(500);
-         *command = 1;
+         command = 1;
          break;
       default:
-         *command = 3;  // If an invalid command is sent, turn off anyway
+         command = 3;  // If an invalid command is sent, turn off anyway
    }
-
    delay(100);
 }
 
