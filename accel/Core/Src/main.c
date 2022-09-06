@@ -69,22 +69,20 @@ long read_byte_data(uint8_t addr, char cmd) {
 	// First we need to initiate the transaction by having the Nucleo send a one byte message
 	// the contains the command.
     buf[0] = cmd;
-    ret = HAL_I2C_Master_Transmit(i2c, addr << 1, buf, 1, 500);
+    ret = HAL_I2C_Master_Transmit(i2c, addr << 1, buf, 1, 50);
 
     // After sending in the command, the Nucleo should read in the 1 byte response.
-    ret = HAL_I2C_Master_Receive(i2c, addr << 1 | 1, buf, 1, 500);
-
-    long data = buf[0] | (buf[1] << 8);
+    ret = HAL_I2C_Master_Receive(i2c, addr << 1 | 1, buf, 1, 50);
 
     if (ret != HAL_OK)
     {
     	HAL_I2C_DeInit(i2c);
     	HAL_Delay(5);
     	HAL_I2C_Init(i2c);
-    	data = 0;
+      return -1;
     }
 
-    return data;
+    return buf[0];
 }
 
 // TODO - Read through this function to see how to write a byte via I2C
@@ -101,7 +99,6 @@ void write_byte_data(uint8_t addr, char cmd, uint8_t data) {
 		HAL_I2C_DeInit(i2c);
 		HAL_Delay(5);
 		HAL_I2C_Init(i2c);
-		data = 0;
 	}
 }
 
@@ -118,7 +115,7 @@ float get_decimal(uint8_t addr, uint8_t lsb_reg, uint8_t msb_reg) {
 	uint16_t combined_val = TODO;
 
 	// Scale data based on values in the accelerometer library.
-	// TODO - Find the scale factor (can be found in the data sheet).
+	// TODO - Find the scale factor (can be found in the data sheet under Data Format Register section).
 	float scale = TODO;
 	float scaled_data = combined_val * scale;
 
