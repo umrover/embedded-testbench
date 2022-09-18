@@ -43,12 +43,12 @@
 
 // TODO - Find the control set up register
 // Hint - check page 21
-#define CONTROL_SET_UP_REGISTER TODO
+#define CONTROL_SET_UP_REGISTER ((uint8_t)TODO)
 
 
 // TODO - Find the int time register
 // Hint - check page 21
-#define INTEGRATION_TIME_REGISTER TODO
+#define INTEGRATION_TIME_REGISTER ((uint8_t)TODO)
 
 // TODO - Find the write and read registers
 // Hint - check page 18
@@ -131,7 +131,6 @@ void write_byte_data(uint8_t addr, char cmd, uint8_t data) {
 	}
 }
 
-// TODO - implement this function
 uint8_t get_value(uint8_t channel_val) {
 	write_byte_data(I2C_DEV_ADDRESS, CHANNEL_WRITE_REGISTER, channel_val);
 	HAL_Delay(5); // Random delays just in case
