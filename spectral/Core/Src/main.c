@@ -34,6 +34,34 @@
 
 #define TODO 0
 
+// Spectral Device - AS7263
+// DATASHEET - https://cdn.sparkfun.com/assets/1/b/7/3/b/AS7263.pdf
+
+// TODO - Find the I2C device address
+// Hint - check page 18
+#define I2C_DEV_ADDRESS ((uint8_t)TODO)
+
+// TODO - Find the control set up register
+// Hint - check page 21
+#define CONTROL_SET_UP_REGISTER TODO
+
+
+// TODO - Find the int time register
+// Hint - check page 21
+#define INTEGRATION_TIME_REGISTER TODO
+
+// TODO - Find the write and read registers
+// Hint - check page 18
+#define CHANNEL_WRITE_REGISTER ((uint8_t)TODO)
+#define CHANNEL_READ_REGISTER ((uint8_t)TODO)
+
+// TODO - Find out what value to put into CHANNEL_WRITE_REGISTER
+// if you want to read the MSB from channel 0, which we
+// will call the start channel value.
+// The start channel is channel R, and the available channels are RSTUVW.
+// Hint - check page 21
+#define START_CHANNEL_VAL ((uint8_t)TODO)
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -99,27 +127,54 @@ void write_byte_data(uint8_t addr, char cmd, uint8_t data) {
 		HAL_I2C_DeInit(i2c);
 		HAL_Delay(5);
 		HAL_I2C_Init(i2c);
+		data = 0;
 	}
 }
 
 // TODO - implement this function
-float get_decimal(uint8_t addr, uint8_t lsb_reg, uint8_t msb_reg) {
-	// Read from the lsb register and msb register
-	uint8_t lsb_val = read_byte_data(addr, lsb_reg);
-	uint8_t msb_val = read_byte_data(addr, msb_reg);
+uint8_t get_value(uint8_t channel_val) {
+	write_byte_data(I2C_DEV_ADDRESS, CHANNEL_WRITE_REGISTER, channel_val);
+	HAL_Delay(5); // Random delays just in case
+	uint8_t value = read_byte_data(I2C_DEV_ADDRESS, CHANNEL_READ_REGISTER);
+	HAL_Delay(5); // Random delays just in case
+	return value;
+}
 
-	// Combine the lsb and msb val by doing the following:
-	// TODO - 1) shift the most significant byte value 8 bits to the left and
-	uint16_t shifted_msb = TODO;
-	// TODO - 2) OR'ing it with the lsb val
-	uint16_t combined_val = TODO;
+// TODO - implement this function
+float get_value_channel(uint8_t channel) {
 
-	// Scale data based on values in the accelerometer library.
-	// TODO - Find the scale factor (can be found in the data sheet under Data Format Register section).
-	float scale = TODO;
-	float scaled_data = combined_val * scale;
+	/*
+	We do START_CHANNEL_VAL + i*2 or START_CHANNEL_VAL + i*2 + 1
+	because the data sheet tells us that the values to read from
+	the channels are set up like this.
+	*/
+	// Get the msb value
+	uint8_t msb = get_value(START_CHANNEL_VAL + channel*2);
+	// Get the lsb value
+	uint8_t lsb = get_value(START_CHANNEL_VAL + channel*2 + 1);
 
-	return scaled_data;
+	// Shift the msb to align it where it belongs
+	uint16_t msb_shifted = msb << 8;
+
+	// Combine the shifted msb with the lsb
+	uint16_t value = msb_shifted | lsb;
+	return value;
+}
+
+void initialize_spectral() {
+	// TODO - Fill out the value to write to channel write register.
+	// Make all bit values to the default as shown in the data sheet except
+	// for gain, which should be set to 16x.
+	const uint8_t channel_write_val = TODO;
+	write_byte_data(I2C_DEV_ADDRESS, CONTROL_SET_UP_REGISTER, channel_write_val);
+
+	HAL_Delay(5); // Random delays just in case
+	write_byte_data(I2C_DEV_ADDRESS, CONTROL_SET_UP_REGISTER, channel_write_val);
+
+	// TODO - Fill out the value to write for integration time value.
+	// Make the integration time as large as possible.
+	const uint8_t integration_time_val = TODO;
+	write_byte_data(I2C_DEV_ADDRESS, INTEGRATION_TIME_REGISTER, integration_time_val);
 }
 
 /* USER CODE END 0 */
@@ -155,29 +210,11 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
 
-  // TODO - Find the i2c dev address in the data sheet
-  // const int i2c_dev_address = <insert address val here>;
-  const uint8_t i2c_dev_address = TODO;
+  // This will store data for spectral data
+  uint16_t spectral_channel_data[6];
 
-  // TODO - Read through this section for the registers.
-  const uint8_t x_lsb_reg = 0x32;
-  const uint8_t x_msb_reg = 0x33;
-  const uint8_t y_lsb_reg = 0x34;
-  const uint8_t y_msb_reg = 0x35;
-  const uint8_t z_lsb_reg = 0x36;
-  const uint8_t z_msb_reg = 0x37;
-  const uint8_t power_ctrl_reg = 0x2D;
-  const uint8_t data_format_reg = 0x31;
-
-  // Wakes the accelerometer from sleep mode.
-  // TODO - Write the values to wake the accelerometer from sleep mode
-  const uint8_t power_ctrl_val = TODO;
-  write_byte_data(i2c_dev_address, power_ctrl_reg, power_ctrl_val);
-
-  // Formats output data
-  // TODO - Format data so that the output range is full resolution +/- 16g
-  const uint8_t data_format_val = TODO;
-  write_byte_data(i2c_dev_address, data_format_reg, data_format_val);
+  // Initialize the spectral
+  initialize_spectral();
 
   /* USER CODE END 2 */
 
@@ -185,11 +222,10 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  // TODO - See the following code.
-	  // TODO - Add breakpoints to see the values change when you run the program in debug.
-	  float x_val = get_decimal(i2c_dev_address, x_lsb_reg, x_msb_reg);
-	  float y_val = get_decimal(i2c_dev_address, y_lsb_reg, y_msb_reg);
-	  float z_val = get_decimal(i2c_dev_address, z_lsb_reg, z_msb_reg);
+	  // This will go through each of the six channels and get data
+	  for (uint8_t i = 0; i < 6; ++i) {
+		  spectral_channel_data[i] = get_value_channel(i);
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
