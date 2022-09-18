@@ -39,28 +39,28 @@
 
 // TODO - Find the I2C device address
 // Hint - check page 18
-#define I2C_DEV_ADDRESS ((uint8_t)TODO)
+#define I2C_DEV_ADDRESS ((uint8_t)0x49) // Read addy, write is 92
 
 // TODO - Find the control set up register
 // Hint - check page 21
-#define CONTROL_SET_UP_REGISTER ((uint8_t)TODO)
+#define CONTROL_SET_UP_REGISTER ((uint8_t)0x04)
 
 
 // TODO - Find the int time register
 // Hint - check page 21
-#define INTEGRATION_TIME_REGISTER ((uint8_t)TODO)
+#define INTEGRATION_TIME_REGISTER ((uint8_t)0x05)
 
 // TODO - Find the write and read registers
 // Hint - check page 18
-#define CHANNEL_WRITE_REGISTER ((uint8_t)TODO)
-#define CHANNEL_READ_REGISTER ((uint8_t)TODO)
+#define CHANNEL_WRITE_REGISTER ((uint8_t)0x01)
+#define CHANNEL_READ_REGISTER ((uint8_t)0x02)
 
 // TODO - Find out what value to put into CHANNEL_WRITE_REGISTER
 // if you want to read the MSB from channel 0, which we
 // will call the start channel value.
 // The start channel is channel R, and the available channels are RSTUVW.
 // Hint - check page 21
-#define START_CHANNEL_VAL ((uint8_t)TODO)
+#define START_CHANNEL_VAL ((uint8_t)0x08) // this is the high data byte, low is 0x09
 
 /* USER CODE END PD */
 
@@ -95,12 +95,12 @@ uint8_t read_byte_data(uint8_t addr, char cmd) {
 	I2C_HandleTypeDef *i2c = &hi2c1;
 
 	// First we need to initiate the transaction by having the Nucleo send a one byte message
-	// the contains the command.
+	// that contains the command.
     buf[0] = cmd;
-    ret = HAL_I2C_Master_Transmit(i2c, addr << 1, buf, 1, 50);
+    ret = HAL_I2C_Master_Transmit(i2c, addr << 1, buf, 1, 1000);
 
     // After sending in the command, the Nucleo should read in the 1 byte response.
-    ret = HAL_I2C_Master_Receive(i2c, addr << 1 | 1, buf, 1, 50);
+    ret = HAL_I2C_Master_Receive(i2c, addr << 1 | 1, buf, 1, 1000);
 
     if (ret != HAL_OK)
     {
@@ -120,7 +120,7 @@ void write_byte_data(uint8_t addr, char cmd, uint8_t data) {
 	I2C_HandleTypeDef *i2c = &hi2c1;
     buf[0] = data;
     buf[1] = cmd;
-    ret = HAL_I2C_Master_Transmit(i2c, addr << 1, buf, 2, 50);
+    ret = HAL_I2C_Master_Transmit(i2c, addr << 1, buf, 2, 1000);
 
     if (ret != HAL_OK)
 	{
@@ -164,7 +164,7 @@ void initialize_spectral() {
 	// TODO - Fill out the value to write to channel write register.
 	// Make all bit values to the default as shown in the data sheet except
 	// for gain, which should be set to 16x.
-	const uint8_t channel_write_val = TODO;
+	const uint8_t channel_write_val = 0x28;
 	write_byte_data(I2C_DEV_ADDRESS, CONTROL_SET_UP_REGISTER, channel_write_val);
 
 	HAL_Delay(5); // Random delays just in case
@@ -172,7 +172,7 @@ void initialize_spectral() {
 
 	// TODO - Fill out the value to write for integration time value.
 	// Make the integration time as large as possible.
-	const uint8_t integration_time_val = TODO;
+	const uint8_t integration_time_val = 0xFF;
 	write_byte_data(I2C_DEV_ADDRESS, INTEGRATION_TIME_REGISTER, integration_time_val);
 }
 
