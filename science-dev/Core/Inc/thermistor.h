@@ -1,11 +1,38 @@
 #ifndef THERMISTOR_H_
 #define THERMISTOR_H_
 
+#include "stm32g0xx_hal.h"
+
+#include <stdint.h>
+
+// potentially change the order around if needed
+typedef enum
+{
+	THERMISTOR_OF_HEATER_2,
+	THERMISTOR_OF_HEATER_1,
+	THERMISTOR_OF_HEATER_0,
+	THERMISTOR_DEVICES
+} THERMISTOR_DEVICE_NAME;
+
 // A thermistor device
 typedef struct {
-	ADC_HandleTypeDef *adc;
-	float resistance;
-	uint8_t channel;
+	// used exist in main.h as an extern variable
+	ADC_HandleTypeDef* adc;
+
+	// given by data sheet for calculating 
+	float constant_array[4][4];
+	
+	// Stores the 3 adc pins
+	uint32_t adc_pins[3];
+	
+	// stores the values in r1
+	int R1_vals[3];
+	
+	// should be 5V for the nucleos
+	float V1;
+	
+	// resistance of thermistor at 25c
+	int R25;
 } Thermistor;
 
 // REQUIRES: adc is the adc channel,
@@ -13,7 +40,7 @@ typedef struct {
 // and channel is the channel
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Thermistor object
-Thermistor *new_thermistor(ADC_HandleTypeDef *_adc, float resistance, uint8_t channel);
+Thermistor *new_thermistor(uint32_t channel0, uint32_t channel1, uint32_t channel2);
 
 // REQUIRES: thermistor is a Thermistor object
 // MODIFIES: nothing
@@ -23,8 +50,11 @@ void initialize_thermistor(Thermistor* thermistor);
 // REQUIRES: thermistor is a Thermistor object
 // MODIFIES: nothing
 // EFFECTS: Returns temperature of thermistor in degrees Celsius
-void get_thermistor_temperature(Thermistor* thermistor);
+float get_thermistor_temperature(uint8_t which_therm, Thermistor* thermistor);
 
+void deleteThermistors(Thermistor* thermistors);
+
+void send_thermistor_data(Thermistor* therms, UART_HandleTypeDef* huart);
 
 #endif
 
