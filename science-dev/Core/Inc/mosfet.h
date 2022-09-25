@@ -3,6 +3,7 @@
 
 #include "stm32g0xx_hal.h"
 #include "main.h"
+#include "stdlib.h"
 
 // A device that is controlled by a MOSFET
 typedef struct {
