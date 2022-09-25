@@ -1,6 +1,9 @@
 #ifndef MOSFET_H_
 #define MOSFET_H_
 
+#include "stm32g0xx_hal.h"
+#include "main.h"
+
 // A device that is controlled by a MOSFET
 typedef struct {
 	GPIO_TypeDef *port;
