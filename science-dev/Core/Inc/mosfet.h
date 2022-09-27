@@ -1,4 +1,4 @@
-#ifndef MOSFET_H_
+#pragma once
 #define MOSFET_H_
 
 #include "stm32g0xx_hal.h"
@@ -31,6 +31,3 @@ void turn_mosfet_device_off(MosfetDevice *mosfet_device);
 // EFFECTS: Sets Mosfet Device to desired state
 void set_mosfet_device_state(MosfetDevice *mosfet_device, uint8_t state);
 
-#endif
-
-//#endif
