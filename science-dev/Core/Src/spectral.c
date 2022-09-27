@@ -10,7 +10,7 @@ Spectral *new_spectral(
     UART_HandleTypeDef *uart,
     bool dma)
 {
-    SMBus *_smbus = new_smbus(i2c, uart, 0, dma); // TODO, fix address
+    SMBus *_smbus = new_smbus(i2c, uart, 0x49, dma);
     Spectral *spectral = malloc(sizeof(Spectral));
     spectral->smbus = _smbus;
     return spectral;
@@ -21,6 +21,7 @@ Spectral *new_spectral(
 // EFFECTS: Initializes the spectral device
 void initialize_spectral(Spectral *spectral)
 {
+//	const uint_
     return;
 }
 
