@@ -19,14 +19,13 @@ Servo *new_servo(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_ch
 // REQUIRES: servo is a Servo object
 // MODIFIES: nothing
 // EFFECTS: Initializes the servo by configuring the timer settings
-void initialize_servo(Servo* servo, uint16_t initial_angle);
+void initialize_servo(Servo* servo, int16_t initial_angle);
 
 // REQUIRES: servo is a Servo object and angle is desired angle in degrees
 // and 0 <= angle <= 180
+// NOTE: the servo has a 120 degree range, so input will need to be scaled accordingly
 // MODIFIES: nothing
 // EFFECTS: Sets the servo angle to an absolute position
-void set_servo_angle(Servo *servo, uint16_t angle);
+void set_servo_angle(Servo *servo, int16_t angle);
 
 #endif
-
-//#endif
