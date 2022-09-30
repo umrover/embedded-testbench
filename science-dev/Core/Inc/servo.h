@@ -1,22 +1,23 @@
-#ifndef SERVO_H_
-#define SERVO_H_
+#pragma once
 
 #include <stdlib.h>
 #include "stm32g0xx_hal.h"
 
 // SG90 Servo Motor
+// Duty cycle should be 20 ms long. Should be high for between 1-2 ms.
+// See http://www.ee.ic.ac.uk/pcheung/teaching/DE1_EE/stores/sg90_datasheet.pdf
 typedef struct {
 	TIM_HandleTypeDef *timer;
 	uint32_t channel;
 	uint32_t *out_channel;
 } Servo;
 
-// REQUIRES: timer is the timer and channel is the channel
+// REQUIRES: timer is the timer and channel is the channel and out channel is the CCR
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Servo object
 Servo *new_servo(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_channel);
 
-// REQUIRES: servo is a Servo object
+// REQUIRES: servo is a Servo object and initial angle is the initial angle
 // MODIFIES: nothing
 // EFFECTS: Initializes the servo by configuring the timer settings
 void initialize_servo(Servo* servo, int16_t initial_angle);
@@ -27,5 +28,3 @@ void initialize_servo(Servo* servo, int16_t initial_angle);
 // MODIFIES: nothing
 // EFFECTS: Sets the servo angle to an absolute position
 void set_servo_angle(Servo *servo, int16_t angle);
-
-#endif
