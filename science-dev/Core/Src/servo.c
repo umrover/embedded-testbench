@@ -5,15 +5,6 @@
 int16_t constrain(int16_t val, int16_t min, int16_t max)
 {
 
-    // assert min <= max
-    if(min > max)
-    {
-        uint16_t tmp = min;
-        min = max;
-        max = tmp;
-    }
-
-    // constrain val
     if(val < min)
     {
         val = min;
@@ -46,6 +37,7 @@ void initialize_servo(Servo* servo, int16_t initial_angle)
 
 void set_servo_angle(Servo *servo, int16_t angle)
 {
+	angle = constrain(angle, 180, 0);
 	angle = constrain(angle, 0, 180);
     *(servo->out_channel) = (angle/18)+10;
 }
