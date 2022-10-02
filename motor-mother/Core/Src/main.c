@@ -21,6 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "hbridge.h"
 
 /* USER CODE END Includes */
 
@@ -114,7 +115,8 @@ int main(void)
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  HBridge *motor_1 = new_hbridge(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1));
+  initialize_hbridge(motor_1, 0);
   /* USER CODE END 2 */
 
   /* Infinite loop */
