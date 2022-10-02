@@ -16,8 +16,6 @@ typedef enum
 
 // A thermistor device
 typedef struct {
-	// used exist in main.h as an extern variable
-	ADC_HandleTypeDef* adc;
 
 	// given by data sheet for calculating 
 	float constant_array[4][4];
@@ -40,7 +38,7 @@ typedef struct {
 // and channel is the channel
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Thermistor object
-Thermistor *new_thermistor(uint32_t channel0, uint32_t channel1, uint32_t channel2);
+Thermistor *new_thermistor(uint32_t channel0, uint32_t channel1, uint32_t channel2, ADC_HandleTypeDef hadc1);
 
 // REQUIRES: thermistor is a Thermistor object
 // MODIFIES: nothing
@@ -50,11 +48,10 @@ void initialize_thermistor(Thermistor* thermistor);
 // REQUIRES: thermistor is a Thermistor object
 // MODIFIES: nothing
 // EFFECTS: Returns temperature of thermistor in degrees Celsius
-float get_thermistor_temperature(uint8_t which_therm, Thermistor* thermistor);
+float get_thermistor_temperature(uint8_t which_therm, Thermistor* thermistor, ADC_HandleTypeDef hadc1);
 
 void deleteThermistors(Thermistor* thermistors);
 
-void send_thermistor_data(Thermistor* therms, UART_HandleTypeDef* huart);
 
 #endif
 

@@ -27,6 +27,7 @@
 #include "servo.h"
 #include "spectral.h"
 #include "thermistor.h"
+#include "stm32g0xx_hal_pwr_ex.h"
 
 /* USER CODE END Includes */
 
@@ -106,13 +107,21 @@ int main(void)
   MX_TIM1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  Thermistor* therm = new_thermistor(-1, -1, -1, hadc1);
+  char msg[10];
+  uint16_t raw;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  raw = get_thermistor_temperature(0, therm, hadc1);
+//	    HAL_ADC_Start(&hadc1);
+//	    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+//	    raw = HAL_ADC_GetValue(&hadc1);
+	    sprintf(msg, "%hu\r\n", raw);
+	    HAL_UART_Transmit(&huart1, (uint8_t*)msg, strlen(msg), HAL_MAX_DELAY);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
