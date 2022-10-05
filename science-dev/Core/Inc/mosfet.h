@@ -1,5 +1,4 @@
 #pragma once
-#define MOSFET_H_
 
 #include "stm32g0xx_hal.h"
 #include "main.h"
