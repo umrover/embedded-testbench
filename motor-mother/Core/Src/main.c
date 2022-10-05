@@ -122,7 +122,7 @@ int main(void)
   Pin* pin2 = new_pin(GPIOA, GPIO_PIN_2);
 
   HBridge *motor_1 = new_hbridge(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1), TIM1->ARR, pin1, pin2);
-  initialize_hbridge(motor_1, 0, 1);
+  intialize_hbridge(motor_1, 0.0, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */

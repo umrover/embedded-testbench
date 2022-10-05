@@ -10,18 +10,8 @@ RM := rm -rf
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include Drivers/STM32F1xx_HAL_Driver/Src/subdir.mk
--include Core/motor-mother/Drivers/STM32F1xx_HAL_Driver/Src/subdir.mk
--include Core/motor-mother/Debug/Drivers/STM32F1xx_HAL_Driver/Src/subdir.mk
--include Core/motor-mother/Debug/Core/Startup/subdir.mk
--include Core/motor-mother/Debug/Core/Src/subdir.mk
--include Core/motor-mother/Debug/subdir.mk
--include Core/motor-mother/Core/Startup/subdir.mk
--include Core/motor-mother/Core/Src/subdir.mk
 -include Core/Startup/subdir.mk
--include Core/Src/.metadata/.plugins/org.eclipse.cdt.make.core/subdir.mk
 -include Core/Src/subdir.mk
--include Core/.metadata/.plugins/org.eclipse.cdt.managedbuilder.core/subdir.mk
--include Core/.metadata/.plugins/org.eclipse.cdt.make.core/subdir.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -70,8 +60,8 @@ all: main-build
 main-build: motor-mother.elf secondary-outputs
 
 # Tool invocations
-motor-mother.elf motor-mother.map: $(OBJS) $(USER_OBJS) C:\Users\isabe\Documents\rover\embedded-testbench\motor-mother\STM32F100VBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "motor-mother.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\isabe\Documents\rover\embedded-testbench\motor-mother\STM32F100VBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="motor-mother.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+motor-mother.elf motor-mother.map: $(OBJS) $(USER_OBJS) /home/edurso/dev/rover/embedded-testbench/motor-mother/STM32F100VBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "motor-mother.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"/home/edurso/dev/rover/embedded-testbench/motor-mother/STM32F100VBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="motor-mother.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
