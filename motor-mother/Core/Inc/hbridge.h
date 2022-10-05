@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdlib.h>
-#include "stm32f1xx_it.h"
+#include "stm32f1xx_hal.h"
 
 typedef struct {
     GPIO_TypeDef *port;
@@ -18,8 +18,10 @@ typedef struct {
 } HBridge;
 
 
+Pin* new_pin(GPIO_TypeDef *_port, uint16_t _pin);
+
 // Returns pointer to a new hbridge object
-HBridge* new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t _ARR, Pin _fwd, Pin _bwd);
+HBridge* new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t _ARR, Pin* _fwd, Pin* _bwd);
 
 
 // Initialize timer settings

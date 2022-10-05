@@ -1,7 +1,17 @@
 
 #include "hbridge.h"
 
-HBridge* new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t _ARR, Pin _fwd, Pin _bwd)
+
+Pin* new_pin(GPIO_TypeDef *_port, uint16_t _pin)
+{
+	Pin* pin = (Pin*) malloc(sizeof(Pin));
+	pin->port = _port;
+	pin->pin = _pin;
+
+	return pin;
+}
+
+HBridge* new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t _ARR, Pin* _fwd, Pin* _bwd)
 {
     HBridge *hbr = (HBridge*) malloc(sizeof(HBridge));
     hbr->timer = _timer;
