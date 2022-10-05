@@ -34,9 +34,9 @@ void turn_mosfet_device_off(MosfetDevice *mosfet_device)
 // REQUIRES: mosfet_device is a Mosfet Device object and state is either 0 or 1
 // MODIFIES: nothing
 // EFFECTS: Sets Mosfet Device to desired state
-void set_mosfet_device_state(MosfetDevice *mosfet_device, uint8_t state)
+void set_mosfet_device_state(MosfetDevice *mosfet_device, bool state)
 {
-	if (state == 1)
+	if (state)
 	{
 		turn_mosfet_device_on(mosfet_device);
 	}
