@@ -116,19 +116,37 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   //(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t _ARR, Pin* _fwd, Pin* _bwd)
-
-
-  Pin* pin1 = new_pin(GPIOA, GPIO_PIN_1);
-  Pin* pin2 = new_pin(GPIOA, GPIO_PIN_2);
-
+  Pin* pin1 = new_pin(GPIOC, GPIO_PIN_10);
+  Pin* pin2 = new_pin(GPIOC, GPIO_PIN_11);
   HBridge *motor_1 = new_hbridge(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1), TIM1->ARR, pin1, pin2);
   intialize_hbridge(motor_1, 0.0, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  int increasing = 1;
+  double dpwm = 0.01;
+  double pwm = 0.0;
   while (1)
   {
+	  set_pwm(motor_1, pwm);
+
+	  if (pwm > 1.0)
+	  {
+		  increasing = 0;
+	  }
+	  if (pwm < 0.0){
+		  increasing = 1;
+	  }
+
+	  if (increasing)
+	  {
+		  pwm += dpwm;
+	  }
+	  else
+	  {
+		pwm -= dpwm;
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
