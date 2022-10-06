@@ -61,10 +61,42 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define MCO_Pin GPIO_PIN_0
 #define MCO_GPIO_Port GPIOF
-#define TMS_Pin GPIO_PIN_13
-#define TMS_GPIO_Port GPIOA
-#define TCK_Pin GPIO_PIN_14
-#define TCK_GPIO_Port GPIOA
+#define SCIENCE_TEMP_0_Pin GPIO_PIN_0
+#define SCIENCE_TEMP_0_GPIO_Port GPIOA
+#define SCIENCE_TEMP_1_Pin GPIO_PIN_1
+#define SCIENCE_TEMP_1_GPIO_Port GPIOA
+#define SCIENCE_TEMP_2_Pin GPIO_PIN_2
+#define SCIENCE_TEMP_2_GPIO_Port GPIOA
+#define USART1_TX_Pin GPIO_PIN_4
+#define USART1_TX_GPIO_Port GPIOC
+#define USART1_RX_Pin GPIO_PIN_5
+#define USART1_RX_GPIO_Port GPIOC
+#define SERVO_0_Pin GPIO_PIN_8
+#define SERVO_0_GPIO_Port GPIOA
+#define SERVO_1_Pin GPIO_PIN_9
+#define SERVO_1_GPIO_Port GPIOC
+#define MOSFET_0_Pin GPIO_PIN_1
+#define MOSFET_0_GPIO_Port GPIOD
+#define MOSFET_1_Pin GPIO_PIN_2
+#define MOSFET_1_GPIO_Port GPIOD
+#define MOSFET_2_Pin GPIO_PIN_3
+#define MOSFET_2_GPIO_Port GPIOD
+#define MOSFET_3_Pin GPIO_PIN_4
+#define MOSFET_3_GPIO_Port GPIOD
+#define MOSFET_4_Pin GPIO_PIN_5
+#define MOSFET_4_GPIO_Port GPIOD
+#define MOSFET_5_Pin GPIO_PIN_6
+#define MOSFET_5_GPIO_Port GPIOD
+#define MOSFET_6_Pin GPIO_PIN_3
+#define MOSFET_6_GPIO_Port GPIOB
+#define MOSFET_7_Pin GPIO_PIN_4
+#define MOSFET_7_GPIO_Port GPIOB
+#define SERVO_2_Pin GPIO_PIN_6
+#define SERVO_2_GPIO_Port GPIOB
+#define I2C1_SCL_SPECTRAL_Pin GPIO_PIN_8
+#define I2C1_SCL_SPECTRAL_GPIO_Port GPIOB
+#define I2C1_SDA_SPECTRAL_Pin GPIO_PIN_9
+#define I2C1_SDA_SPECTRAL_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */
