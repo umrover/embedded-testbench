@@ -158,15 +158,15 @@
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.core.LanguageSettingsProviders"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
+	<storageModule moduleId="refreshScope"/>
 	<storageModule moduleId="scannerConfiguration">
 		<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
-		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1681145145;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1681145145.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.987916118;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.73788023">
+		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1677883190;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1677883190.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1018644285;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.171623283">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
-		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.1601469824;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.1601469824.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.1039823173;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.818803189">
+		<scannerConfigBuildInfo instanceId="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.1766323713;com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.1766323713.;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.197445015;com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.input.c.1533442959">
 			<autodiscovery enabled="false" problemReportingEnabled="true" selectedProfileId=""/>
 		</scannerConfigBuildInfo>
 	</storageModule>
-	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets"/>
-	<storageModule moduleId="refreshScope"/>
 </cproject>
