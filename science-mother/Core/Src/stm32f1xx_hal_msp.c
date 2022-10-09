@@ -109,8 +109,8 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
     PA5     ------> ADC1_IN5
     PA6     ------> ADC1_IN6
     */
-    GPIO_InitStruct.Pin = SCIENCE_TEMP_0_Pin|SCIENCE_TEMP_1_Pin|SCIENCE_TEMP_2_Pin|DIAG_CURR_Pin
-                          |DIAG_TEMP_0_Pin|DIAG_TEMP_1_Pin|DIAG_TEMP_2_Pin;
+    GPIO_InitStruct.Pin = SCIENCE_TEMP_0_Pin|SCIENCE_TEMP_1_Pin|SCIENCE_TEMP_2_Pin|DIAG_CURR_0_Pin
+                          |DIAG_CURR_1_Pin|DIAG_CURR_2_Pin|DIAG_TEMP_0_Pin;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
@@ -146,8 +146,8 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* hadc)
     PA5     ------> ADC1_IN5
     PA6     ------> ADC1_IN6
     */
-    HAL_GPIO_DeInit(GPIOA, SCIENCE_TEMP_0_Pin|SCIENCE_TEMP_1_Pin|SCIENCE_TEMP_2_Pin|DIAG_CURR_Pin
-                          |DIAG_TEMP_0_Pin|DIAG_TEMP_1_Pin|DIAG_TEMP_2_Pin);
+    HAL_GPIO_DeInit(GPIOA, SCIENCE_TEMP_0_Pin|SCIENCE_TEMP_1_Pin|SCIENCE_TEMP_2_Pin|DIAG_CURR_0_Pin
+                          |DIAG_CURR_1_Pin|DIAG_CURR_2_Pin|DIAG_TEMP_0_Pin);
 
   /* USER CODE BEGIN ADC1_MspDeInit 1 */
 
