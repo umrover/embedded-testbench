@@ -27,6 +27,7 @@
 #include "servo.h"
 #include "spectral.h"
 #include "thermistor.h"
+#include "current.h"
 
 /* USER CODE END Includes */
 
@@ -65,6 +66,7 @@ static void MX_I2C1_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
+ADC_ChannelConfTypeDef *sConfig;
 
 /* USER CODE END PFP */
 
@@ -106,21 +108,16 @@ int main(void)
   MX_TIM1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
+  CurrentSensor* my_current = new_CurrentSensor(hadc1, 0);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  float temp;
   while (1)
   {
-//	  Test code
-//	  MosfetDevice *new_dev = new_mosfet_device(GPIOD, GPIO_PIN_1);
-//	  turn_mosfet_device_on(new_dev);
-//	  turn_mosfet_device_off(new_dev);
-//	  turn_mosfet_device_on(new_dev);
-//	  turn_mosfet_device_on(new_dev);
-//	  turn_mosfet_device_off(new_dev);
-//	  turn_mosfet_device_off(new_dev);
+	  temp = get_current_data(my_current, sConfig);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
