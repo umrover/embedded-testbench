@@ -60,8 +60,8 @@ all: main-build
 main-build: science-dev.elf secondary-outputs
 
 # Tool invocations
-science-dev.elf science-dev.map: $(OBJS) $(USER_OBJS) /home/jessyw/MRover/embedded-testbench/science-dev/STM32G0B1RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "science-dev.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"/home/jessyw/MRover/embedded-testbench/science-dev/STM32G0B1RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="science-dev.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+science-dev.elf science-dev.map: $(OBJS) $(USER_OBJS) C:\Users\gutst\Documents\embedded-testbench\science-dev\STM32G0B1RETX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "science-dev.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0plus -T"C:\Users\gutst\Documents\embedded-testbench\science-dev\STM32G0B1RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="science-dev.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
