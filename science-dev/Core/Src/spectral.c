@@ -1,5 +1,7 @@
 #include "spectral.h"
 
+#define SPECTRAL_DEVICES 1
+
 // REQUIRES: i2c is the i2c channel
 // and uart is the debugging UART channel or NULL,
 // and dma tells if DMA is enabled
@@ -21,8 +23,10 @@ Spectral *new_spectral(
 // EFFECTS: Initializes the spectral device
 void initialize_spectral(Spectral *spectral)
 {
-//	const uint_
-    return;
+	// Opens spectral channels to start listening
+	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+		enable_spectral(spectral);
+	}
 }
 
 // REQUIRES: spectral is an object and 0 <= channel < 6
