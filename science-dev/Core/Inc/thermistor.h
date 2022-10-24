@@ -15,7 +15,7 @@ static float constant_array[4][4] = {{3.3570420E-03, 2.5214848E-04, 3.3743283E-0
 		{3.3536166E-03, 2.5377200E-04, 8.5433271E-07, -8.7912262E-08}};
 
 // stores the values in r1
-#define R_1 10000.0f
+#define RESISTOR_OHMS 10000.0f
 // resistance of thermistor at 25c
 #define R_25 10000.0f
 
@@ -24,7 +24,6 @@ static float constant_array[4][4] = {{3.3570420E-03, 2.5214848E-04, 3.3743283E-0
 
 
 // TH10K Thermistor
-// https://www.thorlabs.com/drawings/e0bb864659fef113-3B520676-F02C-64B3-AEC057713167DDAA/TH10K-SpecSheet.pdf
 typedef struct {
 	float temperature;
 	uint8_t adc_channel;

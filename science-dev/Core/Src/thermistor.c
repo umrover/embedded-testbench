@@ -28,14 +28,22 @@ void update_thermistor_temperature(Thermistor* therm) {
     uint16_t raw_data = get_adc_sensor_value(therm->adc_sensor, therm->adc_channel);
 
 	// done to avoid sending infinity/nan
-	if (raw_data >= 4095) raw_data = 4094;
+    raw_data = raw_data > 4094 ? 4094 : raw_data;
 
     // Logic to get actual Voltage from 12 bit string
     // NOTE pretty sure it is 12 bit that's what HAL says in documentation, but could be wrong
-    float curr_volt = (raw_data * V_1) / 4095.0f; // 2^12 - 1= 4095 (12 bit string  )
+    float volt_drop_across_thermistor = (raw_data * V_1) / 4095.0f; // 2^12 - 1= 4095 (12 bit string  )
 
     // Circuit math to get temperature from voltage
-    float R_t = (R_1 * curr_volt) / (V_1 - curr_volt);
+    // Basically, the circuit looks like the following:
+    // 3v3 -> resistor -> nucleo probe point -> thermistor -> ground.
+    // The Nucleo's measured voltage is equal to voltage drop across
+    // the resistor.
+    // Since current is same, the V=IR implies that volt_therm/resistance_therm =
+    // volt_resistor/resistance_resistor.
+    // Thus, resistance_therm = volt_therm * resistance_resistor / volt_resistor.
+    float volt_drop_across_resistor = V_1 - volt_drop_across_thermistor;
+    float R_t = (RESISTOR_OHMS * volt_drop_across_thermistor) / (volt_drop_across_resistor);
 
     uint8_t const_set = 0;
     if (R_t < 692600.0f && R_t >= 32770.0f){
