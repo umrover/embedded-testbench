@@ -1,7 +1,7 @@
 #pragma once
 
 #include <stdlib.h>
-#include "stm32g0xx_hal.h"
+#include "stm32f1xx_hal.h"
 
 // SG90 Servo Motor
 // Duty cycle should be 20 ms long. Should be high for between 1-2 ms.

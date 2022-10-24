@@ -1,31 +1,37 @@
-#ifndef THERMISTOR_H_
-#define THERMISTOR_H_
+#pragma once
 
-// A thermistor device
+#include "adc_sensor.h"
+#include <stdint.h>
+#include <math.h>
+#include <stdio.h>
+#include <string.h>
+
+#define RESISTOR_OHMS 10000.0f
+#define R_25 10000.0f
+#define V_1 3.3f
+
+
+// TH10K Thermistor
 typedef struct {
-	ADC_HandleTypeDef *adc;
-	float resistance;
-	uint8_t channel;
+	float temperature;
+	uint8_t adc_channel;
+	ADCSensor* adc_sensor;
 } Thermistor;
 
-// REQUIRES: adc is the adc channel,
-// resistance is the resistance of the resistor in ohms,
-// and channel is the channel
+// REQUIRES: _adc_channel is the corresponding ADC channel and
+// _adc_sensor is a pointer to an ADCSensor object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Thermistor object
-Thermistor *new_thermistor(ADC_HandleTypeDef *_adc, float resistance, uint8_t channel);
+Thermistor *new_thermistor(ADCSensor* _adc_sensor, uint8_t _adc_channel);
+
+// REQUIRES: thermistor is a Thermistor object
+// MODIFIES: temperature
+// EFFECTS: Updates temperature of thermistor
+void update_thermistor_temperature(Thermistor* therm);
 
 // REQUIRES: thermistor is a Thermistor object
 // MODIFIES: nothing
-// EFFECTS: Initializes the thermistor by changing the ADC settings
-void initialize_thermistor(Thermistor* thermistor);
+// EFFECTS: Get temperature of thermistor in degrees Celsius
+float get_thermistor_temperature(Thermistor* therm);
 
-// REQUIRES: thermistor is a Thermistor object
-// MODIFIES: nothing
-// EFFECTS: Returns temperature of thermistor in degrees Celsius
-void get_thermistor_temperature(Thermistor* thermistor);
-
-
-#endif
-
-//#endif
+void deleteThermistors(Thermistor* thermistors);
