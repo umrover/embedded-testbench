@@ -1,5 +1,9 @@
-#ifndef MOSFET_H_
-#define MOSFET_H_
+#pragma once
+
+#include "stm32f1xx_hal.h"
+#include "main.h"
+#include "stdlib.h"
+#include "stdbool.h"
 
 // A device that is controlled by a MOSFET
 typedef struct {
@@ -10,7 +14,7 @@ typedef struct {
 // REQUIRES: port is the port and pin is the pin
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Mosfet Device object
-MosfetDevice *new_mosfet_device(GPIO_TypeDef *_port, uint8_t _pin);
+MosfetDevice *new_mosfet_device(GPIO_TypeDef *_port, uint16_t _pin);
 
 // REQUIRES: mosfet_device is a Mosfet Device object
 // MODIFIES: nothing
@@ -25,8 +29,4 @@ void turn_mosfet_device_off(MosfetDevice *mosfet_device);
 // REQUIRES: mosfet_device is a Mosfet Device object and state is either 0 or 1
 // MODIFIES: nothing
 // EFFECTS: Sets Mosfet Device to desired state
-void set_mosfet_device_state(MosfetDevice *mosfet_device, uint8_t state);
-
-#endif
-
-//#endif
+void set_mosfet_device_state(MosfetDevice *mosfet_device, bool state);

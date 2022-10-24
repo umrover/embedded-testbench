@@ -25,6 +25,7 @@
 #include "servo.h"
 #include "adc_sensor.h"
 #include "thermistor.h"
+#include "mosfet.h"
 
 /* USER CODE END Includes */
 
@@ -124,6 +125,17 @@ int main(void)
   for (size_t i = 0; i < 3; ++i) {
 	  initialize_servo(servos[i], 0);
   }
+
+  MosfetDevice* mosfet_devices[8] = {
+		  new_mosfet_device(MOSFET_0_GPIO_Port, MOSFET_0_Pin),
+		  new_mosfet_device(MOSFET_1_GPIO_Port, MOSFET_1_Pin),
+		  new_mosfet_device(MOSFET_2_GPIO_Port, MOSFET_2_Pin),
+		  new_mosfet_device(MOSFET_3_GPIO_Port, MOSFET_3_Pin),
+		  new_mosfet_device(MOSFET_4_GPIO_Port, MOSFET_4_Pin),
+		  new_mosfet_device(MOSFET_5_GPIO_Port, MOSFET_5_Pin),
+		  new_mosfet_device(MOSFET_6_GPIO_Port, MOSFET_6_Pin),
+		  new_mosfet_device(MOSFET_7_GPIO_Port, MOSFET_7_Pin),
+  };
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -141,6 +153,10 @@ int main(void)
 
 	  for (size_t i = 0; i < 3; ++i) {
 		  set_servo_angle(servos[i], 0);
+	  }
+
+	  for (size_t i = 0; i < 8; ++i) {
+		  set_mosfet_device_state(mosfet_devices[i], 0);
 	  }
   }
   /* USER CODE END 3 */
