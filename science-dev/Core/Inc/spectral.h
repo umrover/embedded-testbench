@@ -63,7 +63,7 @@ typedef struct
 typedef struct
 {
 	SMBus *smbus;
-	Channel *channels[CHANNELS];
+	Channel channels[CHANNELS];
 } Spectral;
 
 // REQUIRES: i2c is the i2c channel
@@ -86,8 +86,19 @@ void initialize_spectral(Spectral *spectral);
 // EFFECTS: Returns the spectral data of a particular channel
 uint32_t get_spectral_channel_data(Spectral *spectral, uint8_t channel);
 
-// sets enable bits in devices
-void enable_spectral(Spectral *spectral);
+// REQUIRES: spectral is a Spectral object,
+// v_reg is the virtual register,
+// and data is the data to pass
+// MODIFIES: nothing
+// EFFECTS: Writes to the virtual register as explained in page 18-20 of the datasheet
+void virtual_write_spectral(Spectral *spectral, uint8_t v_reg, uint8_t data);
+
+// REQUIRES: spectral is a Spectral object and
+// v_reg is the virtual register
+// MODIFIES: nothing
+// EFFECTS: Returns the value read from the virtual register
+// as explained in page 18-20 of the datasheet
+uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg);
 
 #endif
 

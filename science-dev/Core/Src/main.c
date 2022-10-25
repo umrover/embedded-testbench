@@ -107,6 +107,12 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  // PB9 SDA, PB8 SCL
+  Spectral* spectral = new_spectral(&hi2c1, NULL, true);
+
+  initialize_spectral(spectral);
+  uint32_t spectral_channel_data[6];
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -116,6 +122,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  for (uint8_t i = 0; i < 6; ++i) {
+		  spectral_channel_data[i] = get_spectral_channel_data(spectral, i);
+	  }
   }
   /* USER CODE END 3 */
 }
