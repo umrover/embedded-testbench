@@ -43,7 +43,7 @@ void initialize_spectral(Spectral *spectral)
 // REQUIRES: spectral is a Spectral object and 0 <= channel < 6
 // MODIFIES: nothing
 // EFFECTS: Returns the spectral data of a particular channel
-uint32_t get_spectral_channel_data(Spectral *spectral, uint8_t channel)
+uint16_t get_spectral_channel_data(Spectral *spectral, uint8_t channel)
 {
 	uint16_t high = (virtual_read_spectral(spectral, spectral->channels[channel].msb_register) & 0xFF) << 8;
     return high | (virtual_read_spectral(spectral, spectral->channels[channel].lsb_register) & 0xFF);

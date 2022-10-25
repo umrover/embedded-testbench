@@ -84,7 +84,7 @@ void initialize_spectral(Spectral *spectral);
 // REQUIRES: spectral is an object and 0 <= channel < 6
 // MODIFIES: nothing
 // EFFECTS: Returns the spectral data of a particular channel
-uint32_t get_spectral_channel_data(Spectral *spectral, uint8_t channel);
+uint16_t get_spectral_channel_data(Spectral *spectral, uint8_t channel);
 
 // REQUIRES: spectral is a Spectral object,
 // v_reg is the virtual register,

@@ -111,7 +111,7 @@ int main(void)
   Spectral* spectral = new_spectral(&hi2c1, NULL, true);
 
   initialize_spectral(spectral);
-  uint32_t spectral_channel_data[6];
+  uint16_t spectral_channel_data[6];
 
   /* USER CODE END 2 */
 
