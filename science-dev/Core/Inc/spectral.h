@@ -57,7 +57,6 @@ typedef struct
 {
 	uint8_t lsb_register;
 	uint8_t msb_register;
-	uint16_t color_data;
 } Channel;
 
 // AS7262 Spectral sensor

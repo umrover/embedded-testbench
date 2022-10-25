@@ -14,6 +14,11 @@ Spectral *new_spectral(
 {
     Spectral *spectral = malloc(sizeof(Spectral));
     spectral->smbus = new_smbus(i2c, uart, 0x49, dma);
+	uint8_t START_REG = 0x08;
+	for (uint8_t i = 0; i < CHANNELS; ++i) {
+		spectral->channels[i].msb_register = START_REG + i * 2;
+		spectral->channels[i].lsb_register = START_REG + i * 2 + 1;
+	}
     return spectral;
 }
 
@@ -33,7 +38,8 @@ void initialize_spectral(Spectral *spectral)
 // EFFECTS: Returns the spectral data of a particular channel
 uint32_t get_spectral_channel_data(Spectral *spectral, uint8_t channel)
 {
-    return 0;
+	uint16_t high = (virtual_read(spectral, spectral->channels[channe]->msb_register) & 0xFF) << 8;
+    return high | (virtual_read(spectral, spectral->channels[channe]->lsb_register) & 0xFF);
 }
 
 // sets enable bits in devices
@@ -47,6 +53,7 @@ void enable_spectral(Spectral *spectral) {
     write_spectral(spectral, CONTROL_SET_UP, 0x28);  // runs twice to account for status miss
     HAL_Delay(5);
     write_spectral(spectral, CONTROL_SET_UP, 0x28);  // converts data bank to 2
+	// Integration time is 0xFF * 2.8ms
     write_spectral(spectral, INT_TIME, 0xFF);  // increases integration time
 }
 
