@@ -12,6 +12,8 @@ Heater *new_heater(MosfetDevice *_mosfet_dev, Thermistor *_thermistor)
     heater->thermistor = _thermistor;
     heater->auto_shutoff = true;
     heater->is_on = false;
+
+    return heater;
 }
 
 // REQUIRES: nothing
@@ -28,42 +30,42 @@ void update_heater_temperature(Heater *heater)
 // permitted temperature AND auto_shutoff is enabled
 void update_heater_state(Heater *heater)
 {
-    if (heater->is_on == true && get_thermistor_temperature(heater->thermistor) >= MAX_HEATER_TEMP && heater->auto_shutoff == true)
+    if (heater->is_on && get_thermistor_temperature(heater->thermistor) >= MAX_HEATER_TEMP && heater->auto_shutoff)
     {
         turn_mosfet_device_off(heater->mosfet);
         heater->is_on = false;
     }
 }
 
-// REQUIRES: state is either 0 or 1, representing off or on
+// REQUIRES: state is either false or true, representing off or on
 // MODIFIES: is_on
-// EFFECTS:  Turn heater off if state is 0. Turn heater on if state is 1 AND
-// either temperature is lower than permitted temperature OR auto_shutoff is
+// EFFECTS:  Turn heater off if state is false. Turn heater on if state is true
+// AND either temperature is lower than permitted temperature OR auto_shutoff is
 // disabled
-void change_heater_state(int state)
+void change_heater_state(Heater *heater, bool state)
 {
     if (!state)
     {
         turn_mosfet_device_off(heater->mosfet);
         heater->is_on = false;
     }
-    else if (state == 1 && (get_thermistor_temperature(heater->thermistor) < MAX_HEATER_TEMP || heater->auto_shutoff == false))
+    else if (state && (get_thermistor_temperature(heater->thermistor) < MAX_HEATER_TEMP || !heater->auto_shutoff))
     {
         turn_mosfet_device_on(heater->mosfet);
         heater->is_on = true;
     }
 }
 
-// REQUIRES: state is either 0 or 1, representing off or on
+// REQUIRES: state is either false or true, representing off or on
 // MODIFIES: auto_shutoff
-// EFFECTS:  Turn auto_shutoff on if state is 1 OR off if state is 0
-void change_auto_shutoff(Heater *heater, int state)
+// EFFECTS:  Turn auto_shutoff on if state is true OR off if state is false
+void change_heater_auto_shutoff(Heater *heater, bool state)
 {
     if (!state)
     {
         heater->auto_shutoff = true;
     }
-    else if (state == 1)
+    else
     {
         heater->auto_shutoff = false;
     }
