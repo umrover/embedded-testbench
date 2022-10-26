@@ -1,5 +1,23 @@
 #include "heater.h"
 
+// REQUIRES: nothing
+// MODIFIES: is_on
+// EFFECTS:  Turns heater off
+void turn_heater_off(Heater *heater)
+{
+    turn_mosfet_device_off(heater->mosfet);
+    heater->is_on = false;
+}
+
+// REQUIRES: nothing
+// MODIFIES: is_on
+// EFFECTS:  Turns heater on
+void turn_heater_on(Heater *heater)
+{
+    turn_mosfet_device_on(heater->mosfet);
+    heater->is_on = true;
+}
+
 // REQUIRES: mosfet_dev is a pointer to a MosfetDevice object and therm
 // is a pointer to a Thermistor object
 // MODIFIES: nothing
@@ -32,8 +50,7 @@ void update_heater_state(Heater *heater)
 {
     if (heater->is_on && get_thermistor_temperature(heater->thermistor) >= MAX_HEATER_TEMP && heater->auto_shutoff)
     {
-        turn_mosfet_device_off(heater->mosfet);
-        heater->is_on = false;
+        turn_heater_off(heater);
     }
 }
 
@@ -46,13 +63,11 @@ void change_heater_state(Heater *heater, bool state)
 {
     if (!state)
     {
-        turn_mosfet_device_off(heater->mosfet);
-        heater->is_on = false;
+        turn_heater_off(heater);
     }
     else if (state && (get_thermistor_temperature(heater->thermistor) < MAX_HEATER_TEMP || !heater->auto_shutoff))
     {
-        turn_mosfet_device_on(heater->mosfet);
-        heater->is_on = true;
+        turn_heater_on(heater);
     }
 }
 

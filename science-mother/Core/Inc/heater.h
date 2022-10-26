@@ -36,8 +36,3 @@ void update_heater_state(Heater *heater);
 // AND either temperature is lower than permitted temperature OR auto_shutoff is
 // disabled
 void change_heater_state(Heater *heater, bool state);
-
-// REQUIRES: state is either false or true, representing off or on
-// MODIFIES: auto_shutoff
-// EFFECTS:  Turn auto_shutoff on if state is true OR off if state is false
-void change_heater_auto_shutoff(Heater *heater, bool state);
