@@ -51,20 +51,20 @@ void set_pwm(HBridge* hbridge, double duty_cycle)
 }
 
 
-void set_dir(HBridge* hbridge, uint8_t direction)
+void set_dir(HBridge* hbridge, int8_t direction)
 {
 
-    if (direction < 0) 
+    if (direction < 0)
     {
         HAL_GPIO_WritePin(hbridge->fwd->port, hbridge->fwd->pin, 0);
         HAL_GPIO_WritePin(hbridge->bwd->port, hbridge->bwd->pin, 1);
-    } 
+    }
 
-    else if (direction > 0) 
+    else if (direction > 0)
     {
         HAL_GPIO_WritePin(hbridge->fwd->port, hbridge->fwd->pin, 1);
         HAL_GPIO_WritePin(hbridge->bwd->port, hbridge->bwd->pin, 0);
-    } 
+    }
 
     else // direction == 0
     {

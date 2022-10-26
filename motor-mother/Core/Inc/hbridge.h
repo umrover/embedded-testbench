@@ -2,6 +2,8 @@
 
 #include <stdlib.h>
 #include "stm32f1xx_hal.h"
+#include "stm32f1xx_hal_conf.h"
+#include "stm32f1xx_it.h"
 
 typedef struct {
     GPIO_TypeDef *port;
@@ -36,4 +38,4 @@ void set_pwm(HBridge* hbridge, double duty_cycle);
 // REQUIRES: direction to be -1 or 1
 // MODIFIES: nothing
 // EFFECTS: sets fwd pin and bwd pin as (0,1) or (1,0)
-void set_dir(HBridge* hbridge, uint8_t direction);
+void set_dir(HBridge* hbridge, int8_t direction);
