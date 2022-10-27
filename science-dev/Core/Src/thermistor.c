@@ -8,95 +8,72 @@
 
 #include "thermistor.h"
 
-Thermistor* thermistor;
-
-uint32_t value[3];
-
-float curr_temps[3] = { 100, 100, 100 }; // heater 2, 1, 0
-
-Thermistor *new_thermistor(uint32_t channel0, uint32_t channel1, uint32_t channel2, ADC_HandleTypeDef hadc1) {
+// REQUIRES: _adc_channel is the corresponding ADC channel and
+// _adc_sensor is a pointer to an ADCSensor object
+// MODIFIES: nothing
+// EFFECTS: Returns a pointer to a created Thermistor object
+Thermistor *new_thermistor(ADCSensor* _adc_sensor, uint8_t _adc_channel) {
     Thermistor* therms = (Thermistor*) malloc(sizeof(Thermistor));
-// string it in a struct doesn't work for some reason. I don't get it. It's above my paygrade.
-//    therms-> adc = &hadc1;
-
-    float temp_const_array[4][4] = {{3.3570420E-03, 2.5214848E-04, 3.3743283E-06, -6.4957311E-08},
-                                  {3.3540170E-03, 2.5617244E-04, 2.1400943E-06, -7.2405219E-08},
-                                  {3.3530481E-03, 2.5420230E-04, 1.1431163E-06, -6.9383563E-08},
-                                  {3.3536166E-03, 2.5377200E-04, 8.5433271E-07, -8.7912262E-08}};
-
-    for(int i = 0; i < 4; ++i){
-        for(int j = 0; j < 4; ++j){
-            therms->constant_array[i][j] = temp_const_array[i][j];
-        }
-    }
-
-    HAL_ADC_Start_DMA(therms->adc,value,3);
-    // NOTE make sure you set these to whatever your resistor values are
-    therms->R1_vals[0] = 10000; therms->R1_vals[1] = 10000; therms->R1_vals[2] = 10000;
-
-    therms->V1 = 3.3;
-
-    therms->R25 = 10000;
-
-    if (channel0 >= 0) {
-        therms->adc_pins[0] = channel0;
-    }
-    if (channel1 >= 0) {
-        therms->adc_pins[1] = channel1; 
-    }
-    if (channel2 >= 0) {
-        therms->adc_pins[2] = channel2;
-    }
+    therms->temperature = 100;
+    therms->adc_channel = _adc_channel;
+    therms->adc_sensor = _adc_sensor;
 
     return therms;
 }
 
-void initialize_thermistor(Thermistor* thermistor) {
-    return;
-}
-
-float get_thermistor_temperature(const uint8_t which_therm, Thermistor* thermistor, ADC_HandleTypeDef hadc1) {
-    //Before reading voltage, enable only the selected channel
-    uint32_t raw_data;
-    HAL_ADC_Start(&hadc1);
-    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-    value[0] = HAL_ADC_GetValue(&hadc1);
-//    value[0] = HAL_ADC_GetValue(thermistor->adc);
-// ADC_HandleTypeDef hadc1;
-	raw_data = value[which_therm];
+// REQUIRES: thermistor is a Thermistor object
+// MODIFIES: temperature
+// EFFECTS: Updates temperature of thermistor
+void update_thermistor_temperature(Thermistor* therm) {
+    uint16_t raw_data = get_adc_sensor_value(therm->adc_sensor, therm->adc_channel);
 
 	// done to avoid sending infinity/nan
-	if (raw_data >= 4095) raw_data = 4094;
+    raw_data = raw_data > 4094 ? 4094 : raw_data;
 
     // Logic to get actual Voltage from 12 bit string
     // NOTE pretty sure it is 12 bit that's what HAL says in documentation, but could be wrong
-    float curr_volt = (raw_data * thermistor->V1) / (float)4095; // 2^12 - 1= 4095 (12 bit string  )
+    float volt_drop_across_thermistor = (raw_data * V_1) / 4095.0f; // 2^12 - 1= 4095 (12 bit string  )
 
     // Circuit math to get temperature from voltage
-    float Rt = ((float)thermistor->R1_vals[which_therm] * curr_volt) / (thermistor->V1 - curr_volt);
+    // Basically, the circuit looks like the following:
+    // 3v3 -> resistor -> nucleo probe point -> thermistor -> ground.
+    // The Nucleo's measured voltage is equal to voltage drop across
+    // the resistor.
+    // Since current is same, the V=IR implies that volt_therm/resistance_therm =
+    // volt_resistor/resistance_resistor.
+    // Thus, resistance_therm = volt_therm * resistance_resistor / volt_resistor.
+    float volt_drop_across_resistor = V_1 - volt_drop_across_thermistor;
+    float R_t = (RESISTOR_OHMS * volt_drop_across_thermistor) / (volt_drop_across_resistor);
 
-    uint8_t const_set;
-    if(Rt < 692600 && Rt >= 32770){
+    uint8_t const_set = 0;
+    if (R_t < 692600.0f && R_t >= 32770.0f){
         const_set = 0;
-    } else if (Rt < 32770 && Rt >= 3599){
+    } else if (R_t < 32770.0f && R_t >= 3599.0f){
         const_set = 1;
-    } else if (Rt < 3599 && Rt >= 681.6){
+    } else if (R_t < 3599.0f && R_t >= 681.6f){
         const_set = 2;
-    } else if (Rt < 681.6 && Rt >= 187){
+    } else if (R_t < 681.6f && R_t >= 187.0f){
         const_set = 3;
     } else {
         // TODO error out cause OOB temp
     }
-    float lnRt_over_R25 = log(Rt/thermistor->R25);
+    float lnR_t_over_R_25 = log(R_t / R_25);
 
-    float one_over_T = thermistor->constant_array[const_set][0] + (thermistor->constant_array[const_set][1] * lnRt_over_R25)
-                     + (thermistor->constant_array[const_set][2] * lnRt_over_R25 * lnRt_over_R25)
-                     + (thermistor->constant_array[const_set][3] * lnRt_over_R25 * lnRt_over_R25 * lnRt_over_R25);
-    return (1 / one_over_T) - 272.15;
+    float one_over_T = constant_array[const_set][0] + (constant_array[const_set][1] * lnR_t_over_R_25)
+                     + (constant_array[const_set][2] * lnR_t_over_R_25 * lnR_t_over_R_25)
+                     + (constant_array[const_set][3] * lnR_t_over_R_25 * lnR_t_over_R_25 * lnR_t_over_R_25);
+    therm->temperature = (1 / one_over_T) - 273.15f;
 }
 
+// REQUIRES: thermistor is a Thermistor object
+// MODIFIES: nothing
+// EFFECTS: Get temperature of thermistor in degrees Celsius
+float get_thermistor_temperature(Thermistor* therm) {
+	return therm->temperature;
+}
 
 void deleteThermistors(Thermistor* thermistors){
     free(thermistors);
 }
 
+Footer
