@@ -75,5 +75,3 @@ float get_thermistor_temperature(Thermistor* therm) {
 void deleteThermistors(Thermistor* thermistors){
     free(thermistors);
 }
-
-Footer

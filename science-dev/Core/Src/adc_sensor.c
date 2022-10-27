@@ -33,4 +33,3 @@ void update_adc_sensor_values(ADCSensor *adc_sensor) {
 }
 
 /** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
-Footer
