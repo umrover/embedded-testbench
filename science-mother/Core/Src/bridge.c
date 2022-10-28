@@ -17,73 +17,73 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart)
 
     bridge->uart = _uart;
 
-    int num_thermistors = 3;
-    bridge->adc_sensor = new_adc_sensor(&hadc1, num_thermistors);
-    for (size_t i = 0; i < num_thermistors; ++i)
-    {
-        bridge->science_thermistors[i] = new_thermistor(bridge->adc_sensor, i);
-        bridge->science_temps[i] = 0;
-    }
-
-    int num_servos = 3;
-
-    bridge->servos[0] = new_servo(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1));
-    bridge->servos[1] = new_servo(&htim1, TIM_CHANNEL_2, &(TIM1->CCR2));
-    bridge->servos[2] = new_servo(&htim1, TIM_CHANNEL_3, &(TIM2->CCR3));
-
-    for (size_t i = 0; i < num_servos; ++i)
-    {
-        initialize_servo(bridge->servos[i], 0);
-    }
-
-    bridge->mosfet_devices[0] = new_mosfet_device(MOSFET_0_GPIO_Port, MOSFET_0_Pin);
-    bridge->mosfet_devices[1] = new_mosfet_device(MOSFET_1_GPIO_Port, MOSFET_1_Pin);
-    bridge->mosfet_devices[2] = new_mosfet_device(MOSFET_2_GPIO_Port, MOSFET_2_Pin);
-    bridge->mosfet_devices[3] = new_mosfet_device(MOSFET_3_GPIO_Port, MOSFET_3_Pin);
-    bridge->mosfet_devices[4] = new_mosfet_device(MOSFET_4_GPIO_Port, MOSFET_4_Pin);
-    bridge->mosfet_devices[5] = new_mosfet_device(MOSFET_5_GPIO_Port, MOSFET_5_Pin);
-    bridge->mosfet_devices[6] = new_mosfet_device(MOSFET_6_GPIO_Port, MOSFET_6_Pin);
-    bridge->mosfet_devices[7] = new_mosfet_device(MOSFET_7_GPIO_Port, MOSFET_7_Pin);
-
     return bridge;
 }
 
 // REQUIRES: nothing
 // MODIFIES: nothing
-// EFFECTS: Updates ADC and Themistor temperatures, and sets servos and mosfets
-void bridge_iterate(Bridge *bridge)
+// EFFECTS: Sends diagnostic current and thermistor data in format:
+// $DIAG,<TEMP_0>,<TEMP_1>,<TEMP_2>,<CURR_0>,<CURR_1>,<CURR_2>
+void bridge_send_diagnostic(Bridge *bridge, float temp_0, float temp_1, float temp_2,
+                            float current_0, float current_1, float current_2)
 {
-    update_adc_sensor_values(bridge->adc_sensor);
-    for (size_t i = 0; i < 3; ++i)
+    char msg[150];
+
+    /*
+    float current_data[3];
+    float temp_data[3];
+    for (uint8_t i = 0; i < 3; ++i)
     {
-        update_thermistor_temperature(bridge->science_thermistors[i]);
-        bridge->science_temps[i] = get_thermistor_temperature(bridge->science_thermistors[i]);
+        temp_data[i] = 0;
+        current_data[i] = 0;
+    }
+    */
+
+    snprintf(msg, sizeof(msg), "$DIAG,%f,%f,%f,%f,%f,%f", temp_0, temp_1,
+             temp_2, current_0, current_1, current_2);
+    /*temp_data[0],
+     temp_data[1], temp_data[2], current_data[0], current_data[1],
+     current_data[2]);
+     */
+    HAL_Delay(100);
+    HAL_UART_Transmit_IT(bridge->uart, (uint8_t *)msg, 150);
+    HAL_Delay(100);
+}
+
+// REQUIRES: nothing
+// MODIFIES: nothing
+// EFFECTS: Sends spectral data in format:
+// "$SPECTRAL, <ch0>, <ch1>, <ch2>, <ch3>, <ch4>, <ch5>""
+void bridge_send_spectral(Bridge *bridge, Spectral *spectral)
+{
+    char msg[150];
+
+    uint32_t spectral_data[6];
+    for (uint8_t i = 0; i < 6; ++i)
+    {
+        spectral_data[i] = get_spectral_channel_data(spectral, i);
     }
 
-    /* TODO: Add Heater Stuff. */
-
-    for (size_t i = 0; i < 3; ++i)
-    {
-        set_servo_angle(bridge->servos[i], 0);
-    }
-
-    for (size_t i = 0; i < 8; ++i)
-    {
-        set_mosfet_device_state(bridge->mosfet_devices[i], 0);
-    }
+    snprintf(msg, sizeof(msg), "$SPECTRAL,%u,%u,%u,%u,%u,%u", spectral_data[0],
+             spectral_data[1], spectral_data[2], spectral_data[3], spectral_data[4],
+             spectral_data[5]);
+    HAL_Delay(100);
+    HAL_UART_Transmit_IT(bridge->uart, (uint8_t *)msg, 150);
+    HAL_Delay(100);
 }
 
 // REQUIRES: nothing
 // MODIFIES: nothing
 // EFFECTS: Sends science temperatures in format:
 // "$SCIENCE_TEMP,<TEMP_0>,<TEMP_1>,<TEMP_2>"
-void bridge_send_science_thermistors(Bridge *bridge)
+void bridge_send_science_thermistors(Bridge *bridge, float temp_0, float temp_1,
+                                     float temp_2)
 {
-    char msg[150];
-    snprintf(msg, sizeof(msg), "$SCIENCE_TEMP,%u,%u,%u",
-             bridge->science_temps[0], bridge->science_temps[1],
-             bridge->science_temps[2]);
-    send_uart_string(bridge, msg);
+    char msg[40];
+    snprintf(msg, sizeof(msg), "$SCIENCE_TEMP,%f,%f,%f", temp_0, temp_1, temp_2);
+    HAL_Delay(100);
+    HAL_UART_Transmit_IT(bridge->uart, (uint8_t *)msg, 40);
+    HAL_Delay(100);
 }
 
 void send_uart_string(Bridge *bridge, char msg[150])
