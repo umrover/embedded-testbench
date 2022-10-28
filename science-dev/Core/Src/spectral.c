@@ -33,11 +33,12 @@ void initialize_spectral(Spectral *spectral)
 	// GAIN is 0b10, so it is 16x sensor channel gain
 	// BANK is 0b10, so data conversion is Mode 2
 	// DATA_RDY is 0 and RSVD is 0
-	virtual_write_spectral(spectral, CONTROL_SET_UP, 0x28);  // runs twice to account for status miss
-	HAL_Delay(5);
-	virtual_write_spectral(spectral, CONTROL_SET_UP, 0x28);  // converts data bank to 2
+	virtual_write_spectral(spectral, CONTROL_SET_UP, 0x3C);  // runs twice to account for status miss
+	HAL_Delay(50);
+	virtual_write_spectral(spectral, CONTROL_SET_UP, 0x3C);  // converts data bank to 2
 	// Integration time is 0xFF * 2.8ms
-	virtual_write_spectral(spectral, INT_TIME, 0xFF);  // increases integration time
+	HAL_Delay(50);
+	virtual_write_spectral(spectral, INT_TIME, 0x32);  // increases integration time
 }
 
 // REQUIRES: spectral is a Spectral object and 0 <= channel < 6

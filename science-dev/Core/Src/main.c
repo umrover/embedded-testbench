@@ -108,7 +108,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   // PB9 SDA, PB8 SCL
-  Spectral* spectral = new_spectral(&hi2c1, NULL, true);
+  Spectral* spectral = new_spectral(&hi2c1, NULL, false);
 
   initialize_spectral(spectral);
   uint16_t spectral_channel_data[6];
@@ -124,6 +124,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
 	  for (uint8_t i = 0; i < 6; ++i) {
 		  spectral_channel_data[i] = get_spectral_channel_data(spectral, i);
+		  HAL_Delay(150);
 	  }
   }
   /* USER CODE END 3 */
