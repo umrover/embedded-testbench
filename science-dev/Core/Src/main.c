@@ -108,7 +108,7 @@ int main(void)
   MX_TIM1_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  CurrentSensor* my_current = new_CurrentSensor(hadc1, 0);
+  CurrentSensor* my_current = new_CurrentSensor(&hadc1, 0);
 
   /* USER CODE END 2 */
 
