@@ -25,7 +25,7 @@ HBridge* new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_ou
 }
 
 
-void intialize_hbridge(HBridge* hbridge, double duty_cycle, uint8_t direction)
+void initialize_hbridge(HBridge* hbridge, double duty_cycle, uint8_t direction)
 {
     HAL_TIM_PWM_Start(hbridge->timer, hbridge->channel);
 	set_pwm(hbridge, duty_cycle);

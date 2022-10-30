@@ -27,7 +27,7 @@ HBridge* new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_ou
 
 
 // Initialize timer settings
-void intialize_hbridge(HBridge* hbridge, double duty_cycle, uint8_t direction);
+void initialize_hbridge(HBridge* hbridge, double duty_cycle, uint8_t direction);
 
 
 // Requires a signal of between 0 and 1 for duty cycle

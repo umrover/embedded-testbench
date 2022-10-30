@@ -38,7 +38,7 @@ Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim
 
 void initialize_motor(Motor* motor, float speed, float theta)
 {
-	intialize_hbridge(motor->hbridge, speed, speed); // note: this must be misspelled to "intialize"
+	initialize_hbridge(motor->hbridge, speed, speed); // note: this must be misspelled to "intialize"
 	set_motor_speed(motor, speed);
 	set_motor_angle(motor, theta);
 }
@@ -70,6 +70,22 @@ void update_limit_switches(Motor *motor)
 
 void update_quad_encoder(Motor *motor)
 {
+
+/*	channels[0].quad_enc_raw_now = TIM2->CNT;
+	channels[1].quad_enc_raw_now = TIM3->CNT;
+*/
+	uint16_t enc_raw_now = motor->encoder->timer->CNT;
+
+	for (int i = 0; i < 3; i++){
+		Channel *channel = channels + i;
+		channel->quad_enc_value = (int16_t)(channel->quad_enc_raw_now - channel->quad_enc_raw_last) + channel->quad_enc_value;
+		channel->quad_enc_raw_last = channel->quad_enc_raw_now;
+
+	}
+
+	motor->encoder->channel_A = (int16_t)(enc_raw_now - enc_raw_last) + motor->encoder->channel_A;
+	enc_raw_last = enc_raw_now;
+
 
 }
 
