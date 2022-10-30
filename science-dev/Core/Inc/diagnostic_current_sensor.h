@@ -8,10 +8,11 @@
 #include <stdio.h>
 #include <string.h>
 
-#define VCC 3.3
-#define MV_PER_AMP 264
+#define VCC 3.3f
+// MV_PER_AMP = 185mV/A * VCC/5.0
+#define MV_PER_AMP 122.1f
 
-// ACS722LLCTR-10AU-T current sensor
+// ACHS-7121 Hall Effect-based isolated linear current sensor 
 // No clue whether or not it's a adc sensor or not. 
 typedef struct {
     int channel;
