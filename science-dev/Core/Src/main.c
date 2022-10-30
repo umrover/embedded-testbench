@@ -26,7 +26,7 @@
 #include "mosfet.h"
 #include "servo.h"
 #include "spectral.h"
-#include "thermistor.h"
+#include "diagnostic_current_sensor.h"
 #include "adc_sensor.h"
 #include "stm32g0xx_hal_pwr_ex.h"
 
@@ -112,12 +112,8 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   ADCSensor* adc_sensor = new_adc_sensor(&hadc1, 3);
-  Thermistor* therm_array[3] = {
-		  new_thermistor(adc_sensor, 0),
-		  new_thermistor(adc_sensor, 1),
-		  new_thermistor(adc_sensor, 2)
-  };
-  uint16_t raw[3];
+  Current_Sensor* current_sensor = new_diagnostic_current_sensor(0, adc_sensor);
+  double raw;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -125,10 +121,7 @@ int main(void)
   while (1)
   {
 	  update_adc_sensor_values(adc_sensor);
-	  for (int i = 0; i < 3; ++i) {
-		  update_thermistor_temperature(therm_array[i]);
-		  raw[i] = get_thermistor_temperature(therm_array[i]);
-	  }
+    raw = get_Amps(current_sensor);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
