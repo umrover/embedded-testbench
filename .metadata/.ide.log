@@ -252,3 +252,20 @@
 2022-10-30 14:00:54,013 [INFO] ApiDb:418 - Load user favorites file C:\Users\isabe/.stm32cubeide/favorites.boards.txt: 0 item(s)
 2022-10-30 14:00:54,013 [INFO] ApiDb:422 - User favorites Boards=[]
 2022-10-30 14:00:54,013 [INFO] DbBoards:189 - Set 0 / 0 favorites Boards
+2022-10-30 14:03:03,553 [INFO] MainUpdater:2768 - connection check result : 10
+2022-10-30 14:03:03,641 [INFO] McuFinderGlobals:57 - Set McuFinderConnectedMode to true
+2022-10-30 14:03:03,641 [INFO] MultiScanPanel:195 - Auto-refresh data requested => check proxy status ongoing
+2022-10-30 14:03:03,641 [INFO] FinderPluginLoader:92 - Searching for filters in installed packs
+2022-10-30 14:03:04,522 [INFO] LoadUrlFilesThread:177 - End of LoadServerUrlFiles without Thread
+2022-10-30 14:03:04,522 [INFO] DetailPanel:339 - Set advertising image to C:/Users/isabe/STM32Cube/Repository/\en.Prom_NBSTM32U50921.jpg
+2022-10-30 14:03:05,042 [INFO] MultiScanPanel:778 - Auto Refresh Data is not needed
+2022-10-30 14:03:07,539 [INFO] McuFinderGlobals:57 - Set McuFinderConnectedMode to true
+2022-10-30 14:03:07,741 [INFO] ApiDb:443 - Save user favorites file C:\Users\isabe/.stm32cubeide/favorites.mcus.txt: 0 item(s)
+2022-10-30 14:03:07,741 [INFO] ApiDb:447 - User favorites MCUs=[]
+2022-10-30 14:03:09,356 [INFO] MainUpdater:2768 - connection check result : 10
+2022-10-30 14:03:09,443 [INFO] McuFinderGlobals:57 - Set McuFinderConnectedMode to true
+2022-10-30 14:03:09,443 [INFO] MultiScanPanel:195 - Auto-refresh data requested => check proxy status ongoing
+2022-10-30 14:03:09,443 [INFO] FinderPluginLoader:92 - Searching for filters in installed packs
+2022-10-30 14:03:10,145 [INFO] LoadUrlFilesThread:177 - End of LoadServerUrlFiles without Thread
+2022-10-30 14:03:10,145 [INFO] DetailPanel:339 - Set advertising image to C:/Users/isabe/STM32Cube/Repository/\en.Prom_NBSTM32U50921.jpg
+2022-10-30 14:03:10,557 [INFO] MultiScanPanel:778 - Auto Refresh Data is not needed
