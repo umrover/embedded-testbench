@@ -72,6 +72,10 @@ static void MX_TIM6_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
+	//motor_periodic(htim, &htim6, Motor* motor[], 2);
+}
+
 /* USER CODE END 0 */
 
 /**

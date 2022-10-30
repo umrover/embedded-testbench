@@ -2,18 +2,6 @@
 #include "motor.h"
 
 
-void motor_periodic(TIM_HandleTypeDef *htim, TIM_HandleTypeDef *central_tim, Motor* motor[], int num_motors)
-{
-	if (htim == central_tim) {
-		for(int i = 0; i < num_motors; ++i) {
-			update_quad_encoder(motor[i]);
-			update_limit_switches(motor[i]);
-			update_pwm(motor[i]->hbridge);
-		}
-	}
-
-}
-
 LimitSwitch* new_limit_switch(Pin* _pin)
 {
 	LimitSwitch *limit_switch = (LimitSwitch*) malloc(sizeof(LimitSwitch));
@@ -86,15 +74,13 @@ void update_limit_switches(Motor *motor)
 
 void update_quad_encoder(Motor *motor)
 {
-	motor->encoder->raw = motor->encoder->tim->CNT;
+	motor->encoder->raw = motor->encoder->timer->CNT;
 	motor->position = (int16_t)(motor->encoder->raw - motor->encoder->prev_raw) + motor->position;
 	motor->encoder->raw = motor->encoder->prev_raw;
 }
 
 void set_motor_angle(Motor *motor, float angle)
 {
-
-
 
 }
 

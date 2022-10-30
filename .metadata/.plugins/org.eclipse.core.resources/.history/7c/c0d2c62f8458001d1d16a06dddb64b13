@@ -20,7 +20,6 @@ HBridge* new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_ou
     hbr->ARR = _ARR;
     hbr->fwd = _fwd;
     hbr->bwd = _bwd;
-    hbr->target_duty_cycle = 0;
     
     return hbr;
 }
@@ -47,7 +46,7 @@ void set_pwm(HBridge* hbridge, double duty_cycle)
         duty_cycle = 1.0;
     }
 
-    hbridge->target_duty_cycle = duty_cycle * (double) hbridge->ARR;
+    *(hbridge->out_register) = duty_cycle * (double) hbridge->ARR;
 
 }
 
@@ -72,9 +71,4 @@ void set_dir(HBridge* hbridge, int8_t direction)
         set_pwm(hbridge, 0);
     }
     
-}
-
-void update_pwm(HBridge* hbridge)
-{
-	*(hbridge->out_register) = hbridge->target_duty_cycle;
 }

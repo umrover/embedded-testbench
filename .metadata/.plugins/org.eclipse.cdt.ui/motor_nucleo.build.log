@@ -1,0 +1,27 @@
+15:02:15 **** Incremental Build of configuration Debug for project motor_nucleo ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/hbridge.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/CMSIS/Include -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/hbridge.d" -MT"Core/Src/hbridge.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/hbridge.o"
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/CMSIS/Include -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/motor.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DSTM32F303xE -DDEBUG -c -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/CMSIS/Include -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/motor.d" -MT"Core/Src/motor.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/motor.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:120:56: warning: passing argument 3 of 'new_hbridge' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+  120 |  HBridge *motor_1 = new_hbridge(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1), TIM1->ARR, pin1, pin2);
+      |                                                        ^~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:25:
+../Core/Inc/hbridge.h:27:78: note: expected 'uint32_t *' {aka 'long unsigned int *'} but argument is of type 'volatile uint32_t *' {aka 'volatile long unsigned int *'}
+   27 | HBridge* new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t _ARR, Pin* _fwd, Pin* _bwd);
+      |                                                                    ~~~~~~~~~~^~~~~~~~~~~~~
+arm-none-eabi-gcc -o "motor_nucleo.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\isabe\Documents\rover\embedded-testbench\motor_nucleo\STM32F303RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="motor_nucleo.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: motor_nucleo.elf
+ 
+arm-none-eabi-size   motor_nucleo.elf 
+arm-none-eabi-objdump -h -S  motor_nucleo.elf  > "motor_nucleo.list"
+   text	   data	    bss	    dec	    hex	filename
+  23712	    120	   2120	  25952	   6560	motor_nucleo.elf
+Finished building: default.size.stdout
+ 
+Finished building: motor_nucleo.list
+ 
+
+15:02:16 Build Finished. 0 errors, 1 warnings. (took 874ms)
+

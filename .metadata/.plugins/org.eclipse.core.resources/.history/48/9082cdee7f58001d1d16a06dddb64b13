@@ -15,8 +15,7 @@ typedef struct
 
 typedef struct
 {
-	TIM_HandleTypeDef *htim;
-	TIM_TypeDef *tim;
+	TIM_HandleTypeDef *timer;
 	int16_t raw;
 	int16_t prev_raw;
 } QuadEncoder;
@@ -29,15 +28,14 @@ typedef struct
 	QuadEncoder *encoder;
 	bool at_fwd_lim;
 	bool at_rev_lim;
-	int16_t position;
+	float angle;
 } Motor;
 
 LimitSwitch* new_limit_switch(Pin* _pin);
 
-QuadEncoder* new_quad_encoder(TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim);
+QuadEncoder* new_quad_encoder(TIM_HandleTypeDef* _timer, uint32_t* _channel_A, uint32_t* _channel_B);
 
-Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim, QuadEncoder* _encoder,
-		bool _at_fwd_lim, bool _at_rev_lim, int16_t _position);
+Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim, QuadEncoder* _encoder, bool _at_fwd_lim, bool _at_rev_lim, float _angle);
 
 
 void initialize_motor(Motor* motor, float speed, float theta);

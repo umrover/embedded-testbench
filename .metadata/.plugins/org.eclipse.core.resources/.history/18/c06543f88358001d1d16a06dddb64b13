@@ -17,7 +17,6 @@ typedef struct {
 	uint32_t ARR;
     Pin *fwd;
     Pin *bwd;
-    uint32_t target_duty_cycle;
 } HBridge;
 
 
@@ -40,6 +39,3 @@ void set_pwm(HBridge* hbridge, double duty_cycle);
 // MODIFIES: nothing
 // EFFECTS: sets fwd pin and bwd pin as (0,1) or (1,0)
 void set_dir(HBridge* hbridge, int8_t direction);
-
-
-void update_pwm(HBridge* hbridge);

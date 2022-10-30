@@ -2,18 +2,6 @@
 #include "motor.h"
 
 
-void motor_periodic(TIM_HandleTypeDef *htim, TIM_HandleTypeDef *central_tim, Motor* motor[], int num_motors)
-{
-	if (htim == central_tim) {
-		for(int i = 0; i < num_motors; ++i) {
-			update_quad_encoder(motor[i]);
-			update_limit_switches(motor[i]);
-			update_pwm(motor[i]->hbridge);
-		}
-	}
-
-}
-
 LimitSwitch* new_limit_switch(Pin* _pin)
 {
 	LimitSwitch *limit_switch = (LimitSwitch*) malloc(sizeof(LimitSwitch));
@@ -22,11 +10,11 @@ LimitSwitch* new_limit_switch(Pin* _pin)
 	return limit_switch;
 }
 
-QuadEncoder* new_quad_encoder(TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim)
+QuadEncoder* new_quad_encoder(TIM_HandleTypeDef *_timer_handle, TIM_TypeDef *_timer)
 {
 	QuadEncoder *quad_encoder = (QuadEncoder*) malloc(sizeof(QuadEncoder));
-	quad_encoder->tim = _tim;
-	quad_encoder->htim = _htim;
+	quad_encoder->timer = _timer;
+	quad_encoder->timer_handle = _timer_handle;
 
 	return quad_encoder;
 }
@@ -49,14 +37,9 @@ Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim
 
 void initialize_motor(Motor* motor, float speed, float theta)
 {
-	initialize_hbridge(motor->hbridge, speed, speed);
+	initialize_hbridge(motor->hbridge, speed, speed); // note: this must be misspelled to "intialize"
 	set_motor_speed(motor, speed);
 	set_motor_angle(motor, theta);
-}
-
-void initialize_quad_encoder(QuadEncoder* encoder)
-{
-	HAL_TIM_Encoder_Start(encoder->htim, TIM_CHANNEL_ALL);
 }
 
 
@@ -86,15 +69,13 @@ void update_limit_switches(Motor *motor)
 
 void update_quad_encoder(Motor *motor)
 {
-	motor->encoder->raw = motor->encoder->tim->CNT;
+	motor->encoder->raw = motor->encoder->timer->CNT;
 	motor->position = (int16_t)(motor->encoder->raw - motor->encoder->prev_raw) + motor->position;
 	motor->encoder->raw = motor->encoder->prev_raw;
 }
 
 void set_motor_angle(Motor *motor, float angle)
 {
-
-
 
 }
 

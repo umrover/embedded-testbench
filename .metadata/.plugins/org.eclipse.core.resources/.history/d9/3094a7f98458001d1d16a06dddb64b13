@@ -2,16 +2,14 @@
 #include "motor.h"
 
 
-void motor_periodic(TIM_HandleTypeDef *htim, TIM_HandleTypeDef *central_tim, Motor* motor[], int num_motors)
+void motor_periodic(TIM_HandleTypeDef *htim, TIM_HandleTypeDef *central_tim, Motor* motor[],)
 {
-	if (htim == central_tim) {
-		for(int i = 0; i < num_motors; ++i) {
-			update_quad_encoder(motor[i]);
-			update_limit_switches(motor[i]);
-			update_pwm(motor[i]->hbridge);
-		}
-	}
+	if (htim == target) {
+		update_quad_encoder();
+		update_limit_switches();
+		update_pwm();
 
+	}
 }
 
 LimitSwitch* new_limit_switch(Pin* _pin)
