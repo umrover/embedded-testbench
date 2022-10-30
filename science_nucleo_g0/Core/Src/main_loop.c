@@ -66,20 +66,21 @@ int main_loop(){
 #ifdef SPECTRAL_ENABLE
 
 		initialize_spectral();
-	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-		channel_select(mux, mux->channel_list[spectral_channels[i]]);
+//	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+//		channel_select(mux, mux->channel_list[spectral_channels[i]]);
 
+		//channel_select(mux, mux->channel_list[spectral_channels[i]]);
 		// Before attempting read, check if that spectral device is ready
-		if(!check_ready()){
-//			initialize_spectral();
-			continue;
-		}
-		if (get_spectral_data(spectral, spectral_data + (i * CHANNELS))) {
+//		if(!check_ready()){
+////			initialize_spectral();
+//			continue;
+//		}
+		if (get_spectral_data(spectral, spectral_data)) {
 			initialize_spectral();
 		}
 
-	}
-	send_spectral_data(spectral_data, &huart2);
+//	}
+//	send_spectral_data(spectral_data, &huart2);
 #endif
 
 #ifdef TRIAD_ENABLE

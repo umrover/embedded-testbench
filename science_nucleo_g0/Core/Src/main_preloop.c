@@ -24,7 +24,6 @@ int main_preloop(){
 #endif
 
 #ifdef MUX_ENABLE
-  	i2c_bus = new_smbus(&hi2c1, JETSON_UART);
   	i2c_bus_triad = new_smbus(&hi2c1, JETSON_UART);
   	disable_DMA(i2c_bus);
   	disable_DMA(i2c_bus_triad);
@@ -46,16 +45,18 @@ int main_preloop(){
 #ifdef SPECTRAL_ENABLE
 	HAL_Delay(500);
 
+  	i2c_bus = new_smbus(&hi2c1, JETSON_UART);
+
   	spectral_exists = 1;
 
 	spectral = new_spectral(i2c_bus);
 
 	// adds all the spectral channels
-	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-		add_channel(mux, spectral_channels[i]);
-	}
+//	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+//		add_channel(mux, spectral_channels[i]);
+//	}
 
-	initialize_spectral();
+	enable_spectral(spectral);
 
 #endif
 

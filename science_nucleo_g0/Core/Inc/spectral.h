@@ -8,12 +8,13 @@
 #include <stdlib.h>
 #include "stm32g0xx_hal.h"
 #include "smbus.h"
-#include "mux.h"
+//#include "mux.h"
 
 
 
 // private data members
 #define CHANNELS 6
+#define SPECTRAL_DEVICES 1
 
 enum {
 	DEV_SEL = 0x4F,
@@ -111,22 +112,20 @@ void initialize_spectral();
 int check_ready();
 
 // Externs
+//extern enum {
+//	SPECTRAL_0_CHANNEL = 0,
+//	SPECTRAL_1_CHANNEL = 1,
+//	SPECTRAL_2_CHANNEL = 2
+//};
 
-extern enum {
-	SPECTRAL_0_CHANNEL = 0,
-	SPECTRAL_1_CHANNEL = 1,
-	SPECTRAL_2_CHANNEL = 2,
-	SPECTRAL_DEVICES = 3
-};
-
-extern int spectral_channels[SPECTRAL_DEVICES];
+//extern int spectral_channels[SPECTRAL_DEVICES];
 extern SMBus *i2c_bus;
 extern Spectral *spectral;
 extern uint8_t *buf[60];
 extern uint16_t spectral_data[SPECTRAL_DEVICES * CHANNELS];
-extern Mux *mux;
+//extern Mux *mux;
 
-void initialize_spectral_mux();
+//void initialize_spectral_mux();
 
 #endif
 

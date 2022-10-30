@@ -119,10 +119,10 @@ void Error_Handler(void);
 #define MOSFET_1_GPIO_Port GPIOB
 #define SERVO_PWM_2_Pin GPIO_PIN_6
 #define SERVO_PWM_2_GPIO_Port GPIOB
-#define MUX_SDA_Pin GPIO_PIN_7
-#define MUX_SDA_GPIO_Port GPIOB
-#define MUX_SCL_Pin GPIO_PIN_8
-#define MUX_SCL_GPIO_Port GPIOB
+#define SPECTRAL_SDA_Pin GPIO_PIN_7
+#define SPECTRAL_SDA_GPIO_Port GPIOB
+#define SPECTRAL_SCL_Pin GPIO_PIN_8
+#define SPECTRAL_SCL_GPIO_Port GPIOB
 #define MOSFET_3_Pin GPIO_PIN_9
 #define MOSFET_3_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */

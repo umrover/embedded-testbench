@@ -1,12 +1,12 @@
 #include "smbus.h"
 #include "spectral.h"
-#include "mux.h"
+//#include "mux.h"
 
-int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
+//int spectral_channels[SPECTRAL_DEVICES] = { SPECTRAL_0_CHANNEL, SPECTRAL_1_CHANNEL, SPECTRAL_2_CHANNEL };
 SMBus *i2c_bus;
 Spectral *spectral;
 uint16_t spectral_data[SPECTRAL_DEVICES * CHANNELS];
-Mux *mux;
+//Mux *mux;
 
 //transmits the spectral data as a sentance
 //$SPECTRAL,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,
@@ -33,13 +33,17 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 		}
 	}
 
-	  sprintf((char *)string, "$SPECTRAL,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u, \r\n",\
-			  separated_data[0], separated_data[1], separated_data[2], separated_data[3], separated_data[4], separated_data[5], \
-			  separated_data[6], separated_data[7], separated_data[8], separated_data[9], separated_data[10], separated_data[11], \
-			  separated_data[12], separated_data[13], separated_data[14], separated_data[15], separated_data[16], separated_data[17], \
-			  separated_data[18], separated_data[19], separated_data[20], separated_data[21], separated_data[22], separated_data[23], \
-			  separated_data[24], separated_data[25], separated_data[26], separated_data[27], separated_data[28], separated_data[29], \
-			  separated_data[30], separated_data[31], separated_data[32], separated_data[33], separated_data[34], separated_data[35]);
+	sprintf((char *)string, "$SPECTRAL,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u, \r\n",\
+				  separated_data[0], separated_data[1], separated_data[2], separated_data[3], separated_data[4], separated_data[5], \
+				  separated_data[6], separated_data[7], separated_data[8], separated_data[9], separated_data[10], separated_data[11]);
+
+//	  sprintf((char *)string, "$SPECTRAL,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u, \r\n",\
+//			  separated_data[0], separated_data[1], separated_data[2], separated_data[3], separated_data[4], separated_data[5], \
+//			  separated_data[6], separated_data[7], separated_data[8], separated_data[9], separated_data[10], separated_data[11], \
+//			  separated_data[12], separated_data[13], separated_data[14], separated_data[15], separated_data[16], separated_data[17], \
+//			  separated_data[18], separated_data[19], separated_data[20], separated_data[21], separated_data[22], separated_data[23], \
+//			  separated_data[24], separated_data[25], separated_data[26], separated_data[27], separated_data[28], separated_data[29], \
+//			  separated_data[30], separated_data[31], separated_data[32], separated_data[33], separated_data[34], separated_data[35]);
 
 
 	//sprintf((char *)string + 10 + channels*6," \r\n");
@@ -192,16 +196,16 @@ void _del_channel(Channel *channel) {
 void initialize_spectral() {
 	// opens all channels on the mux to listen
 	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-		channel_select(mux, mux->channel_list[i]);
+//		channel_select(mux, mux->channel_list[i]);
 		enable_spectral(spectral);
 	}
 }
 
-void initialize_spectral_mux() {
-	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-			add_channel(mux, spectral_channels[i]);
-	}
-}
+//void initialize_spectral_mux() {
+//	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
+//			add_channel(mux, spectral_channels[i]);
+//	}
+//}
 // Check if spectral device is ready for data read
 // Assumes the channel is already selected on the mux
 // 1 = Not Ready
