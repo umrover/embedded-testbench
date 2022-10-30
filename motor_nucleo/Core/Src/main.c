@@ -22,7 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "abs_enc_reading.h"
+#include "hbridge.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -33,35 +34,6 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-Channel channel_default = {
-	0x00, //mode
-	0, //open_setpoint
-	0, //closed_setpoint
-	0, //FF
-	0, //KP
-	0, //KI
-	0, //KD
-	0, //limit
-	0, //abs_enc_value
-	0, //quad_enc_value
-	0, //speed_max
-	0, //speed
-	0, //quad_enc_raw_now
-	0, //quad_enc_raw_last
-	0, //integrated_error
-	0, //last_error
-	0, //calibrated
-	0xFF, // limit_enabled
-};
-
-Channel channels[6];
-
-#define DT 0.001
-
-// NUCLEO 2 MOTOR 2 IS GRIPPER, NUCLEO 3 MOTOR 2 IS FINGER	
-#define MOTOR_2_FORWARD_LIMIT channels[2].limit
-#define MOTOR_2_BACKWARD_LIMIT channels[1].limit	
-#define MOTOR_1_CALIBRATION_POSITIVE_LIMIT channels[3].limit
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -99,187 +71,7 @@ static void MX_TIM6_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void update_quad_enc() {
-	channels[0].quad_enc_raw_now = TIM2->CNT;
-	channels[1].quad_enc_raw_now = TIM3->CNT;
 
-	for (int i = 0; i < 3; i++){
-		Channel *channel = channels + i;
-		channel->quad_enc_value = (int16_t)(channel->quad_enc_raw_now - channel->quad_enc_raw_last) + channel->quad_enc_value;
-		channel->quad_enc_raw_last = channel->quad_enc_raw_now;
-
-	}
-}
-
-float abs_enc_filter(int channel, float raw_val)
-{
-	// TODO make filters that can handle wrap around
-
-	// Check for initial 0 value
-	if (fabs((channels + channel)->abs_enc_value) < STABILIZER_EPSILON) {
-		return raw_val;
-	}
-
-	float multiplier = STABILIZER_MULTIPLIER;
-
-	// If value is outside 6.25 rad
-	// If value is zero the i2c transaction failed
-	if (fabs(raw_val) > 6.25 || raw_val == 0) {
-		multiplier = 1;
-	}
-
-//	// If value is far from current value
-//	else if (fabs(raw_val - (channels + channel)->abs_enc_value) > ENCODER_ERROR_THRESHOLD) {
-//		multiplier = STABILIZER_BAD_MULTIPLIER;
-//	}
-
-	// Return combination of new and old values
-	return multiplier * (channels + channel)->abs_enc_value + (1 - multiplier) * raw_val;
-}
-
-void update_abs_enc_0()
-{
-	(channels + 0)->abs_enc_value = abs_enc_filter(0, get_angle_radians(abs_enc_0));
-}
-
-void update_abs_enc_1()
-{
-	(channels + 1)->abs_enc_value = abs_enc_filter(1, get_angle_radians(abs_enc_1));
-}
-
-void update_both_abs_enc() {
-	update_abs_enc_0();
-	update_abs_enc_1();
-}
-
-void update_limit() {
-	// Nucleo 2 Channel 0 is limit switch front (open) for scoop (LS3)
-	// Nucleo 2 Channel 1 is limit switch back (closed) for scoop (LS4)
-	// Nucleo 3 Channel 0 is limit switch top/front for scope+triad (LS1)
-	// Nucleo 3 Channel 1 is limit switch bottom/back for scope+triad (LS2)
-	// Nucleo 1 Channel 2 is used for joint b calibration
-
-	// Our limit switches are active high, so the channels[x].limit is equal to 0xFF if the switch is active.
-
-	channels[0].limit = (HAL_GPIO_ReadPin(M0_LIMIT_GPIO_Port, M0_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
-	channels[1].limit = (HAL_GPIO_ReadPin(M1_LIMIT_GPIO_Port, M1_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
-	channels[2].limit = (HAL_GPIO_ReadPin(M2_LIMIT_GPIO_Port, M2_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
-	channels[3].limit = (HAL_GPIO_ReadPin(M3_LIMIT_GPIO_Port, M3_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
-	channels[4].limit = (HAL_GPIO_ReadPin(M4_LIMIT_GPIO_Port, M4_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
-	channels[5].limit = (HAL_GPIO_ReadPin(M5_LIMIT_GPIO_Port, M5_LIMIT_Pin) == GPIO_PIN_SET) ? 0xFF : 0x00;
-
-	// If joint b is at the end, calibrate it
-	if ((I2C_ADDRESS == 0x10 || I2C_ADDRESS == 0x30) && MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF) {
-		channels[1].quad_enc_value = 0;
-		channels[1].calibrated = 0xFF;
-	}
-}
-
-void update_logic() {
-	for (uint8_t i = 0; i < 6; i++){
-		Channel *channel = channels + i;
-		float output;
-
-		if (channel->mode == 0xFF){
-
-			float error = 0;
-
-			error = (float)(channel->closed_setpoint - channel->quad_enc_value);
-
-			float integratedError = channel->integrated_error + (error * DT);
-			float derivativeError = (error - channel->last_error) / DT;
-
-			channel->integrated_error = integratedError;
-			channel->last_error = error;
-
-			output = ((channel->KP * error) + (channel->KI * integratedError) + (channel->KD * derivativeError) + channel->FF);
-			output = output <  channel->speed_max ? output : channel->speed_max;
-			output = output > -channel->speed_max ? output : -channel->speed_max;
-			channel->speed = -output;
-		}
-		else {
-			channel->speed = channel->open_setpoint * channel->speed_max; //scales it
-		}
-
-	}
-}
-
-void set_dir(float speed, GPIO_TypeDef *fwd_port, uint16_t fwd_pin, GPIO_TypeDef *bwd_port,
-		uint16_t bwd_pin) {
-	HAL_GPIO_WritePin(fwd_port, fwd_pin, (speed > 0) | (speed == 0));
-	HAL_GPIO_WritePin(bwd_port, bwd_pin, (speed < 0) | (speed == 0));
-}
-
-float fabs(float i) {
-	return i < 0 ? i * -1.0 : i;
-}
-
-void update_PWM() {
-
-	float speed_0 = channels[0].speed;
-	float speed_1 = channels[1].speed;
-	float speed_2 = channels[2].speed;
-	float speed_3 = channels[3].speed;
-	float speed_4 = channels[4].speed;
-	float speed_5 = channels[5].speed;
-
-	// if reached forward limit for channel 1 motor on nucleo 1, don't go forwards
-	// this is for joint b
-	if (I2C_ADDRESS == 0x10)
-	{
-		speed_1 =
-				MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF && speed_1 > 0 ? 0 : speed_1;
-	}
-
-	// this is for the carousel motor
-	// TODO - verify that this is the correct direction
-	if (I2C_ADDRESS == 0x30)
-	{
-		speed_1 =
-				MOTOR_1_CALIBRATION_POSITIVE_LIMIT == 0xFF && speed_1 > 0 ? 0 : speed_1;
-	}
-
-	else if (I2C_ADDRESS == 0x20)
-	{
-		// if reached forward limit for channel 2 motor, don't go forwards
-		speed_2 = MOTOR_2_BACKWARD_LIMIT == 0xFF && speed_2 > 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
-		// if reached backward limit for channel 2, don't go backwards
-		speed_2 = MOTOR_2_FORWARD_LIMIT == 0xFF && speed_2 < 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
-	}
-	else if (I2C_ADDRESS == 0x30)
-	{
-		// if reached forward limit for channel 2 motor, don't go forwards
-		speed_2 = MOTOR_2_FORWARD_LIMIT == 0xFF && speed_2 > 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
-		// if reached backward limit for channel 2, don't go backwards
-		speed_2 = MOTOR_2_BACKWARD_LIMIT == 0xFF && speed_2 < 0 && channels[2].limit_enabled == 0xFF ? 0 : speed_2;
-	}
-
-	TIM1->CCR1 = (uint32_t)(fabs(speed_0) * TIM1->ARR);
-	TIM1->CCR2 = (uint32_t)(fabs(speed_1) * TIM1->ARR);
-	TIM1->CCR3 = (uint32_t)(fabs(speed_2) * TIM1->ARR);
-
-	set_dir(speed_0, M0_DIR_GPIO_Port, M0_DIR_Pin, M0_NDIR_GPIO_Port, M0_NDIR_Pin);
-	set_dir(speed_1, M1_DIR_GPIO_Port, M1_DIR_Pin, M1_NDIR_GPIO_Port, M1_NDIR_Pin);
-	set_dir(speed_2, M2_DIR_GPIO_Port, M2_DIR_Pin, M2_NDIR_GPIO_Port, M2_NDIR_Pin);
-
-	TIM8->CCR1 = (uint32_t)(fabs(speed_3) * TIM8->ARR);
-	TIM8->CCR2 = (uint32_t)(fabs(speed_4) * TIM8->ARR);
-	TIM8->CCR3 = (uint32_t)(fabs(speed_5) * TIM8->ARR);
-
-	set_dir(speed_3, M3_DIR_GPIO_Port, M3_DIR_Pin, M3_NDIR_GPIO_Port, M3_NDIR_Pin);
-	set_dir(speed_4, M4_DIR_GPIO_Port, M4_DIR_Pin, M4_NDIR_GPIO_Port, M4_NDIR_Pin);
-	set_dir(speed_5, M5_DIR_GPIO_Port, M5_DIR_Pin, M5_NDIR_GPIO_Port, M5_NDIR_Pin);
-}
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim){
-	if (htim == &htim6) {
-		update_quad_enc();
-		update_limit();
-		update_logic();
-		update_PWM();
-		CH_tick();
-	}
-}
 /* USER CODE END 0 */
 
 /**
@@ -318,75 +110,42 @@ int main(void)
   MX_TIM8_Init();
   MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
-  // LED indicator about reset by watchdog
-  HAL_Delay (500);
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
-
-  for (int i = 0; i < CHANNELS; ++i)
-  {
-	  channels[i] = channel_default;
-//	  channels[i].open_setpoint = 0;
-//	  channels[i].quad_enc_value = 0;
-//	  channels[i].quad_enc_raw_now = 0;
-//	  channels[i].quad_enc_raw_last = 0;
-//	  channels[i].abs_enc_value = 0;
-  }
-
-  i2c_bus = i2c_bus_default;
-  i2c_bus_handle = &hi2c1;
-
-  abs_encoder_handle = &hi2c2;
-  abs_enc_0 = abs_encoder_init(abs_encoder_handle, FALSE, FALSE);
-  abs_enc_1 = abs_encoder_init(abs_encoder_handle, TRUE, TRUE);
-  disable_DMA(abs_enc_0->i2cBus);
-  disable_DMA(abs_enc_1->i2cBus);
-
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-  HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_3);
-  HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
-  HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-  HAL_TIM_Base_Start_IT(&htim6);
-  HAL_I2C_EnableListen_IT(&hi2c1);
-
+  //(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t _ARR, Pin* _fwd, Pin* _bwd)
+	Pin* pin1 = new_pin(GPIOC, GPIO_PIN_10);
+	Pin* pin2 = new_pin(GPIOC, GPIO_PIN_11);
+	HBridge *motor_1 = new_hbridge(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1), TIM1->ARR, pin1, pin2);
+	initialize_hbridge(motor_1, 0.0, 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  if (I2C_ADDRESS == 0x10)
-  {
-	  while (1)
-	  {
-		  update_abs_enc_0();
-		  HAL_Delay(90);
-	  }
-  }
-  else if (I2C_ADDRESS == 0x20)
-  {
-	  while (1)
-	  {
-		  update_both_abs_enc();
-		  HAL_Delay(90);
-	  }
-  }
-  else if (I2C_ADDRESS == 0x30)
-	{
-	  while (1)
-	  {
-		  update_abs_enc_0();
-		  HAL_Delay(90);
-	  }
-	}
+  int increasing = 1;
+  double dpwm = 0.01;
+  double pwm = 0.0;
   while (1)
   {
+	  set_pwm(motor_1, pwm);
+
+	  if (pwm > 1.0)
+	  {
+		  increasing = 0;
+	  }
+	  if (pwm < 0.0){
+		  increasing = 1;
+	  }
+
+	  if (increasing)
+	  {
+		  pwm += dpwm;
+	  }
+	  else
+	  {
+		pwm -= dpwm;
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	update_both_abs_enc();
-	HAL_Delay(90);
+
   }
   /* USER CODE END 3 */
 }
@@ -412,6 +171,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -468,12 +228,14 @@ static void MX_I2C1_Init(void)
   {
     Error_Handler();
   }
+
   /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
+
   /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
@@ -514,12 +276,14 @@ static void MX_I2C2_Init(void)
   {
     Error_Handler();
   }
+
   /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c2, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
+
   /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c2, 0) != HAL_OK)
@@ -591,10 +355,6 @@ static void MX_TIM1_Init(void)
     Error_Handler();
   }
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
   {
     Error_Handler();
   }
@@ -770,8 +530,6 @@ static void MX_TIM8_Init(void)
 
   TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
-  TIM_OC_InitTypeDef sConfigOC = {0};
-  TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
 
   /* USER CODE BEGIN TIM8_Init 1 */
 
@@ -792,10 +550,6 @@ static void MX_TIM8_Init(void)
   {
     Error_Handler();
   }
-  if (HAL_TIM_PWM_Init(&htim8) != HAL_OK)
-  {
-    Error_Handler();
-  }
   sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
   sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
   sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
@@ -803,44 +557,9 @@ static void MX_TIM8_Init(void)
   {
     Error_Handler();
   }
-  sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 0;
-  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
-  sConfigOC.OCNPolarity = TIM_OCNPOLARITY_HIGH;
-  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
-  sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
-  if (HAL_TIM_PWM_ConfigChannel(&htim8, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_TIM_PWM_ConfigChannel(&htim8, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  if (HAL_TIM_PWM_ConfigChannel(&htim8, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  sBreakDeadTimeConfig.OffStateRunMode = TIM_OSSR_DISABLE;
-  sBreakDeadTimeConfig.OffStateIDLEMode = TIM_OSSI_DISABLE;
-  sBreakDeadTimeConfig.LockLevel = TIM_LOCKLEVEL_OFF;
-  sBreakDeadTimeConfig.DeadTime = 0;
-  sBreakDeadTimeConfig.BreakState = TIM_BREAK_DISABLE;
-  sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
-  sBreakDeadTimeConfig.BreakFilter = 0;
-  sBreakDeadTimeConfig.Break2State = TIM_BREAK2_DISABLE;
-  sBreakDeadTimeConfig.Break2Polarity = TIM_BREAK2POLARITY_HIGH;
-  sBreakDeadTimeConfig.Break2Filter = 0;
-  sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
-  if (HAL_TIMEx_ConfigBreakDeadTime(&htim8, &sBreakDeadTimeConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE BEGIN TIM8_Init 2 */
 
   /* USER CODE END TIM8_Init 2 */
-  HAL_TIM_MspPostInit(&htim8);
 
 }
 
@@ -854,54 +573,36 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin|M1_NDIR_Pin
-                          |M2_NDIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOA, M0_DIR_Pin|M1_DIR_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5|M3_NDIR_Pin|M0_DIR_Pin|M1_DIR_Pin
-                          |M2_DIR_Pin|M5_DIR_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOC, M0_NDIR_Pin|M1_NDIR_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, M3_DIR_Pin|M4_DIR_Pin, GPIO_PIN_RESET);
+  /*Configure GPIO pins : M0_LIMIT_A_Pin M0_LIMIT_B_Pin M1_LIMIT_A_Pin M1_LIMIT_B_Pin */
+  GPIO_InitStruct.Pin = M0_LIMIT_A_Pin|M0_LIMIT_B_Pin|M1_LIMIT_A_Pin|M1_LIMIT_B_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : M4_NDIR_Pin M5_NDIR_Pin M0_NDIR_Pin M1_NDIR_Pin
-                           M2_NDIR_Pin */
-  GPIO_InitStruct.Pin = M4_NDIR_Pin|M5_NDIR_Pin|M0_NDIR_Pin|M1_NDIR_Pin
-                          |M2_NDIR_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : PA5 M3_NDIR_Pin M0_DIR_Pin M1_DIR_Pin
-                           M2_DIR_Pin M5_DIR_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_5|M3_NDIR_Pin|M0_DIR_Pin|M1_DIR_Pin
-                          |M2_DIR_Pin|M5_DIR_Pin;
+  /*Configure GPIO pins : M0_DIR_Pin M1_DIR_Pin */
+  GPIO_InitStruct.Pin = M0_DIR_Pin|M1_DIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : M3_DIR_Pin M4_DIR_Pin */
-  GPIO_InitStruct.Pin = M3_DIR_Pin|M4_DIR_Pin;
+  /*Configure GPIO pins : M0_NDIR_Pin M1_NDIR_Pin */
+  GPIO_InitStruct.Pin = M0_NDIR_Pin|M1_NDIR_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /*Configure GPIO pins : M0_LIMIT_Pin M1_LIMIT_Pin M2_LIMIT_Pin M3_LIMIT_Pin
-                           M4_LIMIT_Pin M5_LIMIT_Pin */
-  GPIO_InitStruct.Pin = M0_LIMIT_Pin|M1_LIMIT_Pin|M2_LIMIT_Pin|M3_LIMIT_Pin
-                          |M4_LIMIT_Pin|M5_LIMIT_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 }
 
@@ -937,5 +638,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

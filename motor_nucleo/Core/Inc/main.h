@@ -32,8 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "command_handling.h"
-//#include "abs_enc_reading.h"
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -43,41 +42,6 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
 
-typedef struct{
-	//REGISTERS
-	uint8_t mode;
-	float open_setpoint;
-	int32_t closed_setpoint;
-	float FF;
-	float KP;
-	float KI;
-	float KD;
-
-	uint8_t limit;
-	float abs_enc_value;
-	int32_t quad_enc_value;
-
-	float speed_max; //max percent
-
-	//INTERNAL
-	float speed; //
-	uint16_t quad_enc_raw_now;
-	uint16_t quad_enc_raw_last;
-
-	float integrated_error;
-	float last_error;
-
-	uint8_t calibrated;
-	uint8_t limit_enabled;
-
-} Channel;
-
-
-extern Channel channel_default;
-
-extern Channel channels[6];
-
-//reserved_area = (const char *) 0x20000088;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -91,7 +55,6 @@ void HAL_TIM_MspPostInit(TIM_HandleTypeDef *htim);
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-float fabs(float);
 
 /* USER CODE END EFP */
 
@@ -101,10 +64,6 @@ float fabs(float);
 #define CHANNELS 6
 #define QUADRATURE_FILTER 8
 #define PWM_PERIOD 10000
-#define M4_NDIR_Pin GPIO_PIN_14
-#define M4_NDIR_GPIO_Port GPIOC
-#define M5_NDIR_Pin GPIO_PIN_15
-#define M5_NDIR_GPIO_Port GPIOC
 #define M_I2C_SDA_Pin GPIO_PIN_0
 #define M_I2C_SDA_GPIO_Port GPIOF
 #define M_I2C_SCL_Pin GPIO_PIN_1
@@ -113,8 +72,6 @@ float fabs(float);
 #define M0_PWM_GPIO_Port GPIOC
 #define M1_PWM_Pin GPIO_PIN_1
 #define M1_PWM_GPIO_Port GPIOC
-#define M2_PWM_Pin GPIO_PIN_2
-#define M2_PWM_GPIO_Port GPIOC
 #define M0_QUAD_A_Pin GPIO_PIN_0
 #define M0_QUAD_A_GPIO_Port GPIOA
 #define M0_QUAD_B_Pin GPIO_PIN_1
@@ -123,44 +80,22 @@ float fabs(float);
 #define M1_QUAD_B_GPIO_Port GPIOA
 #define M1_QUAD_A_Pin GPIO_PIN_6
 #define M1_QUAD_A_GPIO_Port GPIOA
-#define M3_NDIR_Pin GPIO_PIN_7
-#define M3_NDIR_GPIO_Port GPIOA
-#define M3_DIR_Pin GPIO_PIN_2
-#define M3_DIR_GPIO_Port GPIOB
-#define M0_LIMIT_Pin GPIO_PIN_10
-#define M0_LIMIT_GPIO_Port GPIOB
-#define M1_LIMIT_Pin GPIO_PIN_11
-#define M1_LIMIT_GPIO_Port GPIOB
-#define M2_LIMIT_Pin GPIO_PIN_12
-#define M2_LIMIT_GPIO_Port GPIOB
-#define M3_LIMIT_Pin GPIO_PIN_13
-#define M3_LIMIT_GPIO_Port GPIOB
-#define M4_LIMIT_Pin GPIO_PIN_14
-#define M4_LIMIT_GPIO_Port GPIOB
-#define M5_LIMIT_Pin GPIO_PIN_15
-#define M5_LIMIT_GPIO_Port GPIOB
-#define M3_PWM_Pin GPIO_PIN_6
-#define M3_PWM_GPIO_Port GPIOC
-#define M4_PWM_Pin GPIO_PIN_7
-#define M4_PWM_GPIO_Port GPIOC
-#define M5_PWM_Pin GPIO_PIN_8
-#define M5_PWM_GPIO_Port GPIOC
+#define M0_LIMIT_A_Pin GPIO_PIN_10
+#define M0_LIMIT_A_GPIO_Port GPIOB
+#define M0_LIMIT_B_Pin GPIO_PIN_11
+#define M0_LIMIT_B_GPIO_Port GPIOB
+#define M1_LIMIT_A_Pin GPIO_PIN_12
+#define M1_LIMIT_A_GPIO_Port GPIOB
+#define M1_LIMIT_B_Pin GPIO_PIN_13
+#define M1_LIMIT_B_GPIO_Port GPIOB
 #define M0_DIR_Pin GPIO_PIN_10
 #define M0_DIR_GPIO_Port GPIOA
 #define M1_DIR_Pin GPIO_PIN_11
 #define M1_DIR_GPIO_Port GPIOA
-#define M2_DIR_Pin GPIO_PIN_12
-#define M2_DIR_GPIO_Port GPIOA
-#define M5_DIR_Pin GPIO_PIN_15
-#define M5_DIR_GPIO_Port GPIOA
 #define M0_NDIR_Pin GPIO_PIN_10
 #define M0_NDIR_GPIO_Port GPIOC
 #define M1_NDIR_Pin GPIO_PIN_11
 #define M1_NDIR_GPIO_Port GPIOC
-#define M2_NDIR_Pin GPIO_PIN_12
-#define M2_NDIR_GPIO_Port GPIOC
-#define M4_DIR_Pin GPIO_PIN_6
-#define M4_DIR_GPIO_Port GPIOB
 #define J_I2C_SCL_Pin GPIO_PIN_8
 #define J_I2C_SCL_GPIO_Port GPIOB
 #define J_I2C_SDA_Pin GPIO_PIN_9
@@ -177,5 +112,3 @@ float fabs(float);
 #endif
 
 #endif /* __MAIN_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
