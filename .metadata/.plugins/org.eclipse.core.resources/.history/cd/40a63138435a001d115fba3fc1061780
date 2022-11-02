@@ -6,11 +6,9 @@ void motor_periodic(TIM_HandleTypeDef *htim, TIM_HandleTypeDef *central_tim, Mot
 {
 	if (htim == central_tim) {
 		for(int i = 0; i < num_motors; ++i) {
-			if(motor[i]) {
-				update_quad_encoder(motor[i]);
-				update_limit_switches(motor[i]);
-				update_pwm(motor[i]->hbridge);
-			}
+			update_quad_encoder(motor[i]);
+			update_limit_switches(motor[i]);
+			update_pwm(motor[i]->hbridge);
 		}
 	}
 
@@ -33,15 +31,16 @@ QuadEncoder* new_quad_encoder(TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim)
 	return quad_encoder;
 }
 
-Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim, QuadEncoder* _encoder, int16_t _position)
+Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim, QuadEncoder* _encoder,
+		bool _at_fwd_lim, bool _at_rev_lim, int16_t _position)
 {
 	Motor *motor = (Motor*) malloc(sizeof(Motor));
 	motor->hbridge = _hbridge;
 	motor->fwd_lim = _fwd_lim;
 	motor->rev_lim = _rev_lim;
 	motor->encoder = _encoder;
-	motor->at_fwd_lim = 0;
-	motor->at_rev_lim = 0;
+	motor->at_fwd_lim = _at_fwd_lim;
+	motor->at_rev_lim = _at_rev_lim;
 	motor->position = _position;
 
 	return motor;
@@ -79,18 +78,11 @@ void set_motor_speed(Motor *motor, float speed)
 
 void update_limit_switches(Motor *motor)
 {
-	if (motor->fwd_lim) {
-		int fwd_lim_state = HAL_GPIO_ReadPin(motor->fwd_lim->pin->port, motor->fwd_lim->pin->pin);
-		motor->at_fwd_lim = fwd_lim_state;
-	}
-	if (motor->rev_lim) {
-		int rev_lim_state = HAL_GPIO_ReadPin(motor->rev_lim->pin->port, motor->rev_lim->pin->pin);
-		motor->at_rev_lim = rev_lim_state;
-	}
+	int fwd_lim_state = HAL_GPIO_ReadPin(motor->fwd_lim->pin->port, motor->fwd_lim->pin->pin);
+	int rev_lim_state = HAL_GPIO_ReadPin(motor->rev_lim->pin->port, motor->rev_lim->pin->pin);
 
-	if(motor->at_fwd_lim || motor->at_rev_lim) {
-		set_motor_speed(motor, 0);
-	}
+	motor->at_fwd_lim = fwd_lim_state;
+	motor->at_rev_lim = rev_lim_state;
 
 }
 
@@ -104,6 +96,13 @@ void update_quad_encoder(Motor *motor)
 void set_motor_angle(Motor *motor, float angle)
 {
 
+	while(motor->position < angle) {
+		set_motor_speed(motor, 5);
+	}
+
+	while(motor->position > angle) {
+		set_motor_speed(motor, -5);
+	}
 
 }
 

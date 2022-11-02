@@ -88,10 +88,6 @@ void update_limit_switches(Motor *motor)
 		motor->at_rev_lim = rev_lim_state;
 	}
 
-	if(motor->at_fwd_lim || motor->at_rev_lim) {
-		set_motor_speed(motor, 0);
-	}
-
 }
 
 void update_quad_encoder(Motor *motor)

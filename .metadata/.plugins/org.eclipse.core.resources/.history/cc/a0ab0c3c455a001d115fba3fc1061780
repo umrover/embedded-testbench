@@ -36,7 +36,8 @@ LimitSwitch* new_limit_switch(Pin* _pin);
 
 QuadEncoder* new_quad_encoder(TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim);
 
-Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim, QuadEncoder* _encoder, int16_t _position);
+Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim, QuadEncoder* _encoder,
+		bool _at_fwd_lim, bool _at_rev_lim, int16_t _position);
 
 
 void initialize_motor(Motor* motor, float speed, float theta);

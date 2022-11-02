@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "hbridge.h"
+#include "motor.h"
 
 /* USER CODE END Includes */
 
@@ -72,8 +72,9 @@ static void MX_TIM6_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+Motor* motors[2];
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
-	//motor_periodic(htim, &htim6, Motor* motor[], 2);
+	motor_periodic(htim, &htim6, motors, 2);
 }
 
 /* USER CODE END 0 */
@@ -119,38 +120,55 @@ int main(void)
 	Pin* pin2 = new_pin(GPIOC, GPIO_PIN_11);
 	HBridge *motor_1 = new_hbridge(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1), TIM1->ARR, pin1, pin2);
 	initialize_hbridge(motor_1, 0.0, 1);
+
+	Pin* pin10 = new_pin(GPIOB, GPIO_PIN_10);
+	Pin* pin11 = new_pin(GPIOB, GPIO_PIN_11);
+	LimitSwitch* limFwd = new_limit_switch(pin10); //B10
+	LimitSwitch* limRev = new_limit_switch(pin11); //B11
+	QuadEncoder* encoder = new_quad_encoder(&htim1, TIM1);
+
+	motors[0] = new_motor(motor_1, limFwd, limRev, encoder, 0);
+	initialize_motor(motors[0], 0.0, 0.0);
+
+	motors[1] = NULL;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   int increasing = 1;
-  double dpwm = 0.01;
-  double pwm = 0.0;
+  double dspeed = 1;
+  double speed = 0.0;
   while (1)
   {
-	  set_pwm(motor_1, pwm);
+	  set_motor_speed(motors[0], speed);
 
-	  if (pwm > 1.0)
+	  if (speed > 100)
 	  {
 		  increasing = 0;
 	  }
-	  if (pwm < 0.0){
+	  if (speed < 0){
 		  increasing = 1;
 	  }
 
 	  if (increasing)
 	  {
-		  pwm += dpwm;
+		 speed += dspeed;
 	  }
 	  else
 	  {
-		pwm -= dpwm;
+		speed -= dspeed;
 	  }
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  HAL_Delay(50);
 
   }
+
+
+
   /* USER CODE END 3 */
 }
 
