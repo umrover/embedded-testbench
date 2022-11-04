@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "stm32f3xx_hal_tim.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -64,10 +64,6 @@ void Error_Handler(void);
 #define CHANNELS 6
 #define QUADRATURE_FILTER 8
 #define PWM_PERIOD 10000
-#define M_I2C_SDA_Pin GPIO_PIN_0
-#define M_I2C_SDA_GPIO_Port GPIOF
-#define M_I2C_SCL_Pin GPIO_PIN_1
-#define M_I2C_SCL_GPIO_Port GPIOF
 #define M0_PWM_Pin GPIO_PIN_0
 #define M0_PWM_GPIO_Port GPIOC
 #define M1_PWM_Pin GPIO_PIN_1
