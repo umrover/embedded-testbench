@@ -72,7 +72,11 @@ void set_motor_speed(Motor *motor, float speed)
 	} else if(motor->at_rev_lim && (speed < 0)) {
 		set_pwm(motor->hbridge, 0);
 	} else {
-		set_pwm(motor->hbridge, fabs(speed));
+		if(speed >= 0) {
+			set_pwm(motor->hbridge, speed);
+		} else {
+			set_pwm(motor->hbridge, speed * -1);
+		}
 	}
 }
 

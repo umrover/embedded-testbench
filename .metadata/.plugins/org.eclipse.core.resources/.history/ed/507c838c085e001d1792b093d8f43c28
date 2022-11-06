@@ -39,7 +39,7 @@ void set_pwm(HBridge* hbridge, double duty_cycle);
 // REQUIRES: direction to be -66 to 66
 // MODIFIES: nothing
 // EFFECTS: sets fwd pin and bwd pin as (0,1) or (1,0)
-void set_dir(HBridge* hbridge, float speed);
+void set_dir(HBridge* hbridge, int8_t direction);
 
 
 void update_pwm(HBridge* hbridge);

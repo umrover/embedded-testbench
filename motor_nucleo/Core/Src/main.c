@@ -115,53 +115,69 @@ int main(void)
   //(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t _ARR, Pin* _fwd, Pin* _bwd)
 	Pin* pin1 = new_pin(GPIOA, GPIO_PIN_10);
 	Pin* pin2 = new_pin(GPIOC, GPIO_PIN_10);
-	HBridge *motor_1 = new_hbridge(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1), TIM1->ARR, pin1, pin2);
-	initialize_hbridge(motor_1, 0.0, 1);
+	HBridge *hbridge1 = new_hbridge(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1), TIM1->ARR, pin1, pin2);
+	initialize_hbridge(hbridge1, 0.0, 1);
 
 	Pin* pin10 = new_pin(GPIOB, GPIO_PIN_10);
 	Pin* pin11 = new_pin(GPIOB, GPIO_PIN_11);
 	LimitSwitch* limFwd = new_limit_switch(pin10); //B10
 	LimitSwitch* limRev = new_limit_switch(pin11); //B11
-	QuadEncoder* encoder = new_quad_encoder(&htim1, TIM1);
+	QuadEncoder* encoder = new_quad_encoder(&htim2, TIM2);
 
-	motors[0] = new_motor(motor_1, limFwd, limRev, encoder, 0);
+	motors[0] = new_motor(hbridge1, limFwd, limRev, encoder, 0);
 	initialize_motor(motors[0], 0.0, 0.0);
 
 	motors[1] = NULL;
 
 	HAL_TIM_Base_Start_IT(&htim6);
 
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
+	HAL_TIM_Base_Start_IT(&htim6);
+/*
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
+	HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1);
+	HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_2);
+	HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_3);
+
+	HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
+	HAL_TIM_Base_Start_IT(&htim6);
+	HAL_I2C_EnableListen_IT(&hi2c1);
+*/
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   int increasing = 1;
-  double dspeed = 10;
-  double speed = 0.0;
+  double dspeed = 0.1;
+  double speed = 0.5;
   double dpwm = 1;
   double pwm = 0.0;
   while (1)
   {
 	  set_motor_speed(motors[0], speed);
 
-	  speed = 50;
+	  while(increasing) {
+		  set_motor_speed(motors[0],speed);
+		  HAL_Delay(1000);
+		  speed += dspeed;
 
-	  /*if (speed > 100)
-	  {
-		  increasing = 0;
-	  }
-	  if (speed < 0){
-		  increasing = 1;
+		  if(speed >= 1) {
+			  increasing = 0;
+		  }
 	  }
 
-	  if (increasing)
-	  {
-		 speed += dspeed;
+	  while(!increasing) {
+		  set_motor_speed(motors[0], speed);
+		  HAL_Delay(1000);
+		  speed -= dspeed;
+
+		  if(speed <= -1) {
+			  increasing = 1;
+		  }
 	  }
-	  else
-	  {
-		speed -= dspeed;
-	  }*/
+
 
 	  /*set_pwm(motor_1, pwm);
 
@@ -314,7 +330,7 @@ static void MX_TIM1_Init(void)
   htim1.Instance = TIM1;
   htim1.Init.Prescaler = 199;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 100;
+  htim1.Init.Period = 30000;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
