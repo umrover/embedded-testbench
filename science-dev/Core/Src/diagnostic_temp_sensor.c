@@ -26,7 +26,7 @@ Temp_Sensor* new_diagnostic_temp_sensor(ADCSensor* adc_sensor, int channel) {
 // EFFECTS: updates the sensor value 
 void update_current_sensor_value(Temp_Sensor* sensor) {
     // Vout = T(coefficient) * T(ambient) + V0 then solve for T(ambient)
-    sensor->temp = (get_adc_sensor_value(sensor->adc_sensor, sensor->channel) - ZERO_DEGREE_OUTPUT) / TEMP_COEFFICIENT;
+    sensor->temp = (get_adc_sensor_value(sensor->adc_sensor, sensor->channel)*3.3/4096 - ZERO_DEGREE_OUTPUT) / TEMP_COEFFICIENT;
 }
 
 // REQUIRES: valid temp sensor
