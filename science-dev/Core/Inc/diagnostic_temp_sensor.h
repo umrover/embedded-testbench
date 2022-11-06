@@ -12,7 +12,7 @@
 #define ZERO_DEGREE_OUTPUT 400 //mV
 
 typedef struct {
-    int channel;
+    uint8_t channel;
     float temp;
     ADCSensor* adc_sensor;
 } Temp_Sensor;
@@ -21,7 +21,7 @@ typedef struct {
 // _adc_sensor is a pointer to an ADCSensor object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created temp sensor object
-Temp_Sensor* new_diagnostic_temp_sensor(int channel, ADCSensor* adc_sensor);
+Temp_Sensor* new_diagnostic_temp_sensor(ADCSensor* adc_sensor, int channel);
 
 // REQUIRES: valid temp sensor
 // MODIFIES: stored sensor value

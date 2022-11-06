@@ -12,7 +12,7 @@
 // _adc_sensor is a pointer to an ADCSensor object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created current sensor object
-Temp_Sensor* new_diagnostic_temp_sensor(int channel, ADCSensor* adc_sensor) {
+Temp_Sensor* new_diagnostic_temp_sensor(ADCSensor* adc_sensor, int channel) {
     Temp_Sensor* temp_sensor = (Temp_Sensor*) malloc(sizeof(Temp_Sensor));
     temp_sensor->adc_sensor = adc_sensor;
     temp_sensor->channel = channel;
