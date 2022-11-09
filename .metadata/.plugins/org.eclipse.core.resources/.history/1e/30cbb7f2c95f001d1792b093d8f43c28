@@ -9,7 +9,8 @@ void motor_periodic(TIM_HandleTypeDef *htim, TIM_HandleTypeDef *central_tim, Mot
 			if(motor[i]) {
 				update_quad_encoder(motor[i]);
 				update_limit_switches(motor[i]);
-				update_motor_speed(motor[i]);
+				update_pwm(motor[i]->hbridge);
+				update_motor_speed(motor[i], motor[i]->desired_speed);
 			}
 		}
 	}
@@ -43,7 +44,6 @@ Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim
 	motor->at_fwd_lim = 0;
 	motor->at_rev_lim = 0;
 	motor->position = _position;
-	motor->desired_speed = 0;
 
 	return motor;
 }
@@ -68,18 +68,18 @@ void set_motor_speed(Motor *motor, float speed)
 	motor->desired_speed = speed;
 }
 
-void update_motor_speed(Motor* motor)
+void update_motor_speed(Motor* motor, float desired_speed)
 {
 	// when speed is positive, motor goes from rev lim to fwd lim
-	if(motor->at_fwd_lim && (motor->desired_speed > 0)) {
+	if(motor->at_fwd_lim && (speed > 0)) {
 		set_pwm(motor->hbridge, 0);
-	} else if(motor->at_rev_lim && (motor->desired_speed < 0)) {
+	} else if(motor->at_rev_lim && (speed < 0)) {
 		set_pwm(motor->hbridge, 0);
 	} else {
-		set_pwm(motor->hbridge, fabs(motor->desired_speed));
+		set_pwm(motor->hbridge, fabs(speed));
 	}
 
-	set_dir(motor->hbridge, motor->desired_speed);
+	set_dir(motor->hbridge, speed);
 }
 
 

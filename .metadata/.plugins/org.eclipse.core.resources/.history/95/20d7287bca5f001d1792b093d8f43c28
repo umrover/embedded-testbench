@@ -41,3 +41,5 @@ void set_pwm(HBridge* hbridge, double duty_cycle);
 // EFFECTS: sets fwd pin and bwd pin as (0,1) or (1,0)
 void set_dir(HBridge* hbridge, float speed);
 
+
+void update_pwm(HBridge* hbridge);

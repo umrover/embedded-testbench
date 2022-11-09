@@ -49,8 +49,6 @@ void set_pwm(HBridge* hbridge, double duty_cycle)
 
     hbridge->target_duty_cycle = duty_cycle * (double) hbridge->ARR;
 
-    *(hbridge->out_register) = hbridge->target_duty_cycle;
-
 }
 
 
@@ -63,10 +61,20 @@ void set_dir(HBridge* hbridge, float speed)
         HAL_GPIO_WritePin(hbridge->bwd->port, hbridge->bwd->pin, 1);
     }
 
-    else
+    else if (speed >= 0)
     {
         HAL_GPIO_WritePin(hbridge->fwd->port, hbridge->fwd->pin, 1);
         HAL_GPIO_WritePin(hbridge->bwd->port, hbridge->bwd->pin, 0);
     }
+
+    else // direction == 0
+    {
+        set_pwm(hbridge, 0);
+    }
     
+}
+
+void update_pwm(HBridge* hbridge)
+{
+	*(hbridge->out_register) = hbridge->target_duty_cycle;
 }
