@@ -24,11 +24,12 @@ LimitSwitch* new_limit_switch(Pin* _pin)
 	return limit_switch;
 }
 
-QuadEncoder* new_quad_encoder(TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim)
+QuadEncoder* new_quad_encoder(TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim, int16_t _PPR)
 {
 	QuadEncoder *quad_encoder = (QuadEncoder*) malloc(sizeof(QuadEncoder));
 	quad_encoder->tim = _tim;
 	quad_encoder->htim = _htim;
+	quad_encoder->PPR = _PPR;
 
 	return quad_encoder;
 }
@@ -97,12 +98,16 @@ void update_limit_switches(Motor *motor)
 
 }
 
+
 void update_quad_encoder(Motor *motor)
 {
 	motor->encoder->raw = motor->encoder->tim->CNT;
 	motor->position = (int16_t)(motor->encoder->raw - motor->encoder->prev_raw) + motor->position;
 	motor->encoder->raw = motor->encoder->prev_raw;
+
+	motor->angle = ((float) motor->position / (float) motor->encoder->PPR) * 360.0;
 }
+
 
 void set_motor_angle(Motor *motor, float angle)
 {
