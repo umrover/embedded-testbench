@@ -1,4 +1,6 @@
 #pragma once
+// Part Link
+// https://www.digikey.com/en/products/detail/microchip-technology/MCP9701T-E-TT/1987445
 
 #include "stm32g0xx_hal.h"
 
