@@ -6,7 +6,6 @@ uint8_t buf_triad[30];
 Device *triad[3];
 SMBus *i2c_bus_triad;
 uint16_t triad_data[18];
-Mux *mux_triad;
 
 uint16_t get_decimal(uint8_t virtual_reg_l, uint8_t virtual_reg_h) {
 	uint16_t high = virtual_read(virtual_reg_h) << 8;
@@ -146,7 +145,6 @@ void send_triad_data(uint16_t *data, UART_HandleTypeDef * huart){
 // Initializes
 void initialize_triad() {
 
-	channel_select(mux_triad, mux_triad->channel_list[3]);
 
 	triad[0] = new_device(0x00);
 	triad[1] = new_device(0x01);

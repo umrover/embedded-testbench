@@ -8,7 +8,6 @@
 #include "spectral.h"
 #include "smbus.h"
 #include "stm32g0xx_hal.h"
-#include "mux.h"
 
 typedef struct {
 	uint8_t dev_register;
@@ -18,7 +17,6 @@ typedef struct {
 extern uint8_t buf_triad[30];
 extern SMBus *i2c_bus_triad;
 extern Device *triad[3];
-extern Mux *mux_triad;
 
 // Function prototypes
 

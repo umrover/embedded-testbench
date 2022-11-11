@@ -16,7 +16,7 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 
 	char string[158] = "";
 
-	uint8_t separated_data[36] = {0};
+	uint8_t separated_data[12] = {0};
 
 	for (uint8_t i = 0; i < devices; ++i) {
 		//uint8_t start = i * (channels*6) + 10;
@@ -33,7 +33,7 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart){
 		}
 	}
 
-	sprintf((char *)string, "$SPECTRAL,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u, \r\n",\
+	sprintf((char *)string, "$SPECTRAL,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u,%u, \r\n",\
 				  separated_data[0], separated_data[1], separated_data[2], separated_data[3], separated_data[4], separated_data[5], \
 				  separated_data[6], separated_data[7], separated_data[8], separated_data[9], separated_data[10], separated_data[11]);
 

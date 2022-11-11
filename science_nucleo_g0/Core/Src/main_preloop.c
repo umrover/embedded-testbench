@@ -47,8 +47,6 @@ int main_preloop(){
 
   	i2c_bus = new_smbus(&hi2c1, JETSON_UART);
 
-  	spectral_exists = 1;
-
 	spectral = new_spectral(i2c_bus);
 
 	// adds all the spectral channels

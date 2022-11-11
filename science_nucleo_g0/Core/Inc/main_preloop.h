@@ -10,7 +10,6 @@
 
 #include "thermistor.h"
 #include "spectral.h"
-#include "mux.h"
 #include "mosfet.h"
 #include "hbridge.h"
 #include "math.h"
