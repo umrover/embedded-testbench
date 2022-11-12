@@ -1,12 +1,6 @@
 #include "bridge.h"
 
 // Private Variables -----------------------------------------------------
-ADC_HandleTypeDef hadc1; // used by adc_sensors
-DMA_HandleTypeDef hdma_adc1;
-
-I2C_HandleTypeDef hi2c1;
-
-TIM_HandleTypeDef htim1; // used by servos
 
 // REQUIRES: uart is the uart channel
 // MODIFIES: nothing
