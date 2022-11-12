@@ -1,6 +1,4 @@
 #pragma once
-// Part Link
-// https://www.digikey.com/en/products/detail/microchip-technology/MCP9701T-E-TT/1987445
 
 #include "stm32f3xx_hal.h"
 
@@ -13,6 +11,8 @@
 #define DIAG_TEMP_COEFFICIENT 19.5f // mV/Celsius
 #define DIAG_TEMP_ZERO_DEGREE_OUTPUT 400 //mV
 
+// Part Link
+// https://www.digikey.com/en/products/detail/microchip-technology/MCP9701T-E-TT/1987445
 typedef struct {
     uint8_t channel;
     float temp;

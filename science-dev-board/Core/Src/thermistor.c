@@ -1,5 +1,5 @@
 ////////////////////////////////
-//      Thermistor Nucleo Hardware Interface
+//      TH10K Thermistor Nucleo Hardware Interface
 //      Written by:
 //      Jess Wu
 //      jessyw@umich.edu
