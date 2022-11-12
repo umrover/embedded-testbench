@@ -135,6 +135,10 @@ void Error_Handler(void);
 #define LIMIT_A_3_GPIO_Port GPIOA
 #define LIMIT_B_3_Pin GPIO_PIN_11
 #define LIMIT_B_3_GPIO_Port GPIOA
+#define DEBUG_LED_3_Pin GPIO_PIN_6
+#define DEBUG_LED_3_GPIO_Port GPIOD
+#define DEBUG_LED_2_Pin GPIO_PIN_7
+#define DEBUG_LED_2_GPIO_Port GPIOD
 #define DEBUG_LED_1_Pin GPIO_PIN_3
 #define DEBUG_LED_1_GPIO_Port GPIOB
 #define DEBUG_LED_0_Pin GPIO_PIN_4

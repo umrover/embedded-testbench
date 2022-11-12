@@ -530,7 +530,8 @@ static void MX_GPIO_Init(void)
                           |DEBUG_LED_1_Pin|DEBUG_LED_0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, MOTOR_DIR_2_Pin|MOTOR_NDIR_2_Pin|MOTOR_DIR_3_Pin|MOTOR_NDIR_3_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, MOTOR_DIR_2_Pin|MOTOR_NDIR_2_Pin|MOTOR_DIR_3_Pin|MOTOR_NDIR_3_Pin
+                          |DEBUG_LED_3_Pin|DEBUG_LED_2_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pins : MOTOR_DIR_4_Pin MOTOR_NDIR_4_Pin */
   GPIO_InitStruct.Pin = MOTOR_DIR_4_Pin|MOTOR_NDIR_4_Pin;
@@ -567,8 +568,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : MOTOR_DIR_2_Pin MOTOR_NDIR_2_Pin MOTOR_DIR_3_Pin MOTOR_NDIR_3_Pin */
-  GPIO_InitStruct.Pin = MOTOR_DIR_2_Pin|MOTOR_NDIR_2_Pin|MOTOR_DIR_3_Pin|MOTOR_NDIR_3_Pin;
+  /*Configure GPIO pins : MOTOR_DIR_2_Pin MOTOR_NDIR_2_Pin MOTOR_DIR_3_Pin MOTOR_NDIR_3_Pin
+                           DEBUG_LED_3_Pin DEBUG_LED_2_Pin */
+  GPIO_InitStruct.Pin = MOTOR_DIR_2_Pin|MOTOR_NDIR_2_Pin|MOTOR_DIR_3_Pin|MOTOR_NDIR_3_Pin
+                          |DEBUG_LED_3_Pin|DEBUG_LED_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
