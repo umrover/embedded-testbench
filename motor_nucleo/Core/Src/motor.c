@@ -16,6 +16,7 @@ void motor_periodic(TIM_HandleTypeDef *htim, TIM_HandleTypeDef *central_tim, Mot
 
 }
 
+
 LimitSwitch* new_limit_switch(Pin* _pin)
 {
 	LimitSwitch *limit_switch = (LimitSwitch*) malloc(sizeof(LimitSwitch));
@@ -23,6 +24,7 @@ LimitSwitch* new_limit_switch(Pin* _pin)
 
 	return limit_switch;
 }
+
 
 QuadEncoder* new_quad_encoder(TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim, int16_t _PPR)
 {
@@ -34,7 +36,8 @@ QuadEncoder* new_quad_encoder(TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim, int16
 	return quad_encoder;
 }
 
-Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim, QuadEncoder* _encoder, int16_t _position)
+
+Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim, QuadEncoder* _encoder)
 {
 	Motor *motor = (Motor*) malloc(sizeof(Motor));
 	motor->hbridge = _hbridge;
@@ -43,7 +46,6 @@ Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim
 	motor->encoder = _encoder;
 	motor->at_fwd_lim = 0;
 	motor->at_rev_lim = 0;
-	motor->position = _position;
 	motor->desired_speed = 0;
 
 	return motor;
@@ -57,6 +59,7 @@ void initialize_motor(Motor* motor, float speed, float theta)
 	set_motor_angle(motor, theta);
 }
 
+
 void initialize_quad_encoder(QuadEncoder* encoder)
 {
 	HAL_TIM_Encoder_Start(encoder->htim, TIM_CHANNEL_ALL);
@@ -68,6 +71,7 @@ void set_motor_speed(Motor *motor, float speed)
 {
 	motor->desired_speed = speed;
 }
+
 
 void update_motor_speed(Motor* motor)
 {
@@ -102,10 +106,11 @@ void update_limit_switches(Motor *motor)
 void update_quad_encoder(Motor *motor)
 {
 	motor->encoder->raw = motor->encoder->tim->CNT;
-	motor->position = (int16_t)(motor->encoder->raw - motor->encoder->prev_raw) + motor->position;
-	motor->encoder->raw = motor->encoder->prev_raw;
 
-	motor->angle = ((float) motor->position / (float) motor->encoder->PPR) * 360.0;
+	motor->raw_angle = (int32_t) (((float) motor->encoder->raw / (float) motor->encoder->PPR) * 360.0);
+
+	// ((n mod 360) + 360) mod 360  (int32_t)
+	motor->angle = ((motor->raw_angle % 360) + 360) % 360;
 }
 
 

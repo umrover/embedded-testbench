@@ -122,9 +122,9 @@ int main(void)
 	Pin* pin11 = new_pin(GPIOB, GPIO_PIN_11);
 	LimitSwitch* limFwd = new_limit_switch(pin10); //B10
 	LimitSwitch* limRev = new_limit_switch(pin11); //B11
-	QuadEncoder* encoder = new_quad_encoder(&htim2, TIM2, 2048);
+	QuadEncoder* encoder = new_quad_encoder(&htim2, TIM2, 1024*4);
 
-	motors[0] = new_motor(hbridge1, limFwd, limRev, encoder, 0);
+	motors[0] = new_motor(hbridge1, limFwd, limRev, encoder);
 	initialize_motor(motors[0], 0.0, 0.0);
 
 	motors[1] = NULL;
