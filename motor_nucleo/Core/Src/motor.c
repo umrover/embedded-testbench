@@ -37,13 +37,14 @@ QuadEncoder* new_quad_encoder(TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim, int16
 }
 
 
-Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim, QuadEncoder* _encoder)
+Motor* new_motor(HBridge *_hbridge, LimitSwitch* _fwd_lim, LimitSwitch* _rev_lim, QuadEncoder* _encoder, Gains* _gains)
 {
 	Motor *motor = (Motor*) malloc(sizeof(Motor));
 	motor->hbridge = _hbridge;
 	motor->fwd_lim = _fwd_lim;
 	motor->rev_lim = _rev_lim;
 	motor->encoder = _encoder;
+	motor->gains = _gains;
 	motor->at_fwd_lim = 0;
 	motor->at_rev_lim = 0;
 	motor->desired_speed = 0;
@@ -56,7 +57,7 @@ void initialize_motor(Motor* motor, float speed, float theta)
 {
 	initialize_hbridge(motor->hbridge, speed, speed);
 	set_motor_speed(motor, speed);
-	set_motor_angle(motor, theta);
+	set_motor_angle(motor, theta, 0.0);
 }
 
 
@@ -114,9 +115,11 @@ void update_quad_encoder(Motor *motor)
 }
 
 
-void set_motor_angle(Motor *motor, float angle)
+void set_motor_angle(Motor *motor, float angle, float dt)
 {
-
+	// TODO need to test this blind implementation, may be some problems wrapping across angle boundaries
+	float speed = calculate_pid(motor->gains, angle, motor->angle, dt);
+	set_motor_speed(motor, speed);
 
 }
 

@@ -4,11 +4,8 @@
 #include "stm32f3xx_hal.h"
 #include "stm32f3xx_hal_conf.h"
 #include "stm32f3xx_it.h"
+#include "pin.h"
 
-typedef struct {
-    GPIO_TypeDef *port;
-    uint16_t pin;
-} Pin;
 
 typedef struct {
 	TIM_HandleTypeDef *timer;
@@ -20,8 +17,6 @@ typedef struct {
     uint32_t target_duty_cycle;
 } HBridge;
 
-
-Pin* new_pin(GPIO_TypeDef *_port, uint16_t _pin);
 
 // Returns pointer to a new hbridge object
 HBridge* new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t _ARR, Pin* _fwd, Pin* _bwd);

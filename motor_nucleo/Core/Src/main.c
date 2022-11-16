@@ -123,8 +123,9 @@ int main(void)
 	LimitSwitch* limFwd = new_limit_switch(pin10); //B10
 	LimitSwitch* limRev = new_limit_switch(pin11); //B11
 	QuadEncoder* encoder = new_quad_encoder(&htim2, TIM2, 1024*4);
+	Gains* gains = new_gains(0.01, 0.0, 0.0, 0.0);
 
-	motors[0] = new_motor(hbridge1, limFwd, limRev, encoder);
+	motors[0] = new_motor(hbridge1, limFwd, limRev, encoder, gains);
 	initialize_motor(motors[0], 0.0, 0.0);
 
 	motors[1] = NULL;
