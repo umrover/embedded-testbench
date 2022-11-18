@@ -47,9 +47,7 @@ int main_preloop(){
 
   	i2c_bus = new_smbus(&hi2c1, JETSON_UART);
 	disable_DMA(i2c_bus);
-
 	spectral = new_spectral(i2c_bus);
-
 	enable_spectral(spectral);
 
 #endif

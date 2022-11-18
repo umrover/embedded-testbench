@@ -8,8 +8,6 @@
 #include <stdlib.h>
 #include "stm32g0xx_hal.h"
 #include "smbus.h"
-//#include "mux.h"
-
 
 
 // private data members
@@ -73,8 +71,6 @@ typedef struct {
 
 //private function interface
 
-uint16_t _read_channel(Spectral *spectral, int channel);
-
 uint16_t _get_val(Spectral *spectral, uint8_t virtual_reg_l, uint8_t virtual_reg_h);
 
 void _virtual_write(Spectral *spectral, uint8_t v_reg, uint8_t data);
@@ -108,22 +104,11 @@ void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart);
 // Check if current selected spectral device is ready for data read
 int check_ready();
 
-// Externs
-//extern enum {
-//	SPECTRAL_0_CHANNEL = 0,
-//	SPECTRAL_1_CHANNEL = 1,
-//	SPECTRAL_2_CHANNEL = 2
-//};
 
-//extern int spectral_channels[SPECTRAL_DEVICES];
 extern SMBus *i2c_bus;
 extern Spectral *spectral;
 extern uint8_t *buf[60];
 extern uint16_t spectral_data[SPECTRAL_DEVICES * CHANNELS];
-//extern Mux *mux;
 
-//void initialize_spectral_mux();
 
 #endif
-
-//#endif

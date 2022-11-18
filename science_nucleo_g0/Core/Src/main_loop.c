@@ -66,20 +66,11 @@ int main_loop(){
 #ifdef SPECTRAL_ENABLE
 
 		enable_spectral(spectral);
-//	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-//		channel_select(mux, mux->channel_list[spectral_channels[i]]);
 
-		//channel_select(mux, mux->channel_list[spectral_channels[i]]);
-		// Before attempting read, check if that spectral device is ready
-//		if(!check_ready()){
-////			initialize_spectral();
-//			continue;
-//		}
 		if (get_spectral_data(spectral, spectral_data)) {
 			enable_spectral(spectral);
 		}
 
-//	}
 //	send_spectral_data(spectral_data, &huart2);
 #endif
 
