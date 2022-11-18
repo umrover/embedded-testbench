@@ -105,9 +105,6 @@ void del_spectral(Spectral *spectral);
 //$SPECTRAL,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,x,
 void send_spectral_data(uint16_t *data, UART_HandleTypeDef * huart);
 
-// Sets up all mux channels.
-void initialize_spectral();
-
 // Check if current selected spectral device is ready for data read
 int check_ready();
 

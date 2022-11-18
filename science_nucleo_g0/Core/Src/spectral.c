@@ -192,15 +192,6 @@ void _del_channel(Channel *channel) {
 	free(channel);
 }
 
-// Sets up all channels
-void initialize_spectral() {
-	// opens all channels on the mux to listen
-	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-//		channel_select(mux, mux->channel_list[i]);
-		enable_spectral(spectral);
-	}
-}
-
 //void initialize_spectral_mux() {
 //	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
 //			add_channel(mux, spectral_channels[i]);

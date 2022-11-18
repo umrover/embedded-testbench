@@ -65,7 +65,7 @@ int main_loop(){
 
 #ifdef SPECTRAL_ENABLE
 
-		initialize_spectral();
+		enable_spectral(spectral);
 //	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
 //		channel_select(mux, mux->channel_list[spectral_channels[i]]);
 
@@ -76,7 +76,7 @@ int main_loop(){
 //			continue;
 //		}
 		if (get_spectral_data(spectral, spectral_data)) {
-			initialize_spectral();
+			enable_spectral(spectral);
 		}
 
 //	}

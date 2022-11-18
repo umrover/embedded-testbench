@@ -46,13 +46,9 @@ int main_preloop(){
 	HAL_Delay(500);
 
   	i2c_bus = new_smbus(&hi2c1, JETSON_UART);
+	disable_DMA(i2c_bus);
 
 	spectral = new_spectral(i2c_bus);
-
-	// adds all the spectral channels
-//	for (int i = 0; i < SPECTRAL_DEVICES; ++i) {
-//		add_channel(mux, spectral_channels[i]);
-//	}
 
 	enable_spectral(spectral);
 
@@ -64,14 +60,14 @@ int main_preloop(){
 	set_speed(hbridge_motor, 0);
 #endif
 
-#ifdef TRIAD_ENABLE
-
-	triad_exists = 1;
-
-	add_channel(mux_triad, 3);
-
-	initialize_triad();
-#endif
+//#ifdef TRIAD_ENABLE
+//
+//	triad_exists = 1;
+//
+//	add_channel(mux_triad, 3);
+//
+//	initialize_triad();
+//#endif
 
 	return 0;
 }
