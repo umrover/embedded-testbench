@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "motor.h"
+#include "i2c_bridge.h"
 
 /* USER CODE END Includes */
 
@@ -52,6 +53,9 @@ TIM_HandleTypeDef htim8;
 
 /* USER CODE BEGIN PV */
 
+Motor* motors[2];
+I2CBus i2c_bus = NULL;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -70,10 +74,53 @@ static void MX_TIM6_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-Motor* motors[2];
+
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim) {
 	motor_periodic(htim, &htim6, motors, 2);
 }
+
+void HAL_I2C_AddrCallback(I2C_HandleTypeDef * hi2c, uint8_t TransferDirection, uint16_t AddrMatchCode){
+	i2c_bus.motor_id = (0x000F & (AddrMatchCode >> 1));
+	if (TransferDirection == I2C_DIRECTION_TRANSMIT){
+		HAL_I2C_Slave_Seq_Receive_IT(i2c_bus_handle, i2c_bus.buffer, 1, I2C_LAST_FRAME);
+		i2c_bus.operation = UNKNOWN;
+	}
+	else {
+		// TODO - ERROR CHECKING FOR MOTOR_ID
+		CH_prepare_send(i2c_bus, motors[motor_id]);
+		uint8_t bytes_to_send = CH_num_send();
+		if (bytes_to_send != 0) {
+			HAL_I2C_Slave_Seq_Transmit_IT(i2c_bus_handle, i2c_bus.buffer, bytes_to_send, I2C_LAST_FRAME);
+		}
+	}
+    //HAL_IWDG_Refresh(watch_dog_handle);
+	i2c_bus.tick = 0;
+}
+
+void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef * hi2c) {
+	if (i2c_bus.operation == UNKNOWN) {
+		i2c_bus.operation = i2c_bus.buffer[0];
+		if (CH_num_receive() != 0) {
+			HAL_I2C_Slave_Seq_Receive_IT(i2c_bus_handle, i2c_bus.buffer, CH_num_receive(), I2C_LAST_FRAME);
+		}
+		else {
+			CH_process_received();
+		}
+	}
+	else {
+		CH_process_received();
+	}
+}
+
+void HAL_I2C_ErrorCallback(I2C_HandleTypeDef * hi2c){
+	CH_reset();
+}
+
+
+void HAL_I2C_ListenCpltCallback(I2C_HandleTypeDef * hi2c) {
+	HAL_I2C_EnableListen_IT(i2c_bus_handle);
+}
+
 
 /* USER CODE END 0 */
 
@@ -127,6 +174,8 @@ int main(void)
 
 	motors[0] = new_motor(hbridge1, limFwd, limRev, encoder, gains);
 	initialize_motor(motors[0], 0.0, 0.0);
+
+	i2c_bus = new_i2c_bus();
 
 	motors[1] = NULL;
 
