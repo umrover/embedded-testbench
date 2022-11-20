@@ -34,11 +34,11 @@ typedef struct {
 	I2C_HandleTypeDef* i2c_bus_handle;
 } I2CBus;
 
-I2CBus* new_i2c_bus();
+I2CBus* new_i2c_bus(I2C_HandleTypeDef* _i2c_bus_handle);
 
 uint8_t CH_num_receive(I2CBus* i2c_bus);
 uint8_t CH_num_send(I2CBus* i2c_bus);
 void CH_process_received(I2CBus* i2c_bus, Motor *motor);
 void CH_prepare_send(I2CBus* i2c_bus, Motor *motor);
-void CH_reset(I2CBus* i2c_bus, Motor *motors[2]);
-void CH_tick(I2CBus* i2c_bus);
+void CH_reset(I2CBus* i2c_bus, Motor *motors[], uint8_t num_motors);
+void CH_tick(I2CBus* i2c_bus, Motor *motors[], uint8_t num_motors) ;

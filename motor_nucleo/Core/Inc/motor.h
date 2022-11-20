@@ -35,7 +35,11 @@ typedef struct
 	int32_t angle;
 	int32_t raw_angle;
 	float desired_speed;
-
+	int32_t desired_angle;
+	uint8_t mode;
+	float speed_limit;
+	bool limit_enabled;
+	bool calibrated;
 } Motor;
 
 LimitSwitch* new_limit_switch(Pin* _pin);
