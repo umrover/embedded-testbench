@@ -67,7 +67,7 @@ LimitSwitch *backward_limit_switches[NUM_MOTORS] = {NULL};
 
 QuadEncoder *quad_encoders[NUM_MOTORS] = {NULL};
 
-Control *controls[NUM_MOTORS] = {NULL};
+ClosedLoopControl *controls[NUM_MOTORS] = {NULL};
 
 Motor *motors[NUM_MOTORS] = {NULL};
 I2CBus *i2c_bus;
@@ -110,7 +110,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 				update_limit_switch(backward_limit_switches[i]);
 			}
 			if (motors[i]) {
-				update_motor_speed(motors[i]);
+				update_motor_logic(motors[i]);
 			}
 		}
 	}
@@ -196,7 +196,7 @@ int main(void) {
 //	hbridges[5] = new_hbridge(&htimX, TIM_CHANNEL_X, &(TIM1->CCRX), TIMX->ARR, hbridge_forward_pins[5], hbridge_backward_pins[5]);
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
-        init_hbridge(hbridges[i], 0.0f, 1);
+        init_hbridge(hbridges[i], 0.0f, true);
     }
 
     forward_limit_switch_pins[0] = new_pin(GPIOB, GPIO_PIN_10);
@@ -230,7 +230,7 @@ int main(void) {
     }
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
-        controls[i] = new_control(0.01f, 0.0f, 0.0f, 0.0f);
+        controls[i] = new_closed_loop_control(0.01f, 0.0f, 0.0f, 0.0f);
     }
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {

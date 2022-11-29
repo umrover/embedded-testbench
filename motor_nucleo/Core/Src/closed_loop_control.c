@@ -1,13 +1,12 @@
-#include "control.h"
+#include "closed_loop_control.h"
 
+ClosedLoopControl *new_closed_loop_control(float _kP, float _kI, float _kD, float _kF) {
+	ClosedLoopControl *control = (ClosedLoopControl *) malloc(sizeof(ClosedLoopControl));
 
-Control *new_control(float kP_, float kI_, float kD_, float kF_) {
-    Control *control = (Control *) malloc(sizeof(Control));
-
-    control->kP = kP_;
-    control->kI = kI_;
-    control->kD = kD_;
-    control->kF = kF_;
+    control->kP = _kP;
+    control->kI = _kI;
+    control->kD = _kD;
+    control->kF = _kF;
 
     control->flag = 1;
     control->last_error = 0.0;
@@ -16,7 +15,7 @@ Control *new_control(float kP_, float kI_, float kD_, float kF_) {
     return control;
 }
 
-float calculate_pid(Control *control, float target, float current, float dt) {
+float calculate_pid(ClosedLoopControl *control, float target, float current) {
     if (control->flag) {
         control->last_error = target - current;
         control->flag = 0;
@@ -24,8 +23,8 @@ float calculate_pid(Control *control, float target, float current, float dt) {
 
     float error = target - current;
 
-    control->cum_integ += error * dt;
-    float diff = (error - control->last_error) / dt;
+    control->cum_integ += error * DT;
+    float diff = (error - control->last_error) / DT;
 
     float output = control->kP * error + control->kI * control->cum_integ + control->kD * diff + signum(error) * control->kF;
 

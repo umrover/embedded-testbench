@@ -16,13 +16,13 @@ HBridge *new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_ou
     return hbr;
 }
 
-void init_hbridge(HBridge *hbridge, float duty_cycle, uint8_t direction) {
+void init_hbridge(HBridge *hbridge, float duty_cycle, bool direction_is_forward) {
     HAL_TIM_PWM_Start(hbridge->timer, hbridge->channel);
-    set_pwm(hbridge, duty_cycle);
-    set_dir(hbridge, direction);
+    change_hbridge_pwm(hbridge, duty_cycle);
+    change_hbridge_dir_val(hbridge, direction_is_forward);
 }
 
-void set_pwm(HBridge *hbridge, float duty_cycle) {
+void change_hbridge_pwm(HBridge *hbridge, float duty_cycle) {
 
     // validate input duty cycle
     if (duty_cycle < 0.0) {
@@ -37,13 +37,13 @@ void set_pwm(HBridge *hbridge, float duty_cycle) {
 
 }
 
-void set_dir(HBridge *hbridge, float speed) {
-    if (speed < 0) {
-    	write_pin_value(hbridge->forward_pin, 0);
-    	write_pin_value(hbridge->backward_pin, 1);
-    } else {
+void change_hbridge_dir_val(HBridge *hbridge, bool val) {
+    if (val) {
 		write_pin_value(hbridge->backward_pin, 0);
     	write_pin_value(hbridge->forward_pin, 1);
+    } else {
+    	write_pin_value(hbridge->forward_pin, 0);
+    	write_pin_value(hbridge->backward_pin, 1);
     }
 
 }

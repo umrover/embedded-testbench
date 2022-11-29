@@ -27,14 +27,11 @@ HBridge *new_hbridge(
 		Pin *bwd);
 
 // Initialize timer settings
-void init_hbridge(HBridge *hbridge, float duty_cycle, uint8_t direction);
+void init_hbridge(HBridge *hbridge, float duty_cycle, bool direction_is_forward);
 
 // Requires a signal of between 0 and 1 for duty cycle
 // Calculates high/low pulse durations and sends to hbridge
-void set_pwm(HBridge *hbridge, float duty_cycle);
+void change_hbridge_pwm(HBridge *hbridge, float duty_cycle);
 
-// REQUIRES: direction to be -66 to 66
-// MODIFIES: nothing
-// EFFECTS: sets fwd pin and bwd pin as (0,1) or (1,0)
-void set_dir(HBridge *hbridge, float speed);
+void change_hbridge_dir_val(HBridge *hbridge, bool val);
 

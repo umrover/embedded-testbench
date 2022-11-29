@@ -1,5 +1,6 @@
 #pragma once
 
+#include <closed_loop_control.h>
 #include <stdlib.h>
 #include <math.h>
 #include "stdbool.h"
@@ -9,7 +10,6 @@
 
 #include "pin.h"
 #include "hbridge.h"
-#include "control.h"
 
 typedef struct {
     TIM_HandleTypeDef *htim;
