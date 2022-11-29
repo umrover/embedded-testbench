@@ -14,7 +14,7 @@ typedef struct {
 } Pin;
 
 
-Pin* new_pin(GPIO_TypeDef *_port, uint16_t _pin);
+Pin *new_pin(GPIO_TypeDef *_port, uint16_t _pin);
 
 
 #endif /* INC_PIN_H_ */

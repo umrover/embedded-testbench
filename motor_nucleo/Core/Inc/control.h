@@ -9,7 +9,7 @@
 
 typedef struct {
 
-	// GAINS
+    // GAINS
     float kP;
     float kI;
     float kD;
@@ -23,9 +23,9 @@ typedef struct {
 } Gains;
 
 
-Gains* new_gains(float kP_, float kI_, float kD_, float kF_);
+Gains *new_gains(float kP_, float kI_, float kD_, float kF_);
 
-float calculate_pid(Gains* gains, float target, float current, float dt);
+float calculate_pid(Gains *gains, float target, float current, float dt);
 
 
 #endif /* INC_CONTROL_H_ */
