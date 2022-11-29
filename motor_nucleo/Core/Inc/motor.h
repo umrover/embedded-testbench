@@ -7,6 +7,7 @@
 #include "stm32f3xx_hal_conf.h"
 #include "stm32f3xx_it.h"
 
+#include "limit_switch.h"
 #include "pin.h"
 #include "hbridge.h"
 #include "control.h"
@@ -14,13 +15,11 @@
 
 typedef struct {
     HBridge *hbridge;
-    Pin *forward_limit_switch_pin;
-    Pin *backward_limit_switch_pin;
+    LimitSwitch *forward_limit_switch;
+    LimitSwitch *backward_limit_switch;
     QuadEncoder *encoder;
     Control *control;
 
-    bool at_fwd_lim;
-    bool at_rev_lim;
     float desired_speed;
     int32_t desired_counts;
     uint8_t mode;
@@ -29,9 +28,9 @@ typedef struct {
     bool calibrated;
 } Motor;
 
-Motor *new_motor(HBridge *_hbridge, Pin *_fwd_lim, Pin *_bwd_lim, QuadEncoder *_encoder, Control *_control);
+Motor *new_motor(HBridge *_hbridge, LimitSwitch *_fwd_lim, LimitSwitch *_bwd_lim, QuadEncoder *_encoder, Control *_control);
 
-void initialize_motor(Motor *motor, float speed);
+void init_motor(Motor *motor, float speed);
 
 void set_motor_speed(Motor *motor, float speed);
 

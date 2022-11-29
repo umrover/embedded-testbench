@@ -4,8 +4,8 @@
 
 #include <stdlib.h>
 #include "stm32f3xx_hal.h"
-#include "stm32f3xx_hal_conf.h"
-#include "stm32f3xx_it.h"
+
+#include "stdbool.h"
 
 
 typedef struct {
@@ -16,5 +16,8 @@ typedef struct {
 
 Pin *new_pin(GPIO_TypeDef *_port, uint16_t _pin);
 
+bool read_pin_value(Pin* pin);
+
+void write_pin_value(Pin* pin, bool val);
 
 #endif /* INC_PIN_H_ */

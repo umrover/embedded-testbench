@@ -62,6 +62,9 @@ HBridge *hbridges[NUM_MOTORS] = {NULL};
 Pin *forward_limit_switch_pins[NUM_MOTORS] = {NULL};
 Pin *backward_limit_switch_pins[NUM_MOTORS] = {NULL};
 
+LimitSwitch *forward_limit_switches[NUM_MOTORS] = {NULL};
+LimitSwitch *backward_limit_switches[NUM_MOTORS] = {NULL};
+
 QuadEncoder *quad_encoders[NUM_MOTORS] = {NULL};
 
 Control *controls[NUM_MOTORS] = {NULL};
@@ -100,8 +103,13 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			if (quad_encoders[i]) {
 				update_quad_encoder(quad_encoders[i]);
 			}
+			if (forward_limit_switches[i]) {
+				update_limit_switch(forward_limit_switches[i]);
+			}
+			if (backward_limit_switches[i]) {
+				update_limit_switch(backward_limit_switches[i]);
+			}
 			if (motors[i]) {
-				update_motor_limits(motors[i]);
 				update_motor_speed(motors[i]);
 			}
 		}
@@ -188,7 +196,7 @@ int main(void) {
 //	hbridges[5] = new_hbridge(&htimX, TIM_CHANNEL_X, &(TIM1->CCRX), TIMX->ARR, hbridge_forward_pins[5], hbridge_backward_pins[5]);
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
-        initialize_hbridge(hbridges[i], 0.0f, 1);
+        init_hbridge(hbridges[i], 0.0f, 1);
     }
 
     forward_limit_switch_pins[0] = new_pin(GPIOB, GPIO_PIN_10);
@@ -204,6 +212,11 @@ int main(void) {
 //	backward_limit_switch_pins[3] = new_pin(GPIOX, GPIO_PIN_0);
 //	backward_limit_switch_pins[4] = new_pin(GPIOX, GPIO_PIN_0);
 //	backward_limit_switch_pins[5] = new_pin(GPIOX, GPIO_PIN_0);
+
+    for (size_t i = 0; i < NUM_MOTORS; ++i) {
+    	forward_limit_switches[i] = new_limit_switch(forward_limit_switch_pins[i]);
+    	backward_limit_switches[i] = new_limit_switch(backward_limit_switch_pins[i]);
+    }
 
     quad_encoders[0] = new_quad_encoder(&htim2, TIM2);
 //	quad_encoders[1] = new_quad_encoder(&htimX, TIMX);
@@ -223,11 +236,11 @@ int main(void) {
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
         motors[i] = new_motor(
                 hbridges[i],
-				forward_limit_switch_pins[i],
-				backward_limit_switch_pins[i],
+				forward_limit_switches[i],
+				backward_limit_switches[i],
                 quad_encoders[i],
                 controls[i]);
-        initialize_motor(motors[i], 0.0f);
+        init_motor(motors[i], 0.0f);
     }
 
     i2c_bus = new_i2c_bus(&hi2c1);
@@ -252,7 +265,6 @@ int main(void) {
     /* USER CODE BEGIN 2 */
 
     HAL_TIM_Base_Start_IT(&htim6);
-
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
     HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
     HAL_TIM_Base_Start_IT(&htim6);

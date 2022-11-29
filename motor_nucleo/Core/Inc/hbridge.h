@@ -11,25 +11,27 @@ typedef struct {
     uint32_t channel;
     uint32_t *out_register;
     uint32_t ARR;
-    Pin *fwd;
-    Pin *bwd;
+    Pin *forward_pin;
+    Pin *backward_pin;
     uint32_t target_duty_cycle;
 } HBridge;
 
 
 // Returns pointer to a new hbridge object
-HBridge *
-new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t _ARR, Pin *_fwd, Pin *_bwd);
-
+HBridge *new_hbridge(
+		TIM_HandleTypeDef *_timer,
+		uint32_t _channel,
+		uint32_t *_out_register,
+		uint32_t _ARR,
+		Pin *fwd,
+		Pin *bwd);
 
 // Initialize timer settings
-void initialize_hbridge(HBridge *hbridge, float duty_cycle, uint8_t direction);
-
+void init_hbridge(HBridge *hbridge, float duty_cycle, uint8_t direction);
 
 // Requires a signal of between 0 and 1 for duty cycle
 // Calculates high/low pulse durations and sends to hbridge
 void set_pwm(HBridge *hbridge, float duty_cycle);
-
 
 // REQUIRES: direction to be -66 to 66
 // MODIFIES: nothing

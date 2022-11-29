@@ -1,32 +1,22 @@
 
 #include "motor.h"
 
-
-Motor *new_motor(HBridge *_hbridge, Pin *_fwd_lim, Pin *_bwd_lim, QuadEncoder *_encoder, Control *_control) {
+Motor *new_motor(HBridge *_hbridge, LimitSwitch *_fwd_lim, LimitSwitch *_bwd_lim, QuadEncoder *_encoder, Control *_control) {
     Motor *motor = (Motor *) malloc(sizeof(Motor));
     motor->hbridge = _hbridge;
-    motor->forward_limit_switch_pin = _fwd_lim;
-    motor->backward_limit_switch_pin = _bwd_lim;
+    motor->forward_limit_switch = _fwd_lim;
+    motor->backward_limit_switch = _bwd_lim;
     motor->encoder = _encoder;
     motor->control = _control;
-    motor->at_fwd_lim = 0;
-    motor->at_rev_lim = 0;
     motor->desired_speed = 0;
 
     return motor;
 }
 
-
-void initialize_motor(Motor *motor, float speed) {
-    initialize_hbridge(motor->hbridge, speed, speed);
+void init_motor(Motor *motor, float speed) {
+    init_hbridge(motor->hbridge, speed, speed);
     set_motor_speed(motor, speed);
 }
-
-
-void initialize_quad_encoder(QuadEncoder *encoder) {
-    HAL_TIM_Encoder_Start(encoder->htim, TIM_CHANNEL_ALL);
-}
-
 
 // at_fwd_lim = 1 means lim switch activated
 void set_motor_speed(Motor *motor, float speed) {
@@ -35,27 +25,15 @@ void set_motor_speed(Motor *motor, float speed) {
 
 void update_motor_speed(Motor *motor) {
     // when speed is positive, motor goes from rev lim to fwd lim
-    if (motor->at_fwd_lim && (motor->desired_speed > 0)) {
+    if (motor->forward_limit_switch->is_activated && (motor->desired_speed > 0)) {
         set_pwm(motor->hbridge, 0);
-    } else if (motor->at_rev_lim && (motor->desired_speed < 0)) {
+    } else if (motor->backward_limit_switch->is_activated && (motor->desired_speed < 0)) {
         set_pwm(motor->hbridge, 0);
     } else {
         set_pwm(motor->hbridge, fabs(motor->desired_speed));
     }
 
     set_dir(motor->hbridge, motor->desired_speed);
-}
-
-
-void update_motor_limits(Motor *motor) {
-    if (motor->forward_limit_switch_pin) {
-        int fwd_lim_state = HAL_GPIO_ReadPin(motor->forward_limit_switch_pin->port, motor->forward_limit_switch_pin->pin);
-        motor->at_fwd_lim = fwd_lim_state;
-    }
-    if (motor->backward_limit_switch_pin) {
-        int rev_lim_state = HAL_GPIO_ReadPin(motor->backward_limit_switch_pin->port, motor->backward_limit_switch_pin->pin);
-        motor->at_rev_lim = rev_lim_state;
-    }
 }
 
 void move_motor_to_target(Motor *motor, int32_t target_counts, float dt) {
