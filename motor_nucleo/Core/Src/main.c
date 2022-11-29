@@ -35,7 +35,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define NUM_MOTORS 2
+#define NUM_MOTORS 6
 
 /* USER CODE END PD */
 
@@ -55,7 +55,20 @@ TIM_HandleTypeDef htim8;
 
 /* USER CODE BEGIN PV */
 
-Motor *motors[NUM_MOTORS];
+Pin* hbridge_forward_pins[NUM_MOTORS] = {NULL};
+Pin* hbridge_backward_pins[NUM_MOTORS] = {NULL};
+HBridge* hbridges[NUM_MOTORS] = {NULL};
+
+Pin* forward_limit_switch_pins[NUM_MOTORS] = {NULL};
+Pin* backward_limit_switch_pins[NUM_MOTORS] = {NULL};
+LimitSwitch* forward_limit_switches[NUM_MOTORS] = {NULL};
+LimitSwitch* backward_limit_switches[NUM_MOTORS] = {NULL};
+
+QuadEncoder* quadrature_encoders[NUM_MOTORS] = {NULL};
+
+Gains* gains[NUM_MOTORS] = {NULL};
+
+Motor *motors[NUM_MOTORS] = {NULL};
 I2CBus *i2c_bus;
 
 /* USER CODE END PV */
@@ -137,6 +150,73 @@ int main(void) {
 
 	/* USER CODE BEGIN Init */
 
+	hbridge_forward_pins[0] = new_pin(GPIOA, GPIO_PIN_10);
+//	hbridge_forward_pins[1] = new_pin(GPIOX, GPIO_PIN_0);
+//	hbridge_forward_pins[2] = new_pin(GPIOX, GPIO_PIN_0);
+//	hbridge_forward_pins[3] = new_pin(GPIOX, GPIO_PIN_0);
+//	hbridge_forward_pins[4] = new_pin(GPIOX, GPIO_PIN_0);
+//	hbridge_forward_pins[5] = new_pin(GPIOX, GPIO_PIN_0);
+
+	hbridge_backward_pins[0] = new_pin(GPIOC, GPIO_PIN_10);
+//	hbridge_backward_pins[1] = new_pin(GPIOX, GPIO_PIN_0);
+//	hbridge_backward_pins[2] = new_pin(GPIOX, GPIO_PIN_0);
+//	hbridge_backward_pins[3] = new_pin(GPIOX, GPIO_PIN_0);
+//	hbridge_backward_pins[4] = new_pin(GPIOX, GPIO_PIN_0);
+//	hbridge_backward_pins[5] = new_pin(GPIOX, GPIO_PIN_0);
+
+	hbridges[0] = new_hbridge(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1), TIM1->ARR, hbridge_forward_pins[0], hbridge_backward_pins[0]);
+//	hbridges[1] = new_hbridge(&htimX, TIM_CHANNEL_X, &(TIM1->CCRX), TIMX->ARR, hbridge_forward_pins[1], hbridge_backward_pins[1]);
+//	hbridges[2] = new_hbridge(&htimX, TIM_CHANNEL_X, &(TIM1->CCRX), TIMX->ARR, hbridge_forward_pins[2], hbridge_backward_pins[2]);
+//	hbridges[3] = new_hbridge(&htimX, TIM_CHANNEL_X, &(TIM1->CCRX), TIMX->ARR, hbridge_forward_pins[3], hbridge_backward_pins[3]);
+//	hbridges[4] = new_hbridge(&htimX, TIM_CHANNEL_X, &(TIM1->CCRX), TIMX->ARR, hbridge_forward_pins[4], hbridge_backward_pins[4]);
+//	hbridges[5] = new_hbridge(&htimX, TIM_CHANNEL_X, &(TIM1->CCRX), TIMX->ARR, hbridge_forward_pins[5], hbridge_backward_pins[5]);
+
+	for (size_t i = 0; i < NUM_MOTORS; ++i) {
+		initialize_hbridge(hbridges[i], 0.0f, 1);
+	}
+
+	forward_limit_switch_pins[0] = new_pin(GPIOB, GPIO_PIN_10);
+//	forward_limit_switch_pins[1] = new_pin(GPIOX, GPIO_PIN_0);
+//	forward_limit_switch_pins[2] = new_pin(GPIOX, GPIO_PIN_0);
+//	forward_limit_switch_pins[3] = new_pin(GPIOX, GPIO_PIN_0);
+//	forward_limit_switch_pins[4] = new_pin(GPIOX, GPIO_PIN_0);
+//	forward_limit_switch_pins[5] = new_pin(GPIOX, GPIO_PIN_0);
+
+	backward_limit_switch_pins[0] = new_pin(GPIOB, GPIO_PIN_11);
+//	backward_limit_switch_pins[1] = new_pin(GPIOX, GPIO_PIN_0);
+//	backward_limit_switch_pins[2] = new_pin(GPIOX, GPIO_PIN_0);
+//	backward_limit_switch_pins[3] = new_pin(GPIOX, GPIO_PIN_0);
+//	backward_limit_switch_pins[4] = new_pin(GPIOX, GPIO_PIN_0);
+//	backward_limit_switch_pins[5] = new_pin(GPIOX, GPIO_PIN_0);
+
+	for (size_t i = 0; i < NUM_MOTORS; ++i) {
+		forward_limit_switches[i] = new_limit_switch(forward_limit_switch_pins[i]);
+		backward_limit_switches[i] = new_limit_switch(backward_limit_switch_pins[i]);
+	}
+
+	quadrature_encoders[0] = new_quad_encoder(&htim2, TIM2, 1024 * 4);
+//	quadrature_encoders[1] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
+//	quadrature_encoders[2] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
+//	quadrature_encoders[3] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
+//	quadrature_encoders[4] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
+//	quadrature_encoders[5] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
+
+	for (size_t i = 0; i < NUM_MOTORS; ++i) {
+		gains[i] = new_gains(0.01f, 0.0f, 0.0f, 0.0f);
+	}
+
+	for (size_t i = 0; i < NUM_MOTORS; ++i) {
+		motors[i] = new_motor(
+				hbridges[i],
+				forward_limit_switches[i],
+				backward_limit_switches[i],
+				quadrature_encoders[i],
+				gains[i]);
+		initialize_motor(motors[i], 0.0f, 0.0f);
+	}
+
+	i2c_bus = new_i2c_bus(&hi2c1);
+
 	/* USER CODE END Init */
 
 	/* Configure the system clock */
@@ -155,71 +235,18 @@ int main(void) {
 	MX_TIM8_Init();
 	MX_TIM6_Init();
 	/* USER CODE BEGIN 2 */
-	//(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t _ARR, Pin* _fwd, Pin* _bwd)
-	Pin *pin1 = new_pin(GPIOA, GPIO_PIN_10);
-	Pin *pin2 = new_pin(GPIOC, GPIO_PIN_10);
-	HBridge *hbridge1 = new_hbridge(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1), TIM1->ARR, pin1, pin2);
-	initialize_hbridge(hbridge1, 0.0, 1);
-
-	Pin *pin10 = new_pin(GPIOB, GPIO_PIN_10);
-	Pin *pin11 = new_pin(GPIOB, GPIO_PIN_11);
-	LimitSwitch *limFwd = new_limit_switch(pin10); //B10
-	LimitSwitch *limRev = new_limit_switch(pin11); //B11
-	QuadEncoder *encoder = new_quad_encoder(&htim2, TIM2, 1024 * 4);
-	Gains *gains = new_gains(0.01, 0.0, 0.0, 0.0);
-
-	motors[0] = new_motor(hbridge1, limFwd, limRev, encoder, gains);
-	initialize_motor(motors[0], 0.0, 0.0);
-
-	i2c_bus = new_i2c_bus(&hi2c1);
-
-	motors[1] = NULL;
 
 	HAL_TIM_Base_Start_IT(&htim6);
 
 	HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 	HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
 	HAL_TIM_Base_Start_IT(&htim6);
-	/*
-	 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-	 HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_3);
-	 HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_1);
-	 HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_2);
-	 HAL_TIM_PWM_Start(&htim8, TIM_CHANNEL_3);
 
-	 HAL_TIM_Encoder_Start(&htim3, TIM_CHANNEL_ALL);
-	 HAL_TIM_Base_Start_IT(&htim6);
-	 HAL_I2C_EnableListen_IT(&hi2c1);
-	 */
 	/* USER CODE END 2 */
 
 	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
-	int increasing = 1;
-	double dspeed = 0.1;
-	double speed = 0.5;
 	while (1) {
-		set_motor_speed(motors[0], speed);
-
-		while (increasing) {
-			set_motor_speed(motors[0], speed);
-			HAL_Delay(1000);
-			speed += dspeed;
-
-			if (speed >= 1) {
-				increasing = 0;
-			}
-		}
-
-		while (!increasing) {
-			set_motor_speed(motors[0], speed);
-			HAL_Delay(1000);
-			speed -= dspeed;
-
-			if (speed <= -1) {
-				increasing = 1;
-			}
-		}
 
 		/* USER CODE END WHILE */
 

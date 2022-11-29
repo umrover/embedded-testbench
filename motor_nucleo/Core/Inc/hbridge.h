@@ -6,7 +6,6 @@
 #include "stm32f3xx_it.h"
 #include "pin.h"
 
-
 typedef struct {
 	TIM_HandleTypeDef *timer;
 	uint32_t channel;
@@ -23,12 +22,12 @@ HBridge* new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_ou
 
 
 // Initialize timer settings
-void initialize_hbridge(HBridge* hbridge, double duty_cycle, uint8_t direction);
+void initialize_hbridge(HBridge* hbridge, float duty_cycle, uint8_t direction);
 
 
 // Requires a signal of between 0 and 1 for duty cycle
 // Calculates high/low pulse durations and sends to hbridge
-void set_pwm(HBridge* hbridge, double duty_cycle);
+void set_pwm(HBridge* hbridge, float duty_cycle);
 
 
 // REQUIRES: direction to be -66 to 66

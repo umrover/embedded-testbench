@@ -17,7 +17,7 @@ HBridge* new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_ou
 }
 
 
-void initialize_hbridge(HBridge* hbridge, double duty_cycle, uint8_t direction)
+void initialize_hbridge(HBridge* hbridge, float duty_cycle, uint8_t direction)
 {
     HAL_TIM_PWM_Start(hbridge->timer, hbridge->channel);
 	set_pwm(hbridge, duty_cycle);
@@ -25,7 +25,7 @@ void initialize_hbridge(HBridge* hbridge, double duty_cycle, uint8_t direction)
 }
 
 
-void set_pwm(HBridge* hbridge, double duty_cycle)
+void set_pwm(HBridge* hbridge, float duty_cycle)
 {
 
     // validate input duty cycle
