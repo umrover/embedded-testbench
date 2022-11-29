@@ -120,7 +120,7 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
         case QUAD_ENC:
             return;
         case ADJUST:
-            memcpy(&(motor->encoder->raw), i2c_bus->buffer, 4);
+            memcpy(&(motor->encoder->counts), i2c_bus->buffer, 4);
             return;
         case ABS_ENC:
         case LIMIT:
@@ -140,18 +140,18 @@ void CH_prepare_send(I2CBus *i2c_bus, Motor *motor) {
         case OPEN:
             return;
         case OPEN_PLUS:
-            memcpy(i2c_bus->buffer, &(motor->encoder->raw), 4);
+            memcpy(i2c_bus->buffer, &(motor->encoder->counts), 4);
             return;
         case CLOSED:
             return;
         case CLOSED_PLUS:
-            memcpy(i2c_bus->buffer, &(motor->encoder->raw), 4);
+            memcpy(i2c_bus->buffer, &(motor->encoder->counts), 4);
             return;
         case CONFIG_PWM:
         case CONFIG_K:
             return;
         case QUAD_ENC:
-            memcpy(i2c_bus->buffer, &(motor->encoder->raw), 4);
+            memcpy(i2c_bus->buffer, &(motor->encoder->counts), 4);
             return;
         case ADJUST:
             return;

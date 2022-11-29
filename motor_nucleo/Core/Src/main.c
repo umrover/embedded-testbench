@@ -62,7 +62,7 @@ HBridge *hbridges[NUM_MOTORS] = {NULL};
 Pin *forward_limit_switch_pins[NUM_MOTORS] = {NULL};
 Pin *backward_limit_switch_pins[NUM_MOTORS] = {NULL};
 
-QuadEncoder *quadrature_encoders[NUM_MOTORS] = {NULL};
+QuadEncoder *quad_encoders[NUM_MOTORS] = {NULL};
 
 Control *controls[NUM_MOTORS] = {NULL};
 
@@ -96,7 +96,15 @@ static void MX_TIM6_Init(void);
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim6) {
-		motor_periodic(motors, NUM_MOTORS);
+		for (size_t i = 0; i < NUM_MOTORS; ++i) {
+			if (quad_encoders[i]) {
+				update_quad_encoder(quad_encoders[i]);
+			}
+			if (motors[i]) {
+				update_motor_limits(motors[i]);
+				update_motor_speed(motors[i]);
+			}
+		}
 	}
 }
 
@@ -197,12 +205,16 @@ int main(void) {
 //	backward_limit_switch_pins[4] = new_pin(GPIOX, GPIO_PIN_0);
 //	backward_limit_switch_pins[5] = new_pin(GPIOX, GPIO_PIN_0);
 
-    quadrature_encoders[0] = new_quad_encoder(&htim2, TIM2, 1024 * 4);
-//	quadrature_encoders[1] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
-//	quadrature_encoders[2] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
-//	quadrature_encoders[3] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
-//	quadrature_encoders[4] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
-//	quadrature_encoders[5] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
+    quad_encoders[0] = new_quad_encoder(&htim2, TIM2);
+//	quad_encoders[1] = new_quad_encoder(&htimX, TIMX);
+//	quad_encoders[2] = new_quad_encoder(&htimX, TIMX);
+//	quad_encoders[3] = new_quad_encoder(&htimX, TIMX);
+//	quad_encoders[4] = new_quad_encoder(&htimX, TIMX);
+//	quad_encoders[5] = new_quad_encoder(&htimX, TIMX);
+
+    for (size_t i = 0; i < NUM_MOTORS; ++i) {
+    	init_quad_encoder(quad_encoders[i]);
+    }
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
         controls[i] = new_control(0.01f, 0.0f, 0.0f, 0.0f);
@@ -213,9 +225,9 @@ int main(void) {
                 hbridges[i],
 				forward_limit_switch_pins[i],
 				backward_limit_switch_pins[i],
-                quadrature_encoders[i],
+                quad_encoders[i],
                 controls[i]);
-        initialize_motor(motors[i], 0.0f, 0.0f);
+        initialize_motor(motors[i], 0.0f);
     }
 
     i2c_bus = new_i2c_bus(&hi2c1);

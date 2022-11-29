@@ -1,28 +1,8 @@
 
 #include "motor.h"
 
-void motor_periodic(Motor *motor[], int num_motors) {
-	for (int i = 0; i < num_motors; ++i) {
-		if (motor[i]) {
-			update_quad_encoder(motor[i]);
-			update_motor_limits(motor[i]);
-			update_motor_speed(motor[i]);
-		}
-	}
-}
 
-QuadEncoder *new_quad_encoder(TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim, int16_t _PPR) {
-    QuadEncoder *quad_encoder = (QuadEncoder *) malloc(sizeof(QuadEncoder));
-    quad_encoder->tim = _tim;
-    quad_encoder->htim = _htim;
-    quad_encoder->PPR = _PPR;
-
-    return quad_encoder;
-}
-
-
-Motor *
-new_motor(HBridge *_hbridge, Pin *_fwd_lim, Pin *_bwd_lim, QuadEncoder *_encoder, Control *_control) {
+Motor *new_motor(HBridge *_hbridge, Pin *_fwd_lim, Pin *_bwd_lim, QuadEncoder *_encoder, Control *_control) {
     Motor *motor = (Motor *) malloc(sizeof(Motor));
     motor->hbridge = _hbridge;
     motor->forward_limit_switch_pin = _fwd_lim;
@@ -37,10 +17,9 @@ new_motor(HBridge *_hbridge, Pin *_fwd_lim, Pin *_bwd_lim, QuadEncoder *_encoder
 }
 
 
-void initialize_motor(Motor *motor, float speed, float theta) {
+void initialize_motor(Motor *motor, float speed) {
     initialize_hbridge(motor->hbridge, speed, speed);
     set_motor_speed(motor, speed);
-    set_motor_counts(motor, theta);
 }
 
 
@@ -79,25 +58,10 @@ void update_motor_limits(Motor *motor) {
     }
 }
 
-void update_quad_encoder(Motor *motor) {
-    motor->encoder->raw = motor->encoder->tim->CNT;
-
-    motor->raw_counts = (int32_t)(((float) motor->encoder->raw / (float) motor->encoder->PPR) * 360.0);
-
-    // ((n mod 360) + 360) mod 360  (int32_t)
-    motor->counts = ((motor->raw_counts % 360) + 360) % 360;
-}
-
-void set_motor_counts(Motor *motor, int32_t counts) {
-	motor->counts = 0;
-	motor->raw_counts = 0;
-}
-
-void update_motor_counts(Motor *motor, int32_t counts, float dt) {
+void move_motor_to_target(Motor *motor, int32_t target_counts, float dt) {
     // TODO need to test this blind implementation, may be some problems wrapping across counts boundaries
-    float speed = calculate_pid(motor->control, counts, motor->counts, dt);
+    float speed = calculate_pid(motor->control, target_counts, motor->encoder->counts, dt);
     set_motor_speed(motor, speed);
-
 }
 
 
