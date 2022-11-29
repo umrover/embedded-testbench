@@ -1,21 +1,37 @@
 #include "control.h"
 
 
-Gains *new_gains(float kP_, float kI_, float kD_, float kF_) {
-    Gains *gains = (Gains *) malloc(sizeof(Gains));
+Control *new_control(float kP_, float kI_, float kD_, float kF_) {
+    Control *control = (Control *) malloc(sizeof(Control));
 
-    gains->kP = kP_;
-    gains->kI = kI_;
-    gains->kD = kD_;
-    gains->kF = kF_;
+    control->kP = kP_;
+    control->kI = kI_;
+    control->kD = kD_;
+    control->kF = kF_;
 
-    gains->flag = 1;
-    gains->last_error = 0.0;
-    gains->cum_integ = 0.0;
+    control->flag = 1;
+    control->last_error = 0.0;
+    control->cum_integ = 0.0;
 
-    return gains;
+    return control;
 }
 
+float calculate_pid(Control *control, float target, float current, float dt) {
+    if (control->flag) {
+        control->last_error = target - current;
+        control->flag = 0;
+    }
+
+    float error = target - current;
+
+    control->cum_integ += error * dt;
+    float diff = (error - control->last_error) / dt;
+
+    float output = control->kP * error + control->kI * control->cum_integ + control->kD * diff + signum(error) * control->kF;
+
+    control->last_error = error;
+    return output;
+}
 
 float signum(float num) {
     if (num < 0) {
@@ -26,23 +42,3 @@ float signum(float num) {
     }
     return 0.0;
 }
-
-
-float calculate_pid(Gains *gains, float target, float current, float dt) {
-    if (gains->flag) {
-        gains->last_error = target - current;
-        gains->flag = 0;
-    }
-
-    float error = target - current;
-
-    gains->cum_integ += error * dt;
-    float diff = (error - gains->last_error) / dt;
-
-    float output = gains->kP * error + gains->kI * gains->cum_integ + gains->kD * diff + signum(error) * gains->kF;
-
-    gains->last_error = error;
-    return output;
-}
-
-

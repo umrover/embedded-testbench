@@ -20,12 +20,16 @@ typedef struct {
     float cum_integ;
     bool flag;
 
-} Gains;
+} Control;
 
+/** PUBLIC FUNCTIONS **/
 
-Gains *new_gains(float kP_, float kI_, float kD_, float kF_);
+Control *new_control(float kP_, float kI_, float kD_, float kF_);
 
-float calculate_pid(Gains *gains, float target, float current, float dt);
+float calculate_pid(Control *control, float target, float current, float dt);
 
+/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/
+
+float signum(float num);
 
 #endif /* INC_CONTROL_H_ */

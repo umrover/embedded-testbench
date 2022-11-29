@@ -61,12 +61,10 @@ HBridge *hbridges[NUM_MOTORS] = {NULL};
 
 Pin *forward_limit_switch_pins[NUM_MOTORS] = {NULL};
 Pin *backward_limit_switch_pins[NUM_MOTORS] = {NULL};
-LimitSwitch *forward_limit_switches[NUM_MOTORS] = {NULL};
-LimitSwitch *backward_limit_switches[NUM_MOTORS] = {NULL};
 
 QuadEncoder *quadrature_encoders[NUM_MOTORS] = {NULL};
 
-Gains *gains[NUM_MOTORS] = {NULL};
+Control *controls[NUM_MOTORS] = {NULL};
 
 Motor *motors[NUM_MOTORS] = {NULL};
 I2CBus *i2c_bus;
@@ -97,7 +95,9 @@ static void MX_TIM6_Init(void);
 /* USER CODE BEGIN 0 */
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-    motor_periodic(htim, &htim6, motors, NUM_MOTORS);
+	if (htim == &htim6) {
+		motor_periodic(motors, NUM_MOTORS);
+	}
 }
 
 void HAL_I2C_AddrCallback(I2C_HandleTypeDef *hi2c, uint8_t TransferDirection, uint16_t AddrMatchCode) {
@@ -197,11 +197,6 @@ int main(void) {
 //	backward_limit_switch_pins[4] = new_pin(GPIOX, GPIO_PIN_0);
 //	backward_limit_switch_pins[5] = new_pin(GPIOX, GPIO_PIN_0);
 
-    for (size_t i = 0; i < NUM_MOTORS; ++i) {
-        forward_limit_switches[i] = new_limit_switch(forward_limit_switch_pins[i]);
-        backward_limit_switches[i] = new_limit_switch(backward_limit_switch_pins[i]);
-    }
-
     quadrature_encoders[0] = new_quad_encoder(&htim2, TIM2, 1024 * 4);
 //	quadrature_encoders[1] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
 //	quadrature_encoders[2] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
@@ -210,16 +205,16 @@ int main(void) {
 //	quadrature_encoders[5] = new_quad_encoder(&htimX, TIMX, 1024 * 4);
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
-        gains[i] = new_gains(0.01f, 0.0f, 0.0f, 0.0f);
+        controls[i] = new_control(0.01f, 0.0f, 0.0f, 0.0f);
     }
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
         motors[i] = new_motor(
                 hbridges[i],
-                forward_limit_switches[i],
-                backward_limit_switches[i],
+				forward_limit_switch_pins[i],
+				backward_limit_switch_pins[i],
                 quadrature_encoders[i],
-                gains[i]);
+                controls[i]);
         initialize_motor(motors[i], 0.0f, 0.0f);
     }
 

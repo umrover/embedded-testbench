@@ -103,8 +103,8 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
         case CLOSED:
         case CLOSED_PLUS:
             motor->mode = 0xFF;
-            memcpy(&(motor->gains->kF), i2c_bus->buffer, 4);
-            memcpy(&(motor->desired_angle), i2c_bus->buffer + 4, 4);
+            memcpy(&(motor->control->kF), i2c_bus->buffer, 4);
+            memcpy(&(motor->desired_counts), i2c_bus->buffer + 4, 4);
             return;
         case CONFIG_PWM: {
             int max = 0;
@@ -113,9 +113,9 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
             return; //UPDATED
         }
         case CONFIG_K:
-            memcpy(&(motor->gains->kP), i2c_bus->buffer, 4);
-            memcpy(&(motor->gains->kI), i2c_bus->buffer + 4, 4);
-            memcpy(&(motor->gains->kD), i2c_bus->buffer + 8, 4);
+            memcpy(&(motor->control->kP), i2c_bus->buffer, 4);
+            memcpy(&(motor->control->kI), i2c_bus->buffer + 4, 4);
+            memcpy(&(motor->control->kD), i2c_bus->buffer + 8, 4);
             return;
         case QUAD_ENC:
             return;
