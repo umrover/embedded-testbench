@@ -22,6 +22,19 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "adc_sensor.h"
+#include "bridge.h"
+#include "diagnostic_curr_sensor.h"
+#include "diagnostic_temp_sensor.h"
+#include "heater.h"
+#include "pin_data.h"
+#include "servo.h"
+#include "smbus.h"
+#include "spectral.h"
+#include "stm32f3xx_hal_conf.h"
+#include "stm32f3xx_it.h"
+#include "thermistor.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,6 +63,8 @@ TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart1;
 
+PinData* debug_led;
+PinData* MOSFETDevices;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
