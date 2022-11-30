@@ -1,13 +1,13 @@
 #pragma once
 
-#include "mosfet.h"
+#include "pin_data.h"
 #include "thermistor.h"
 
 #define MAX_HEATER_TEMP 65.0f
 
 typedef struct
 {
-    MosfetDevice *mosfet;
+    PinData *mosfet;
     Thermistor *thermistor;
     bool auto_shutoff;
     bool is_on;
@@ -17,7 +17,7 @@ typedef struct
 // is a pointer to a Thermistor object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Heater object
-Heater *new_heater(MosfetDevice *_mosfet_dev, Thermistor *_thermistor);
+Heater *new_heater(PinData *_mosfet_dev, Thermistor *_thermistor);
 
 // REQUIRES: nothing
 // MODIFIES: nothing
