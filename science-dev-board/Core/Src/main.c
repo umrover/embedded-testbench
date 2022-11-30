@@ -63,9 +63,20 @@ TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart1;
 
-PinData* debug_led;
-PinData* MOSFETDevices;
 /* USER CODE BEGIN PV */
+
+ADCSensor* adc_sensor = NULL;
+Bridge* bridge = NULL;
+Current_Sensor* current_sensor = NULL;
+Temp_Sensor* temp_sensor = NULL;
+Heater* heater = NULL;
+PinData* debug_led = NULL;
+PinData* MOSFETDevices = NULL;
+Servo* servo = NULL;
+SMBus* smbus = NULL;
+Spectral* spectral = NULL;
+Thermistor* thermistor = NULL;
+bool send_message_flag = false;
 
 /* USER CODE END PV */
 
