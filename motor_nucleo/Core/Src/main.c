@@ -264,7 +264,7 @@ int main(void) {
     MX_TIM6_Init();
     /* USER CODE BEGIN 2 */
 
-    HAL_TIM_Base_Start_IT(&htim6);
+    // HAL_TIM_Base_Start_IT(&htim6);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
     HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
     HAL_TIM_Base_Start_IT(&htim6);

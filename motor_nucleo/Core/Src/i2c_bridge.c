@@ -19,7 +19,6 @@ I2CBus i2c_bus_default = {
 int WATCHDOG_TIMEOUT = 443;
 
 I2CBus *new_i2c_bus(I2C_HandleTypeDef *_i2c_bus_handle) {
-    // TODO
     I2CBus *bus = (I2CBus *) malloc(sizeof(I2CBus));
     bus->i2c_bus_handle = _i2c_bus_handle;
     return bus;
@@ -110,7 +109,7 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
             int max = 0;
             memcpy(&(max), i2c_bus->buffer, 2);
             motor->speed_limit = (float) (max) / 100;
-            return; //UPDATED
+            return; // UPDATED
         }
         case CONFIG_K:
             memcpy(&(motor->control->kP), i2c_bus->buffer, 4);
@@ -160,7 +159,8 @@ void CH_prepare_send(I2CBus *i2c_bus, Motor *motor) {
             return; // TODO add support for abs encoder
             // case LIMIT: memcpy(i2c_bus->buffer, &(motor->limit), 1); return;
         case LIMIT:
-            return; // TODO add cases for both limits
+        	memcpy(i2c_bus->buffer, &(motor->forward_limit_switch->is_activated), 1);
+            return; // TODO add cases for reverse limits
         case CALIBRATED:
             memcpy(i2c_bus->buffer, &(motor->calibrated), 1);
             return;
