@@ -1,4 +1,3 @@
-#include "smbus.h"
 #include "spectral.h"
 
 SMBus *i2c_bus;

@@ -7,17 +7,17 @@
 
 typedef struct
 {
-    PinData *mosfet;
+    PinData *heater_pin;
     Thermistor *thermistor;
     bool auto_shutoff;
     bool is_on;
 } Heater;
 
-// REQUIRES: mosfet_dev is a pointer to a MosfetDevice object and therm
+// REQUIRES: _heater_pin is a pointer to a PinData object and therm
 // is a pointer to a Thermistor object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Heater object
-Heater *new_heater(PinData *_mosfet_dev, Thermistor *_thermistor);
+Heater *new_heater(PinData *_heater_pin, Thermistor *_thermistor);
 
 // REQUIRES: nothing
 // MODIFIES: nothing

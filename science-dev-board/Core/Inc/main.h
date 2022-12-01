@@ -59,6 +59,10 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define MOSFET_10_Pin GPIO_PIN_13
+#define MOSFET_10_GPIO_Port GPIOC
+#define MOSFET_11_Pin GPIO_PIN_14
+#define MOSFET_11_GPIO_Port GPIOC
 #define I2C2_SPECTRAL_SDA_Pin GPIO_PIN_0
 #define I2C2_SPECTRAL_SDA_GPIO_Port GPIOF
 #define I2C2_SPECTRAL_SCL_Pin GPIO_PIN_1
@@ -93,8 +97,14 @@ void Error_Handler(void);
 #define SERVO_1_GPIO_Port GPIOC
 #define SERVO_2_Pin GPIO_PIN_8
 #define SERVO_2_GPIO_Port GPIOC
-#define DEBUG_LED_Pin GPIO_PIN_2
-#define DEBUG_LED_GPIO_Port GPIOD
+#define DEBUG_LED_3_Pin GPIO_PIN_10
+#define DEBUG_LED_3_GPIO_Port GPIOC
+#define DEBUG_LED_2_Pin GPIO_PIN_11
+#define DEBUG_LED_2_GPIO_Port GPIOC
+#define DEBUG_LED_1_Pin GPIO_PIN_12
+#define DEBUG_LED_1_GPIO_Port GPIOC
+#define DEBUG_LED_0_Pin GPIO_PIN_2
+#define DEBUG_LED_0_GPIO_Port GPIOD
 #define MOSFET_3_Pin GPIO_PIN_3
 #define MOSFET_3_GPIO_Port GPIOB
 #define MOSFET_4_Pin GPIO_PIN_4
@@ -105,6 +115,10 @@ void Error_Handler(void);
 #define MOSFET_6_GPIO_Port GPIOB
 #define MOSFET_7_Pin GPIO_PIN_7
 #define MOSFET_7_GPIO_Port GPIOB
+#define MOSFET_8_Pin GPIO_PIN_8
+#define MOSFET_8_GPIO_Port GPIOB
+#define MOSFET_9_Pin GPIO_PIN_9
+#define MOSFET_9_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

@@ -23,7 +23,7 @@ typedef struct {
 // _adc_sensor is a pointer to an ADCSensor object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created temp sensor object
-Temp_Sensor* new_diagnostic_temp_sensor(ADCSensor* adc_sensor, int channel);
+Temp_Sensor* new_diag_temp_sensor(ADCSensor* adc_sensor, int channel);
 
 // REQUIRES: valid temp sensor
 // MODIFIES: stored sensor value

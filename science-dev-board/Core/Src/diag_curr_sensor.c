@@ -5,14 +5,14 @@
 //      jessyw@umich.edu
 ////////////////////////////////
 
-#include "diagnostic_curr_sensor.h"
+#include "diag_curr_sensor.h"
 
 
 // REQUIRES: _adc_channel is the corresponding ADC channel and
 // _adc_sensor is a pointer to an ADCSensor object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created current sensor object
-Current_Sensor* new_diagnostic_current_sensor(int channel, ADCSensor* adc_sensor) {
+Current_Sensor* new_diag_current_sensor(ADCSensor* adc_sensor, uint8_t channel) {
     Current_Sensor* current_sensor = (Current_Sensor*) malloc(sizeof(Current_Sensor));
     current_sensor->adc_sensor = adc_sensor;
     current_sensor->channel = channel;

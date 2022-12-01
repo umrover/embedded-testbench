@@ -5,14 +5,14 @@
 //      jessyw@umich.edu
 ////////////////////////////////
 
-#include "diagnostic_temp_sensor.h"
+#include "diag_temp_sensor.h"
 
 
 // REQUIRES: _adc_channel is the corresponding ADC channel and
 // _adc_sensor is a pointer to an ADCSensor object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created current sensor object
-Temp_Sensor* new_diagnostic_temp_sensor(ADCSensor* adc_sensor, int channel) {
+Temp_Sensor* new_diag_temp_sensor(ADCSensor* adc_sensor, int channel) {
     Temp_Sensor* temp_sensor = (Temp_Sensor*) malloc(sizeof(Temp_Sensor));
     temp_sensor->adc_sensor = adc_sensor;
     temp_sensor->channel = channel;

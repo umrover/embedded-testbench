@@ -14,7 +14,7 @@
 // ACHS-7121 Hall Effect-based isolated linear current sensor
 // No clue whether or not it's a adc sensor or not.
 typedef struct {
-    int channel;
+	uint8_t channel;
     float amps;
     ADCSensor* adc_sensor;
 } Current_Sensor;
@@ -23,7 +23,7 @@ typedef struct {
 // _adc_sensor is a pointer to an ADCSensor object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created current sensor object
-Current_Sensor* new_diagnostic_current_sensor(int channel, ADCSensor* adc_sensor);
+Current_Sensor* new_diag_current_sensor(ADCSensor* adc_sensor, uint8_t channel);
 
 // REQUIRES: valid current sensor
 // MODIFIES: stored sensor value

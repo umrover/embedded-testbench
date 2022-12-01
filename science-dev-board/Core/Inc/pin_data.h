@@ -27,7 +27,7 @@ PinData *new_pin_data(GPIO_TypeDef *_port, uint16_t _pin, bool _is_output);
 // REQUIRES: pin_data is PinData and value is 0 or 1
 // MODIFIES: nothing
 // EFFECTS: Sets pin to value
-void set_pin_value(PinData *pin_data, uint8_t value);
+void set_pin_value(PinData *pin_data, bool value);
 
 // REQUIRES: pin_data is PinData
 // MODIFIES: nothing
