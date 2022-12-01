@@ -29,8 +29,6 @@
 #include "heater.h"
 #include "pin_data.h"
 #include "servo.h"
-#include "smbus.h"
-#include "spectral.h"
 #include "stm32f3xx_hal_conf.h"
 #include "stm32f3xx_it.h"
 #include "thermistor.h"
@@ -56,9 +54,6 @@
 #define HEATER_0_MOSFET_PIN 3
 #define HEATER_1_MOSFET_PIN 4
 #define HEATER_2_MOSFET_PIN 5
-
-// TODO - Fix.
-#define SPECTRAL_ADDRESS 0x00
 
 /* USER CODE END PD */
 
@@ -91,8 +86,8 @@ PinData* debug_leds[NUM_DEBUG_LEDS] = {NULL};
 PinData* heater_pins[NUM_HEATERS] = {NULL};
 PinData* mosfet_pins[NUM_MOSFET_DEVICES] = {NULL};
 Servo* servos[NUM_SERVOS] = {NULL};
-SMBus* smbus = NULL;
-Spectral* spectral = NULL;
+//SMBus* smbus = NULL;
+//Spectral* spectral = NULL;
 Thermistor* science_temp_sensors[NUM_SCIENCE_TEMP_SENSORS] = {NULL};
 
 /* USER CODE END PV */
@@ -161,16 +156,16 @@ int main(void)
 	servos[1] = new_servo(&htim3, TIM_CHANNEL_2, &(TIM3->CCR2));
 	servos[2] = new_servo(&htim3, TIM_CHANNEL_3, &(TIM3->CCR3));
 
-	smbus = new_smbus(&hi2c2, NULL, SPECTRAL_ADDRESS, false);
-	spectral = new_spectral(smbus);
+//	smbus = new_smbus(&hi2c2, NULL, SPECTRAL_ADDRESS, false);
+//	spectral = new_spectral(smbus);
 
 	science_temp_sensors[0] = new_thermistor(adc_sensor_1, 0);
 	science_temp_sensors[1] = new_thermistor(adc_sensor_1, 1);
 	science_temp_sensors[2] = new_thermistor(adc_sensor_1, 2);
 
-	science_heaters[0] = new_heater(science_temp_sensors[0], heater_pins[0]);
-	science_heaters[1] = new_heater(science_temp_sensors[1], heater_pins[1]);
-	science_heaters[2] = new_heater(science_temp_sensors[2], heater_pins[2]);
+	science_heaters[0] = new_heater(heater_pins[0], science_temp_sensors[0]);
+	science_heaters[1] = new_heater(heater_pins[1], science_temp_sensors[1]);
+	science_heaters[2] = new_heater(heater_pins[2], science_temp_sensors[2]);
 
   /* USER CODE END 1 */
 
