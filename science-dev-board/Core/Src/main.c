@@ -22,6 +22,19 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include "adc_sensor.h"
+#include "bridge.h"
+#include "diagnostic_curr_sensor.h"
+#include "diagnostic_temp_sensor.h"
+#include "heater.h"
+#include "pin_data.h"
+#include "servo.h"
+#include "smbus.h"
+#include "spectral.h"
+#include "stm32f3xx_hal_conf.h"
+#include "stm32f3xx_it.h"
+#include "thermistor.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,6 +64,19 @@ TIM_HandleTypeDef htim3;
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
+
+ADCSensor* adc_sensor = NULL;
+Bridge* bridge = NULL;
+Current_Sensor* current_sensor = NULL;
+Temp_Sensor* temp_sensor = NULL;
+Heater* heater = NULL;
+PinData* debug_led = NULL;
+PinData* MOSFETDevices = NULL;
+Servo* servo = NULL;
+SMBus* smbus = NULL;
+Spectral* spectral = NULL;
+Thermistor* thermistor = NULL;
+bool send_message_flag = false;
 
 /* USER CODE END PV */
 
