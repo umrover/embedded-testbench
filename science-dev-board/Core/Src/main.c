@@ -44,7 +44,7 @@
 /* USER CODE BEGIN PD */
 
 #define NUM_MOSFET_DEVICES 12
-#define NUM_CURRENT_SENSORS 3
+#define NUM_DIAG_CURRENT_SENSORS 3
 #define NUM_DIAG_TEMP_SENSORS 3
 #define NUM_SCIENCE_TEMP_SENSORS 3
 #define NUM_SERVOS 3
@@ -79,8 +79,8 @@ UART_HandleTypeDef huart1;
 ADCSensor* adc_sensor_0 = NULL;
 ADCSensor* adc_sensor_1 = NULL;
 Bridge* bridge = NULL;
-Current_Sensor* diag_current_sensors[NUM_CURRENT_SENSORS] = {NULL};
-Temp_Sensor* diag_temp_sensors[NUM_DIAG_TEMP_SENSORS] = {NULL};
+DiagCurrentSensor* diag_current_sensors[NUM_DIAG_CURRENT_SENSORS] = {NULL};
+DiagTempSensor* diag_temp_sensors[NUM_DIAG_TEMP_SENSORS] = {NULL};
 Heater* science_heaters[NUM_HEATERS] = {NULL};
 PinData* debug_leds[NUM_DEBUG_LEDS] = {NULL};
 PinData* heater_pins[NUM_HEATERS] = {NULL};
@@ -89,6 +89,10 @@ Servo* servos[NUM_SERVOS] = {NULL};
 //SMBus* smbus = NULL;
 //Spectral* spectral = NULL;
 Thermistor* science_temp_sensors[NUM_SCIENCE_TEMP_SENSORS] = {NULL};
+
+
+float diag_temperatures[3] = {0};
+float diag_currents[3] = {0};
 
 /* USER CODE END PV */
 
@@ -204,6 +208,28 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  /*
+	   * In a while loop, we will need to get the following data and send it over:
+	   * Diagnostic Temperatures and Currents
+	   * Science Temperatures
+	   * Spectral sensor data
+	   * State of auto-shut off state of the heater (upon change).
+	   * State of the heater (upon change).
+	   */
+	  update_adc_sensor_values(adc_sensor_0);
+	  update_adc_sensor_values(adc_sensor_1);
+	  for (size_t i = 0; i < NUM_DIAG_TEMP_SENSORS; ++i) {
+		  update_diag_temp_sensor_val(diag_temp_sensors[i]);
+		  diag_temperatures[i] = get_diag_temp_sensor_val(diag_temp_sensors[i]);
+	  }
+	  for (size_t i = 0; i < NUM_DIAG_CURRENT_SENSORS; ++i) {
+		  update_diag_current_sensor_val(diag_current_sensors[i]);
+		  diag_currents[i] = get_diag_current_sensor_val(diag_current_sensors[i]);
+	  }
+	  bridge_send_diagnostic(bridge, diag_temperatures, diag_currents);
+
+
+
   }
   /* USER CODE END 3 */
 }

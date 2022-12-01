@@ -17,20 +17,20 @@ typedef struct {
     uint8_t channel;
     float temp;
     ADCSensor* adc_sensor;
-} Temp_Sensor;
+} DiagTempSensor;
 
 // REQUIRES: _adc_channel is the corresponding ADC channel and
 // _adc_sensor is a pointer to an ADCSensor object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created temp sensor object
-Temp_Sensor* new_diag_temp_sensor(ADCSensor* adc_sensor, int channel);
+DiagTempSensor* new_diag_temp_sensor(ADCSensor* adc_sensor, int channel);
 
 // REQUIRES: valid temp sensor
 // MODIFIES: stored sensor value
 // EFFECTS: updates the sensor value
-void update_temp_sensor_value(Temp_Sensor* sensor);
+void update_diag_temp_sensor_val(DiagTempSensor* sensor);
 
 // REQUIRES: valid temp sensor
 // MODIFIES: nothing
 // EFFECTS: returns the stored value for amps
-float get_temp_sensor_temp(Temp_Sensor* sensor);
+float get_diag_temp_sensor_val(DiagTempSensor* sensor);

@@ -17,21 +17,21 @@ typedef struct {
 	uint8_t channel;
     float amps;
     ADCSensor* adc_sensor;
-} Current_Sensor;
+} DiagCurrentSensor;
 
 // REQUIRES: _adc_channel is the corresponding ADC channel and
 // _adc_sensor is a pointer to an ADCSensor object
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created current sensor object
-Current_Sensor* new_diag_current_sensor(ADCSensor* adc_sensor, uint8_t channel);
+DiagCurrentSensor* new_diag_current_sensor(ADCSensor* adc_sensor, uint8_t channel);
 
 // REQUIRES: valid current sensor
 // MODIFIES: stored sensor value
 // EFFECTS: updates the sensor value
-void update_current_sensor_value(Current_Sensor* sensor);
+void update_diag_current_sensor_val(DiagCurrentSensor* sensor);
 
 
 // REQUIRES: valid current sensor
 // MODIFIES: nothing
 // EFFECTS: returns the stored value for amps
-float get_current_sensor_amps(Current_Sensor* sensor);
+float get_diag_current_sensor_val(DiagCurrentSensor* sensor);
