@@ -35,7 +35,7 @@
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 
-#define NUM_MOTORS 6
+#define NUM_MOTORS 1  // TODO make this 6, not 1
 
 /* USER CODE END PD */
 
@@ -196,7 +196,9 @@ int main(void) {
 //	hbridges[5] = new_hbridge(&htimX, TIM_CHANNEL_X, &(TIM1->CCRX), TIMX->ARR, hbridge_forward_pins[5], hbridge_backward_pins[5]);
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
-        init_hbridge(hbridges[i], 0.0f, true);
+    	if(hbridges[i]) {
+            init_hbridge(hbridges[i], 0.0f, true);
+    	}
     }
 
     forward_limit_switch_pins[0] = new_pin(GPIOB, GPIO_PIN_10);
@@ -214,8 +216,12 @@ int main(void) {
 //	backward_limit_switch_pins[5] = new_pin(GPIOX, GPIO_PIN_0);
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
-    	forward_limit_switches[i] = new_limit_switch(forward_limit_switch_pins[i]);
-    	backward_limit_switches[i] = new_limit_switch(backward_limit_switch_pins[i]);
+    	if(forward_limit_switches[i]){
+        	forward_limit_switches[i] = new_limit_switch(forward_limit_switch_pins[i]);
+    	}
+    	if(backward_limit_switches[i]){
+        	backward_limit_switches[i] = new_limit_switch(backward_limit_switch_pins[i]);
+    	}
     }
 
     quad_encoders[0] = new_quad_encoder(&htim2, TIM2);
@@ -226,7 +232,9 @@ int main(void) {
 //	quad_encoders[5] = new_quad_encoder(&htimX, TIMX);
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
-    	init_quad_encoder(quad_encoders[i]);
+    	if(quad_encoders[i]){
+        	init_quad_encoder(quad_encoders[i]);
+    	}
     }
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
