@@ -46,6 +46,7 @@ long smbus_read_byte_data(
     SMBus *smbus,
     char reg)
 {
+    smbus->buf[0] = reg;
     if (!smbus->DMA)
     {
         smbus->ret = HAL_I2C_Master_Transmit(
