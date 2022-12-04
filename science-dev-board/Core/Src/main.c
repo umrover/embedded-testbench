@@ -86,8 +86,8 @@ PinData* debug_leds[NUM_DEBUG_LEDS] = {NULL};
 PinData* heater_pins[NUM_HEATERS] = {NULL};
 PinData* mosfet_pins[NUM_MOSFET_DEVICES] = {NULL};
 Servo* servos[NUM_SERVOS] = {NULL};
-//SMBus* smbus = NULL;
-//Spectral* spectral = NULL;
+SMBus* smbus = NULL;
+Spectral* spectral = NULL;
 Thermistor* science_temp_sensors[NUM_SCIENCE_TEMP_SENSORS] = {NULL};
 
 
@@ -160,8 +160,9 @@ int main(void)
 	servos[1] = new_servo(&htim3, TIM_CHANNEL_2, &(TIM3->CCR2));
 	servos[2] = new_servo(&htim3, TIM_CHANNEL_3, &(TIM3->CCR3));
 
-//	smbus = new_smbus(&hi2c2, NULL, SPECTRAL_ADDRESS, false);
-//	spectral = new_spectral(smbus);
+	// TODO: implement spectral code
+	smbus = new_smbus(&hi2c2, NULL, SPECTRAL_ADDRESS, false);
+	spectral = new_spectral(smbus);
 
 	science_temp_sensors[0] = new_thermistor(adc_sensor_1, 0);
 	science_temp_sensors[1] = new_thermistor(adc_sensor_1, 1);
