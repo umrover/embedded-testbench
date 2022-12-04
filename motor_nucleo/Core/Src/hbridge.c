@@ -2,7 +2,7 @@
 #include "hbridge.h"
 
 
-HBridge *new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t _ARR, Pin *fwd,
+HBridge *new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t *_ARR, Pin *fwd,
                      Pin *bwd) {
     HBridge *hbr = (HBridge *) malloc(sizeof(HBridge));
     hbr->timer = _timer;
@@ -31,7 +31,7 @@ void change_hbridge_pwm(HBridge *hbridge, float duty_cycle) {
         duty_cycle = 1.0;
     }
 
-    hbridge->target_duty_cycle = duty_cycle * (double) hbridge->ARR;
+    hbridge->target_duty_cycle = duty_cycle * (float) *hbridge->ARR;
 
     *(hbridge->out_register) = hbridge->target_duty_cycle;
 

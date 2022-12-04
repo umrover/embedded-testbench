@@ -110,7 +110,8 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 				update_limit_switch(backward_limit_switches[i]);
 			}
 			if (motors[i]) {
-				update_motor_logic(motors[i]);
+                update_motor_target(motors[i]);
+                update_motor_speed(motors[i]);
 			}
 		}
 	}
@@ -122,8 +123,9 @@ void HAL_I2C_AddrCallback(I2C_HandleTypeDef *hi2c, uint8_t TransferDirection, ui
         HAL_I2C_Slave_Seq_Receive_IT(i2c_bus->i2c_bus_handle, i2c_bus->buffer, 1, I2C_LAST_FRAME);
         i2c_bus->operation = UNKNOWN;
     } else {
-        // TODO - ERROR CHECKING FOR MOTOR_ID
-        CH_prepare_send(i2c_bus, motors[i2c_bus->motor_id]);
+    	if(i2c_bus->motor_id < NUM_MOTORS) {
+            CH_prepare_send(i2c_bus, motors[i2c_bus->motor_id]);
+    	}
         uint8_t bytes_to_send = CH_num_send(i2c_bus);
         if (bytes_to_send != 0) {
             HAL_I2C_Slave_Seq_Transmit_IT(i2c_bus->i2c_bus_handle, i2c_bus->buffer, bytes_to_send, I2C_LAST_FRAME);
@@ -140,10 +142,14 @@ void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c) {
         if (bytes_to_recieve != 0) {
             HAL_I2C_Slave_Seq_Receive_IT(i2c_bus->i2c_bus_handle, i2c_bus->buffer, bytes_to_recieve, I2C_LAST_FRAME);
         } else {
-            CH_process_received(i2c_bus, motors[i2c_bus->motor_id]);
+        	if(i2c_bus->motor_id < NUM_MOTORS) {
+        		CH_process_received(i2c_bus, motors[i2c_bus->motor_id]);
+        	}
         }
     } else {
-        CH_process_received(i2c_bus, motors[i2c_bus->motor_id]);
+    	if(i2c_bus->motor_id < NUM_MOTORS) {
+    		CH_process_received(i2c_bus, motors[i2c_bus->motor_id]);
+    	}
     }
 }
 
@@ -187,7 +193,7 @@ int main(void) {
 //	hbridge_backward_pins[4] = new_pin(GPIOX, GPIO_PIN_0);
 //	hbridge_backward_pins[5] = new_pin(GPIOX, GPIO_PIN_0);
 
-    hbridges[0] = new_hbridge(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1), TIM1->ARR, hbridge_forward_pins[0],
+    hbridges[0] = new_hbridge(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1), &(TIM1->ARR), hbridge_forward_pins[0],
                               hbridge_backward_pins[0]);
 //	hbridges[1] = new_hbridge(&htimX, TIM_CHANNEL_X, &(TIM1->CCRX), TIMX->ARR, hbridge_forward_pins[1], hbridge_backward_pins[1]);
 //	hbridges[2] = new_hbridge(&htimX, TIM_CHANNEL_X, &(TIM1->CCRX), TIMX->ARR, hbridge_forward_pins[2], hbridge_backward_pins[2]);
@@ -232,7 +238,7 @@ int main(void) {
 //	quad_encoders[5] = new_quad_encoder(&htimX, TIMX);
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
-    	if(quad_encoders[i]){
+    	if(quad_encoders[i]) {
         	init_quad_encoder(quad_encoders[i]);
     	}
     }
@@ -242,13 +248,13 @@ int main(void) {
     }
 
     for (size_t i = 0; i < NUM_MOTORS; ++i) {
-        motors[i] = new_motor(
-                hbridges[i],
+		motors[i] = new_motor(
+				hbridges[i],
 				forward_limit_switches[i],
 				backward_limit_switches[i],
-                quad_encoders[i],
-                controls[i]);
-        init_motor(motors[i], 0.0f);
+				quad_encoders[i],
+				controls[i]);
+		init_motor(motors[i], 0.0f);
     }
 
     i2c_bus = new_i2c_bus(&hi2c1);
@@ -272,10 +278,10 @@ int main(void) {
     MX_TIM6_Init();
     /* USER CODE BEGIN 2 */
 
-    // HAL_TIM_Base_Start_IT(&htim6);
     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
     HAL_TIM_Encoder_Start(&htim2, TIM_CHANNEL_ALL);
     HAL_TIM_Base_Start_IT(&htim6);
+    HAL_I2C_EnableListen_IT(&hi2c1);
 
     /* USER CODE END 2 */
 

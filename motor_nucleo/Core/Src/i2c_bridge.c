@@ -96,19 +96,19 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
             return;
         case OPEN:
         case OPEN_PLUS:
-            motor->mode = 0x00;
+            motor->using_open_loop_control = 1;
             memcpy(&(motor->desired_speed), i2c_bus->buffer, 4);
             return;
         case CLOSED:
         case CLOSED_PLUS:
-            motor->mode = 0xFF;
+            motor->using_open_loop_control = 0;
             memcpy(&(motor->control->kF), i2c_bus->buffer, 4);
             memcpy(&(motor->desired_counts), i2c_bus->buffer + 4, 4);
             return;
         case CONFIG_PWM: {
             int max = 0;
             memcpy(&(max), i2c_bus->buffer, 2);
-            motor->speed_limit = (float) (max) / 100;
+            motor->max_pwm = ((float) max) / 100.0f;
             return; // UPDATED
         }
         case CONFIG_K:
@@ -175,7 +175,7 @@ void CH_reset(I2CBus *i2c_bus, Motor *motors[], uint8_t num_motors) {
     i2c_bus->operation = UNKNOWN;
     for (int i = 0; i < num_motors; ++i) {
         motors[i]->desired_speed = 0; // open loop setpoint
-        motors[i]->mode = 0x00;
+        motors[i]->using_open_loop_control = 1;
     }
     HAL_I2C_Init(i2c_bus->i2c_bus_handle);
     HAL_I2C_EnableListen_IT(i2c_bus->i2c_bus_handle);

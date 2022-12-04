@@ -11,11 +11,10 @@ Motor *new_motor(HBridge *_hbridge, LimitSwitch *_fwd_lim, LimitSwitch *_bwd_lim
     motor->control = _control;
     motor->using_open_loop_control = true;
     motor->output_pwm = 0;
-    motor->max_pwm = 0;
+    motor->max_pwm = 1;
     motor->desired_speed = 0;
     motor->desired_counts = 0;
-    motor->speed_limit = 0;
-    motor->limit_enabled = true;
+    motor->limit_enabled = false; // TODO this should be true... testing
 
     return motor;
 }
@@ -25,13 +24,13 @@ void init_motor(Motor *motor, float speed) {
     set_motor_speed(motor, speed);
 }
 
-void update_motor_logic(Motor *motor) {
+void update_motor_target(Motor *motor) {
 	if (motor->using_open_loop_control) {
 		set_motor_speed(motor, motor->desired_speed);
 	}
 	else {
-		move_motor_to_target(motor);
-	}
+        move_motor_to_target(motor);
+    }
 }
 
 // at_fwd_lim = 1 means lim switch activated

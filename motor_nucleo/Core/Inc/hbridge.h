@@ -10,7 +10,7 @@ typedef struct {
     TIM_HandleTypeDef *timer;
     uint32_t channel;
     uint32_t *out_register;
-    uint32_t ARR;
+    uint32_t *ARR;
     Pin *forward_pin;
     Pin *backward_pin;
     uint32_t target_duty_cycle;
@@ -22,7 +22,7 @@ HBridge *new_hbridge(
 		TIM_HandleTypeDef *_timer,
 		uint32_t _channel,
 		uint32_t *_out_register,
-		uint32_t _ARR,
+		uint32_t *_ARR,
 		Pin *fwd,
 		Pin *bwd);
 
