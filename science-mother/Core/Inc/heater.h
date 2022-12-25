@@ -2,6 +2,7 @@
 
 #include "pin_data.h"
 #include "thermistor.h"
+#include <stdbool.h>
 
 #define MAX_HEATER_TEMP 65.0f
 

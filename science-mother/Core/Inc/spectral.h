@@ -6,7 +6,7 @@
 #include "stdlib.h" // for malloc
 
 #define SPECTRAL_DEVICES 1
-#define CHANNELS 6
+#define SPECTRAL_CHANNELS 6
 
 enum {
 	DEV_SEL = 0x4F,
@@ -50,25 +50,12 @@ enum {
 	INT_TIME = 0x05
 };
 
-// Spectral channel. Each sensor has 6 of them
-// We will combine the msb register and lsb register together
-// before sending out the data
-typedef struct
-{
-	uint8_t lsb_register;
-	uint8_t msb_register;
-	uint16_t color_data;
-} Channel;
-
 // AS7262 Spectral sensor
 typedef struct
 {
 	SMBus *smbus;
-	Channel* channels[CHANNELS];
+	uint16_t channel_data[SPECTRAL_CHANNELS];
 } Spectral;
-
-// creates a channel
-Channel* _new_channel(uint16_t channel_data);
 
 // REQUIRES: SMBus declared by user
 // MODIFIES: nothing
@@ -80,17 +67,20 @@ Spectral *new_spectral(SMBus *smbus);
 // EFFECTS: Initializes the spectral device
 void initialize_spectral(Spectral *spectral);
 
+// REQUIRES: spectral is an object
+// MODIFIES: spectral.channels array
+// EFFECTS: Updates values of spectral struct's channels array with data from spectral sensor
+void update_spectral_all_channel_data(Spectral *spectral);
+
 // REQUIRES: spectral is an object and 0 <= channel < 6
 // MODIFIES: spectral.channels array
 // EFFECTS: Updates values of spectral struct's channels array with data from spectral sensor
-void update_channels(Spectral *spectral);
+void update_spectral_channel_data(Spectral *spectral, uint8_t channel);
 
 // REQUIRES: spectral is an object and 0 <= channel < 6
 // MODIFIES: nothing
 // EFFECTS: Returns the spectral data of a particular channel
 uint16_t get_spectral_channel_data(Spectral *spectral, uint8_t channel);
-
-// TODO: function to update all channel data
 
 // REQUIRES: spectral is a Spectral object,
 // v_reg is the virtual register,

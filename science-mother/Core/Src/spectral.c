@@ -1,14 +1,5 @@
 #include "spectral.h"
 
-// creates a channel
-Channel *new_channel(uint8_t msb_r, uint8_t lsb_r) {
-    Channel* ch = malloc(sizeof(Channel));
-	ch->lsb_register = lsb_r;
-	ch->msb_register = msb_r;
-	ch->color_data = 0;
-	return ch;
-}
-
 // REQUIRES: i2c is the i2c channel
 // and uart is the debugging UART channel or NULL,
 // and dma tells if DMA is enabled
@@ -18,9 +9,8 @@ Spectral *new_spectral(SMBus *smbus)
 {
     Spectral *spectral = malloc(sizeof(Spectral));
     spectral->smbus = smbus;
-	uint8_t START_REG = RAW_VALUE_RGA_HIGH;
-	for (uint8_t i = 0; i < CHANNELS; ++i) {
-		spectral->channels[i] = new_channel(START_REG + i * 2, START_REG + i * 2 + 1);
+	for (uint8_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
+		spectral->channel_data[i] = 0;
 	}
     return spectral;
 }
@@ -44,15 +34,32 @@ void initialize_spectral(Spectral *spectral)
 	virtual_write_spectral(spectral, INT_TIME, 0xFF);  // increases integration time
 }
 
+// REQUIRES: spectral is an object
+// MODIFIES: spectral.channels array
+// EFFECTS: Updates values of spectral struct's channels array with data from spectral sensor
+void update_spectral_all_channel_data(Spectral *spectral) {
+	// Update ALL channels in the spectral struct
+	for(int i = 0; i < SPECTRAL_CHANNELS; ++i) {
+		update_spectral_channel_data(spectral, i);
+	}
+}
+
 // REQUIRES: spectral is an object and 0 <= channel < 6
 // MODIFIES: spectral.channels array
 // EFFECTS: Updates values of spectral struct's channels array with data from spectral sensor
-void update_channels(Spectral *spectral) {
-	// Update ALL channels in the spectral struct
-	for(int i = 0; i < CHANNELS; ++i) {
-		 uint16_t high = (virtual_read_spectral(spectral, spectral->channels[i]->msb_register) & 0xFF) << 8;
-		 spectral->channels[i]->color_data = high | (virtual_read_spectral(spectral, spectral->channels[i]->lsb_register) & 0xFF);
+void update_spectral_channel_data(Spectral *spectral, uint8_t channel) {
+
+
+	if (0 <= channel && channel < 6) {
+		uint8_t START_REG = RAW_VALUE_RGA_HIGH;
+
+		uint8_t msb = START_REG + channel * 2;
+		uint8_t lsb = START_REG + channel * 2 + 1;
+
+		 uint16_t high = (virtual_read_spectral(spectral, msb) & 0xFF) << 8;
+		 spectral->channel_data[channel] = high | (virtual_read_spectral(spectral, lsb) & 0xFF);
 	}
+
 }
 
 // REQUIRES: spectral is a Spectral object and 0 <= channel < 6
@@ -60,7 +67,7 @@ void update_channels(Spectral *spectral) {
 // EFFECTS: Returns the spectral data of a particular channel
 uint16_t get_spectral_channel_data(Spectral *spectral, uint8_t channel)
 {
-	return spectral->channels[channel]->color_data;
+	return spectral->channel_data[channel];
 
 }
 

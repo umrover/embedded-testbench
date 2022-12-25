@@ -71,6 +71,7 @@ I2C_HandleTypeDef hi2c1;
 TIM_HandleTypeDef htim1;
 
 UART_HandleTypeDef huart1;
+DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
 
@@ -88,8 +89,12 @@ Spectral* spectral = NULL;
 Thermistor* science_temp_sensors[NUM_SCIENCE_TEMP_SENSORS] = {NULL};
 
 
-float diag_temperatures[3] = {0};
-float diag_currents[3] = {0};
+float diag_temperatures[NUM_DIAG_TEMP_SENSORS] = {0};
+float diag_currents[NUM_DIAG_CURRENT_SENSORS] = {0};
+float science_temperatures[NUM_SCIENCE_TEMP_SENSORS] = {0};
+uint16_t spectral_data[SPECTRAL_CHANNELS] = {0};
+bool heater_auto_shutoff_state = false;
+bool heater_on_state[NUM_HEATERS] = {false};
 
 /* USER CODE END PV */
 
@@ -107,6 +112,9 @@ static void MX_USART1_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+}
 
 /* USER CODE END 0 */
 
@@ -155,8 +163,6 @@ int main(void)
 	servos[0] = new_servo(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1));
 	servos[1] = new_servo(&htim1, TIM_CHANNEL_2, &(TIM1->CCR2));
 	servos[2] = new_servo(&htim1, TIM_CHANNEL_3, &(TIM1->CCR3));
-
-	// TODO: implement spectral code
 
 	smbus = new_smbus(&hi2c1, NULL, false);
 	spectral = new_spectral(smbus);
@@ -224,6 +230,43 @@ int main(void)
 		  diag_currents[i] = get_diag_current_sensor_val(diag_current_sensors[i]);
 	  }
 	  bridge_send_diagnostic(bridge, diag_temperatures, diag_currents);
+
+	  for (size_t i = 0; i < NUM_HEATERS; ++i) {
+		  update_heater_temperature(science_heaters[i]);
+		  update_heater_state(science_heaters[i]);
+		  science_temperatures[i] = get_thermistor_temperature(science_temp_sensors[i]);
+	  }
+	  bridge_send_science_thermistors(bridge, science_temperatures);
+
+	  for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
+		  update_spectral_channel_data(spectral, i);
+		  spectral_data[i] = get_spectral_channel_data(spectral, i);
+	  }
+	  bridge_send_spectral(bridge, spectral_data);
+
+	  bool auto_shutoff_changed = false;
+	  for (size_t i = 0; i < NUM_HEATERS; ++i) {
+		  if (heater_auto_shutoff_state != science_heaters[i]->auto_shutoff) {
+			  heater_auto_shutoff_state = science_heaters[i]->auto_shutoff;
+			  auto_shutoff_changed = true;
+		  }
+	  }
+	  if (auto_shutoff_changed) {
+		  bridge_send_heater_auto_shutoff(bridge, heater_auto_shutoff_state);
+	  }
+
+	  bool heater_on_state_changed = false;
+	  for (size_t i = 0; i < NUM_HEATERS; ++i) {
+		  if (heater_on_state[i] != science_heaters[i]->is_on) {
+			  heater_on_state[i] = science_heaters[i]->is_on;
+			  heater_on_state_changed = true;
+		  }
+	  }
+	  if (heater_on_state_changed) {
+		  bridge_send_heater_state(bridge, heater_on_state);
+	  }
+
+
   }
   /* USER CODE END 3 */
 }
@@ -513,7 +556,7 @@ static void MX_USART1_UART_Init(void)
 
   /* USER CODE END USART1_Init 1 */
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 9600;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -543,6 +586,9 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+  /* DMA1_Channel5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);
 
 }
 
