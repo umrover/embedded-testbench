@@ -1,3 +1,0 @@
-../Core/Src/diag_curr_sensor.c:15:20:new_diag_current_sensor	24	static
-../Core/Src/diag_curr_sensor.c:27:6:update_diag_current_sensor_val	24	static
-../Core/Src/diag_curr_sensor.c:36:7:get_diag_current_sensor_val	16	static
