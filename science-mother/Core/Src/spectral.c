@@ -5,6 +5,7 @@ Channel *new_channel(uint8_t msb_r, uint8_t lsb_r) {
     Channel* ch = malloc(sizeof(Channel));
 	ch->lsb_register = lsb_r;
 	ch->msb_register = msb_r;
+	ch->color_data = 0;
 	return ch;
 }
 
@@ -49,8 +50,8 @@ void initialize_spectral(Spectral *spectral)
 void update_channels(Spectral *spectral) {
 	// Update ALL channels in the spectral struct
 	for(int i = 0; i < CHANNELS; ++i) {
-		virtual_read_spectral(spectral, spectral->channels[i]->msb_register);
-		virtual_read_spectral(spectral, spectral->channels[i]->lsb_register);
+		 uint16_t high = (virtual_read_spectral(spectral, spectral->channels[i].msb_register) & 0xFF) << 8;
+		 spectral->channels[i].color_data = high | (virtual_read_spectral(spectral, spectral->channels[i].lsb_register) & 0xFF);
 	}
 }
 
@@ -59,8 +60,7 @@ void update_channels(Spectral *spectral) {
 // EFFECTS: Returns the spectral data of a particular channel
 uint16_t get_spectral_channel_data(Spectral *spectral, uint8_t channel)
 {
-	uint16_t high = (spectral->channels[channel]->msb_register & 0xFF) << 8;
-    return high | ((spectral->channels[channel]->lsb_register) & 0xFF);
+	return spectral->channels[channel].color_data;
 
 }
 
@@ -75,22 +75,22 @@ void virtual_write_spectral(Spectral *spectral, uint8_t v_reg, uint8_t data) {
     uint8_t status;
 
 	while(1) {
-		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG);
+		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
 		if ((status & I2C_AS72XX_SLAVE_TX_VALID) == 0) {
 			break;
 		}
 		HAL_Delay(5);
 	}
-	smbus_write_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_WRITE_REG, (v_reg | 0x80));
+	smbus_write_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_WRITE_REG, (v_reg | 0x80), DEVICE_SLAVE_ADDRESS);
 
 	while(1) {
-		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG);
+		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
 		if ((status & I2C_AS72XX_SLAVE_TX_VALID) == 0) {
 			break;
 		}
 		HAL_Delay(5);
 	}
-	smbus_write_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_WRITE_REG, data);
+	smbus_write_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_WRITE_REG, data, DEVICE_SLAVE_ADDRESS);
 }
 
 // REQUIRES: spectral is a Spectral object and
@@ -102,7 +102,7 @@ uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg) {
     // Taken from datasheet
     uint8_t status;
 	uint8_t d;
-	status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG);
+	status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
 
 	if ((status & I2C_AS72XX_SLAVE_RX_VALID) != 0) {
 		// d = nucleo_byte_read(I2C_AS72XX_SLAVE_READ_REG);
@@ -110,7 +110,7 @@ uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg) {
 	}
 
 	while(1) {
-		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG);
+		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
 		if ((status & I2C_AS72XX_SLAVE_TX_VALID) == 0) {
 			break;
 		}
@@ -119,13 +119,13 @@ uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg) {
 
 	smbus_write_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_WRITE_REG, v_reg);
 	while(1) {
-		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG);
+		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
 		if ((status & I2C_AS72XX_SLAVE_RX_VALID) != 0) {
 			break;
 		}
 		HAL_Delay(5); //delay for 5 ms
 	}
 
-	d = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_READ_REG);
+	d = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_READ_REG, DEVICE_SLAVE_ADDRESS);
 	return d;
 }

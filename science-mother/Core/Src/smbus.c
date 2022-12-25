@@ -8,7 +8,6 @@
 SMBus *new_smbus(
     I2C_HandleTypeDef *hi2c,
     UART_HandleTypeDef *huart,
-    uint8_t device_addr,
     bool _dma)
 {
     SMBus *smbus = malloc(sizeof(SMBus));
@@ -16,7 +15,6 @@ SMBus *new_smbus(
     smbus->uart = huart;
     smbus->ret = HAL_OK;
     memset(smbus->buf, 0, sizeof(smbus->buf));
-    smbus->device_address = device_addr;
     smbus->DMA = _dma;
 }
 
@@ -44,21 +42,22 @@ int smbus_check_error(SMBus *smbus)
 // EFFECTS: Reads one byte from the register.
 long smbus_read_byte_data(
     SMBus *smbus,
-    char reg)
+    char reg,
+	uint8_t device_address)
 {
     smbus->buf[0] = reg;
     if (!smbus->DMA)
     {
         smbus->ret = HAL_I2C_Master_Transmit(
             smbus->i2c,
-            smbus->device_address << 1,
+            device_address << 1,
             smbus->buf,
             1,
             50);
         smbus_check_error(smbus);
         smbus->ret = HAL_I2C_Master_Receive(
             smbus->i2c,
-            (smbus->device_address << 1) | 1,
+            (device_address << 1) | 1,
             smbus->buf,
             1,
             50);
@@ -67,13 +66,13 @@ long smbus_read_byte_data(
     {
         smbus->ret = HAL_I2C_Master_Transmit_DMA(
             smbus->i2c,
-            smbus->device_address << 1,
+            device_address << 1,
             smbus->buf,
             1);
         smbus_check_error(smbus);
         smbus->ret = HAL_I2C_Master_Receive_DMA(
             smbus->i2c,
-            (smbus->device_address << 1) | 1,
+            (device_address << 1) | 1,
             smbus->buf,
             1);
     }
@@ -88,21 +87,22 @@ long smbus_read_byte_data(
 // EFFECTS: Reads two bytes from the register.
 long smbus_read_word_data(
     SMBus *smbus,
-    char reg)
+    char reg,
+	uint8_t device_address)
 {
     smbus->buf[0] = reg;
     if (!smbus->DMA)
     {
         smbus->ret = HAL_I2C_Master_Transmit(
             smbus->i2c,
-            smbus->device_address << 1,
+            device_address << 1,
             smbus->buf,
             1,
             50);
         smbus_check_error(smbus);
         smbus->ret = HAL_I2C_Master_Receive(
             smbus->i2c,
-            (smbus->device_address << 1) | 1,
+            (device_address << 1) | 1,
             smbus->buf,
             2,
             50);
@@ -111,13 +111,13 @@ long smbus_read_word_data(
     {
         smbus->ret = HAL_I2C_Master_Transmit_DMA(
             smbus->i2c,
-            smbus->device_address << 1,
+            device_address << 1,
             smbus->buf,
             1);
         smbus_check_error(smbus);
         smbus->ret = HAL_I2C_Master_Receive_DMA(
             smbus->i2c,
-            (smbus->device_address << 1) | 1,
+            (device_address << 1) | 1,
             smbus->buf,
             2);
     }
@@ -143,7 +143,8 @@ void smbus_reset(SMBus *smbus)
 void smbus_write_byte_data(
     SMBus *smbus,
     char reg,
-    uint8_t data)
+    uint8_t data,
+	uint8_t device_address)
 {
     smbus->buf[0] = reg;
     smbus->buf[1] = data;
@@ -152,7 +153,7 @@ void smbus_write_byte_data(
     {
         smbus->ret = HAL_I2C_Master_Transmit(
             smbus->i2c,
-            smbus->device_address << 1,
+            device_address << 1,
             smbus->buf,
             2,
             50);
@@ -161,7 +162,7 @@ void smbus_write_byte_data(
     {
         smbus->ret = HAL_I2C_Master_Transmit_DMA(
             smbus->i2c,
-            smbus->device_address << 1,
+            device_address << 1,
             smbus->buf,
             2);
     }
@@ -177,7 +178,8 @@ void smbus_write_byte_data(
 void smbus_write_word_data(
     SMBus *smbus,
     char reg,
-    uint16_t data)
+    uint16_t data,
+	uint8_t device_address)
 {
     smbus->buf[0] = reg;
     smbus->buf[1] = data & 0xFF;
@@ -187,7 +189,7 @@ void smbus_write_word_data(
     {
         smbus->ret = HAL_I2C_Master_Transmit(
             smbus->i2c,
-            smbus->device_address << 1,
+            device_address << 1,
             smbus->buf,
             3,
             50);
@@ -196,7 +198,7 @@ void smbus_write_word_data(
     {
         smbus->ret = HAL_I2C_Master_Transmit_DMA(
             smbus->i2c,
-            smbus->device_address << 1,
+            device_address << 1,
             smbus->buf,
             3);
     }

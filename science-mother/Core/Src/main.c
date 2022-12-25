@@ -158,7 +158,7 @@ int main(void)
 
 	// TODO: implement spectral code
 
-	smbus = new_smbus(&hi2c1, NULL, 0x49, false);
+	smbus = new_smbus(&hi2c1, NULL, false);
 	spectral = new_spectral(smbus);
 
 	science_temp_sensors[0] = new_thermistor(adc_sensor, 0);

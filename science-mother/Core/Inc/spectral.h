@@ -57,19 +57,18 @@ typedef struct
 {
 	uint8_t lsb_register;
 	uint8_t msb_register;
+	uint16_t color_data;
 } Channel;
 
 // AS7262 Spectral sensor
 typedef struct
 {
 	SMBus *smbus;
-	Channel* channels[CHANNELS];
+	Channel channels[CHANNELS];
 } Spectral;
 
 // creates a channel
-Channel* _new_channel(
-	uint8_t msb_r,
-	uint8_t lsb_r);
+Channel* _new_channel(uint16_t channel_data);
 
 // REQUIRES: SMBus declared by user
 // MODIFIES: nothing
