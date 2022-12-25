@@ -64,7 +64,7 @@ typedef struct
 typedef struct
 {
 	SMBus *smbus;
-	Channel channels[CHANNELS];
+	Channel* channels[CHANNELS];
 } Spectral;
 
 // creates a channel

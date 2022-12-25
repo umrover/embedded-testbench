@@ -50,8 +50,8 @@ void initialize_spectral(Spectral *spectral)
 void update_channels(Spectral *spectral) {
 	// Update ALL channels in the spectral struct
 	for(int i = 0; i < CHANNELS; ++i) {
-		 uint16_t high = (virtual_read_spectral(spectral, spectral->channels[i].msb_register) & 0xFF) << 8;
-		 spectral->channels[i].color_data = high | (virtual_read_spectral(spectral, spectral->channels[i].lsb_register) & 0xFF);
+		 uint16_t high = (virtual_read_spectral(spectral, spectral->channels[i]->msb_register) & 0xFF) << 8;
+		 spectral->channels[i]->color_data = high | (virtual_read_spectral(spectral, spectral->channels[i]->lsb_register) & 0xFF);
 	}
 }
 
@@ -60,7 +60,7 @@ void update_channels(Spectral *spectral) {
 // EFFECTS: Returns the spectral data of a particular channel
 uint16_t get_spectral_channel_data(Spectral *spectral, uint8_t channel)
 {
-	return spectral->channels[channel].color_data;
+	return spectral->channels[channel]->color_data;
 
 }
 
@@ -106,7 +106,7 @@ uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg) {
 
 	if ((status & I2C_AS72XX_SLAVE_RX_VALID) != 0) {
 		// d = nucleo_byte_read(I2C_AS72XX_SLAVE_READ_REG);
-		d = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_READ_REG);
+		d = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_READ_REG, DEVICE_SLAVE_ADDRESS);
 	}
 
 	while(1) {
@@ -117,7 +117,7 @@ uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg) {
 		HAL_Delay(5); //delay for 5 ms
 	}
 
-	smbus_write_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_WRITE_REG, v_reg);
+	smbus_write_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_WRITE_REG, v_reg, DEVICE_SLAVE_ADDRESS);
 	while(1) {
 		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
 		if ((status & I2C_AS72XX_SLAVE_RX_VALID) != 0) {
