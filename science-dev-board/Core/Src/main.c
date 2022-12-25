@@ -161,7 +161,7 @@ int main(void)
 	servos[2] = new_servo(&htim3, TIM_CHANNEL_3, &(TIM3->CCR3));
 
 	// TODO: implement spectral code
-	smbus = new_smbus(&hi2c2, NULL, SPECTRAL_ADDRESS, false);
+	smbus = new_smbus(&hi2c2, NULL, 0x49, false);
 	spectral = new_spectral(smbus);
 
 	science_temp_sensors[0] = new_thermistor(adc_sensor_1, 0);
