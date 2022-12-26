@@ -40,13 +40,13 @@ void receive_bridge_servo_cmd(Bridge *bridge, Servo *servos[3]);
 // REQUIRES: bridge and heaters are objects
 // MODIFIES: Nothing
 // EFFECTS: Receives the message if it is an auto shutoff message in the format:
-// "$AUTOSHUTOFF,<VAL>"
+// "$AUTO_SHUTOFF,<VAL>"
 void receive_bridge_auto_shutoff_cmd(Bridge *bridge, Heater *heaters[3]);
 
 // REQUIRES: bridge and heaters are objects
 // MODIFIES: Nothing
 // EFFECTS: Receives the message if it is a heater message in the format:
-// "$HEATER,<DEVICE>,<ENABLE>"
+// "$HEATER_CMD,<DEVICE>,<ENABLE>"
 void receive_bridge_heater_cmd(Bridge *bridge, Heater *heaters[3]);
 
 // REQUIRES: nothing
@@ -70,7 +70,7 @@ void bridge_send_science_thermistors(Bridge *bridge, float temps[3]);
 // REQUIRES: nothing
 // MODIFIES: nothing
 // EFFECTS: Sends heater auto shutoff in format:
-// "$AUTOSHUTOFF,<VAL>"
+// "$AUTO_SHUTOFF,<VAL>"
 void bridge_send_heater_auto_shutoff(Bridge *bridge, bool state);
 
 // REQUIRES: nothing

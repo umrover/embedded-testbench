@@ -92,7 +92,7 @@ void receive_bridge_servo_cmd(Bridge *bridge, Servo *servos[3]) {
 // REQUIRES: bridge and heaters are objects
 // MODIFIES: Nothing
 // EFFECTS: Receives the message if it is an auto shutoff message in the format:
-// "$AUTOSHUTOFF,<VAL>"
+// "$AUTO_SHUTOFF,<VAL>"
 void receive_bridge_auto_shutoff_cmd(Bridge *bridge, Heater *heaters[3]) {
 	if (bridge->uart_buffer[0] != '$' || bridge->uart_buffer[1] != 'A') {
 		// This should be asserted.
@@ -102,7 +102,7 @@ void receive_bridge_auto_shutoff_cmd(Bridge *bridge, Heater *heaters[3]) {
 
 	char *identifier = strtok(bridge->uart_buffer, ",");
 
-	if (!strcmp(identifier,"$AUTOSHUTOFF")){
+	if (!strcmp(identifier,"$AUTO_SHUTOFF")){
 		bool state = false;
 
 		state = atoi(strtok(NULL, ","));
@@ -118,7 +118,7 @@ void receive_bridge_auto_shutoff_cmd(Bridge *bridge, Heater *heaters[3]) {
 // REQUIRES: bridge and heaters are objects
 // MODIFIES: Nothing
 // EFFECTS: Receives the message if it is a heater message in the format:
-// "$HEATER,<DEVICE>,<ENABLE>"
+// "$HEATER_CMD,<DEVICE>,<ENABLE>"
 void receive_bridge_heater_cmd(Bridge *bridge, Heater *heaters[3]) {
 	if (bridge->uart_buffer[0] != '$' || bridge->uart_buffer[1] != 'H') {
 		// This should be asserted.
@@ -128,7 +128,7 @@ void receive_bridge_heater_cmd(Bridge *bridge, Heater *heaters[3]) {
 
 	char *identifier = strtok(bridge->uart_buffer, ",");
 
-	if (!strcmp(identifier,"$HEATER")){
+	if (!strcmp(identifier,"$HEATER_CMD")){
 		int device = -1;
 		bool state = false;
 
@@ -191,10 +191,10 @@ void bridge_send_science_thermistors(Bridge *bridge, float temps[3])
 // REQUIRES: nothing
 // MODIFIES: nothing
 // EFFECTS: Sends heater auto shutoff in format:
-// "$AUTOSHUTOFF,<VAL>"
+// "$AUTO_SHUTOFF,<VAL>"
 void bridge_send_heater_auto_shutoff(Bridge *bridge, bool state) {
 	char msg[150];
-	snprintf(msg, sizeof(msg), "$AUTOSHUTOFF,%i", state);
+	snprintf(msg, sizeof(msg), "$AUTO_SHUTOFF,%i", state);
 	HAL_Delay(100);
 	HAL_UART_Transmit_IT(bridge->uart, (uint8_t *)msg, 150);
 	HAL_Delay(100);
