@@ -6,10 +6,140 @@
 Bridge *new_bridge(UART_HandleTypeDef *_uart)
 {
     Bridge *bridge = (Bridge *)malloc(sizeof(Bridge));
-
     bridge->uart = _uart;
+	for (int i = 0; i < 30; ++i) {
+		bridge->uart_buffer[i] = 0;
+	}
+	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
 
     return bridge;
+}
+
+// REQUIRES: bridge, heater, mosfet_device, and servo are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the message and processes it
+void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12], Servo *servos[3]) {
+	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
+	if (bridge->uart_buffer[0] == '$') {
+		// Expect it always to be a $ sign.
+		if (bridge->uart_buffer[1] == 'M') {
+			receive_bridge_mosfet_cmd(bridge, mosfet_pins);
+		}
+		else if (bridge->uart_buffer[1] == 'S') {
+			receive_bridge_servo_cmd(bridge, servos);
+		}
+		else if (bridge->uart_buffer[1] == 'A') {
+			receive_bridge_auto_shutoff_cmd(bridge, heaters);
+		}
+		else if (bridge->uart_buffer[1] == 'H') {
+			receive_bridge_heater_cmd(bridge, heaters);
+		}
+	}
+}
+
+// REQUIRES: bridge and mosfet_device are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the message if it is a mosfet message in the format:
+// "$MOSFET,<DEVICE>,<ENABLE>"
+void receive_bridge_mosfet_cmd(Bridge *bridge, PinData *mosfet_pins[12]) {
+	if (bridge->uart_buffer[0] != '$' || bridge->uart_buffer[1] != 'M') {
+		// This should be asserted.
+		// The function should not have been called if it was not the correct message
+		return;
+	}
+
+	char *identifier = strtok(bridge->uart_buffer, ",");
+
+	if (!strcmp(identifier,"$MOSFET")){
+		int device = -1;
+		bool state = false;
+
+		device = atoi(strtok(NULL, ","));
+		state = atoi(strtok(NULL, ","));
+
+		if (0 <= device && device < 12) {
+			set_pin_value(mosfet_pins[device], state);
+		}
+	}
+}
+
+// REQUIRES: bridge and servos are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the message if it is a servo message in the format:
+// "$SERVO,<SERVO ID>,<ANGLE>"
+void receive_bridge_servo_cmd(Bridge *bridge, Servo *servos[3]) {
+	if (bridge->uart_buffer[0] != '$' || bridge->uart_buffer[1] != 'S') {
+		// This should be asserted.
+		// The function should not have been called if it was not the correct message
+		return;
+	}
+
+	char *identifier = strtok(bridge->uart_buffer, ",");
+
+	if (!strcmp(identifier,"$SERVO")){
+		int device = -1;
+		int angle = 0;
+
+		device = atoi(strtok(NULL, ","));
+		angle = atoi(strtok(NULL, ","));
+
+		if (0 <= device && device < 3) {
+			set_servo_angle(servos[device], angle);
+		}
+	}
+}
+
+// REQUIRES: bridge and heaters are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the message if it is an auto shutoff message in the format:
+// "$AUTOSHUTOFF,<VAL>"
+void receive_bridge_auto_shutoff_cmd(Bridge *bridge, Heater *heaters[3]) {
+	if (bridge->uart_buffer[0] != '$' || bridge->uart_buffer[1] != 'A') {
+		// This should be asserted.
+		// The function should not have been called if it was not the correct message
+		return;
+	}
+
+	char *identifier = strtok(bridge->uart_buffer, ",");
+
+	if (!strcmp(identifier,"$AUTOSHUTOFF")){
+		bool state = false;
+
+		state = atoi(strtok(NULL, ","));
+
+		for (size_t i = 0; i < 3; ++i) {
+			heaters[i]->auto_shutoff = state;
+			heaters[i]->send_auto_shutoff = true;
+		}
+
+	}
+}
+
+// REQUIRES: bridge and heaters are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the message if it is a heater message in the format:
+// "$HEATER,<DEVICE>,<ENABLE>"
+void receive_bridge_heater_cmd(Bridge *bridge, Heater *heaters[3]) {
+	if (bridge->uart_buffer[0] != '$' || bridge->uart_buffer[1] != 'H') {
+		// This should be asserted.
+		// The function should not have been called if it was not the correct message
+		return;
+	}
+
+	char *identifier = strtok(bridge->uart_buffer, ",");
+
+	if (!strcmp(identifier,"$HEATER")){
+		int device = -1;
+		bool state = false;
+
+		device = atoi(strtok(NULL, ","));
+		state = atoi(strtok(NULL, ","));
+
+		if (0 <= device && device < 3) {
+			change_heater_state(heaters[device], state);
+			heaters[device]->send_on = true;
+		}
+	}
 }
 
 // REQUIRES: nothing

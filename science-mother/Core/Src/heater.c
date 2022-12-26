@@ -30,7 +30,8 @@ Heater *new_heater(PinData *_heater_pin, Thermistor *_thermistor)
     heater->thermistor = _thermistor;
     heater->auto_shutoff = true;
     heater->is_on = false;
-
+    heater->send_auto_shutoff = true;
+    heater->send_on = true;
     return heater;
 }
 
@@ -50,6 +51,7 @@ void update_heater_state(Heater *heater)
 {
     if (heater->is_on && get_thermistor_temperature(heater->thermistor) >= MAX_HEATER_TEMP && heater->auto_shutoff)
     {
+    	heater->send_on = true;
         turn_heater_off(heater);
     }
 }
@@ -63,11 +65,17 @@ void change_heater_state(Heater *heater, bool state)
 {
     if (!state)
     {
-        turn_heater_off(heater);
+    	if (heater->is_on) {
+    		heater->send_on = true;
+    		turn_heater_off(heater);
+    	}
     }
     else if (state && (get_thermistor_temperature(heater->thermistor) < MAX_HEATER_TEMP || !heater->auto_shutoff))
     {
-        turn_heater_on(heater);
+    	if (!heater->is_on) {
+    		heater->send_on = true;
+			turn_heater_on(heater);
+    	}
     }
 }
 

@@ -62,7 +62,8 @@ void update_thermistor_temperature(Thermistor* therm) {
     } else if (R_t < 681.6f && R_t >= 187.0f){
         const_set = 3;
     } else {
-        // TODO error out cause OOB temp
+        // Error out cause OOB temp
+    	return;
     }
     float lnR_t_over_R_25 = log(R_t / THERMISTOR_R_25);
 
@@ -77,8 +78,4 @@ void update_thermistor_temperature(Thermistor* therm) {
 // EFFECTS: Get temperature of thermistor in degrees Celsius
 float get_thermistor_temperature(Thermistor* therm) {
 	return therm->temperature;
-}
-
-void deleteThermistors(Thermistor* thermistors){
-    free(thermistors);
 }

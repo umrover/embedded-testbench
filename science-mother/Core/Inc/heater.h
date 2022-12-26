@@ -1,8 +1,9 @@
 #pragma once
 
+#include <stdbool.h>
+
 #include "pin_data.h"
 #include "thermistor.h"
-#include <stdbool.h>
 
 #define MAX_HEATER_TEMP 65.0f
 
@@ -12,6 +13,8 @@ typedef struct
     Thermistor *thermistor;
     bool auto_shutoff;
     bool is_on;
+    bool send_auto_shutoff;
+    bool send_on;
 } Heater;
 
 // REQUIRES: _heater_pin is a pointer to a PinData object and therm

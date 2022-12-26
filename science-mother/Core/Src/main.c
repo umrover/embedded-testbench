@@ -114,6 +114,7 @@ static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN 0 */
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
+	receive_bridge(bridge, science_heaters, mosfet_pins, servos);
 }
 
 /* USER CODE END 0 */
@@ -244,28 +245,29 @@ int main(void)
 	  }
 	  bridge_send_spectral(bridge, spectral_data);
 
-	  bool auto_shutoff_changed = false;
+	  bool send_auto_shutoff = false;
 	  for (size_t i = 0; i < NUM_HEATERS; ++i) {
-		  if (heater_auto_shutoff_state != science_heaters[i]->auto_shutoff) {
-			  heater_auto_shutoff_state = science_heaters[i]->auto_shutoff;
-			  auto_shutoff_changed = true;
+		  heater_auto_shutoff_state = science_heaters[i]->auto_shutoff;
+		  if (science_heaters[i]->send_auto_shutoff) {
+			  science_heaters[i]->send_auto_shutoff = false;
+			  send_auto_shutoff = true;
 		  }
 	  }
-	  if (auto_shutoff_changed) {
+	  if (send_auto_shutoff) {
 		  bridge_send_heater_auto_shutoff(bridge, heater_auto_shutoff_state);
 	  }
 
-	  bool heater_on_state_changed = false;
+	  bool send_heater_on = false;
 	  for (size_t i = 0; i < NUM_HEATERS; ++i) {
-		  if (heater_on_state[i] != science_heaters[i]->is_on) {
-			  heater_on_state[i] = science_heaters[i]->is_on;
-			  heater_on_state_changed = true;
+		  heater_on_state[i] = science_heaters[i]->is_on;
+		  if (science_heaters[i]->send_on) {
+			  science_heaters[i]->send_on = false;
+			  send_heater_on = true;
 		  }
 	  }
-	  if (heater_on_state_changed) {
+	  if (send_heater_on) {
 		  bridge_send_heater_state(bridge, heater_on_state);
 	  }
-
 
   }
   /* USER CODE END 3 */

@@ -33,5 +33,3 @@ void update_thermistor_temperature(Thermistor* therm);
 // MODIFIES: nothing
 // EFFECTS: Get temperature of thermistor in degrees Celsius
 float get_thermistor_temperature(Thermistor* therm);
-
-void deleteThermistors(Thermistor* thermistors);

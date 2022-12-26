@@ -5,16 +5,49 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "heater.h"
+#include "servo.h"
+
 // The communication bridge between the Jetson and the chip
 typedef struct
 {
 	UART_HandleTypeDef *uart;
+	char uart_buffer[30];
 } Bridge;
 
 // REQUIRES: uart is the uart channel
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Bridge object
 Bridge *new_bridge(UART_HandleTypeDef *_uart);
+
+// REQUIRES: bridge, heater, mosfet_device, and servo are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the message and processes it
+void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12], Servo *servos[3]);
+
+// REQUIRES: bridge and mosfet_device are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the message if it is a mosfet message in the format:
+// "$MOSFET,<DEVICE>,<ENABLE>"
+void receive_bridge_mosfet_cmd(Bridge *bridge, PinData *mosfet_pins[12]);
+
+// REQUIRES: bridge and servos are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the message if it is a servo message in the format:
+// "$SERVO,<SERVO ID>,<ANGLE>"
+void receive_bridge_servo_cmd(Bridge *bridge, Servo *servos[3]);
+
+// REQUIRES: bridge and heaters are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the message if it is an auto shutoff message in the format:
+// "$AUTOSHUTOFF,<VAL>"
+void receive_bridge_auto_shutoff_cmd(Bridge *bridge, Heater *heaters[3]);
+
+// REQUIRES: bridge and heaters are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the message if it is a heater message in the format:
+// "$HEATER,<DEVICE>,<ENABLE>"
+void receive_bridge_heater_cmd(Bridge *bridge, Heater *heaters[3]);
 
 // REQUIRES: nothing
 // MODIFIES: nothing
