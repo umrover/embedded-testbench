@@ -239,11 +239,11 @@ int main(void)
 	  }
 	  bridge_send_science_thermistors(bridge, science_temperatures);
 
-	  for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
-		  update_spectral_channel_data(spectral, i);
-		  spectral_data[i] = get_spectral_channel_data(spectral, i);
-	  }
-	  bridge_send_spectral(bridge, spectral_data);
+//	  for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
+//		  update_spectral_channel_data(spectral, i);
+//		  spectral_data[i] = get_spectral_channel_data(spectral, i);
+//	  }
+//	  bridge_send_spectral(bridge, spectral_data);
 
 	  bool send_auto_shutoff = false;
 	  for (size_t i = 0; i < NUM_HEATERS; ++i) {
