@@ -8,8 +8,8 @@
 #include <stdio.h>
 #include <string.h>
 
-#define DIAG_TEMP_COEFFICIENT 19.5f // mV/Celsius
-#define DIAG_TEMP_ZERO_DEGREE_OUTPUT 400 //mV
+#define DIAG_TEMP_COEFFICIENT 0.0195f // V / Celsius
+#define DIAG_TEMP_ZERO_DEGREE_OUTPUT 0.4f // V
 
 // Part Link
 // https://www.digikey.com/en/products/detail/microchip-technology/MCP9701T-E-TT/1987445

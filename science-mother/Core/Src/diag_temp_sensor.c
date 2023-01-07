@@ -26,7 +26,7 @@ DiagTempSensor* new_diag_temp_sensor(ADCSensor* adc_sensor, int channel) {
 // EFFECTS: updates the sensor value
 void update_diag_temp_sensor_val(DiagTempSensor* sensor) {
     // Vout = T(coefficient) * T(ambient) + V0 then solve for T(ambient)
-	float measured_voltage = get_adc_sensor_value(sensor->adc_sensor, sensor->channel) * 3.3 / 4096;
+	float measured_voltage = get_adc_sensor_value(sensor->adc_sensor, sensor->channel) * 3.3f / 4096.0f;
     sensor->temp = (measured_voltage - DIAG_TEMP_ZERO_DEGREE_OUTPUT) / DIAG_TEMP_COEFFICIENT;
 }
 
