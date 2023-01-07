@@ -208,11 +208,14 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+
 	  /*
 	   * In a while loop, we will need to get the following data and send it over:
 	   * Diagnostic Temperatures and Currents

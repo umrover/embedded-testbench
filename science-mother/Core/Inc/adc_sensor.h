@@ -7,7 +7,7 @@
 typedef struct {
 	ADC_HandleTypeDef *adc;
 	uint8_t total_channels;
-	uint32_t values[10];
+	uint16_t values[10];
 } ADCSensor;
 
 /** PUBLIC FUNCTIONS **/
