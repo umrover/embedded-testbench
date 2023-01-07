@@ -204,20 +204,18 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
+  receive_bridge(bridge, science_heaters, mosfet_pins, servos);
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  int counter = 0;
 
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  int val = counter++ % 2;
-	  set_pin_value(mosfet_pins[0], val);
-
 
 	  /*
 	   * In a while loop, we will need to get the following data and send it over:
@@ -245,11 +243,11 @@ int main(void)
 	  }
 	  bridge_send_science_thermistors(bridge, science_temperatures);
 
-	  for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
-		  update_spectral_channel_data(spectral, i);
-		  spectral_data[i] = get_spectral_channel_data(spectral, i);
-	  }
-	  bridge_send_spectral(bridge, spectral_data);
+//	  for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
+//		  update_spectral_channel_data(spectral, i);
+//		  spectral_data[i] = get_spectral_channel_data(spectral, i);
+//	  }
+//	  bridge_send_spectral(bridge, spectral_data);
 
 	  bool send_auto_shutoff = false;
 	  for (size_t i = 0; i < NUM_HEATERS; ++i) {
