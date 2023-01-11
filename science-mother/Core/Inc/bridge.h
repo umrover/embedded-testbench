@@ -12,7 +12,7 @@
 typedef struct
 {
 	UART_HandleTypeDef *uart;
-	char uart_buffer[150];
+	char uart_buffer[30];
 } Bridge;
 
 // REQUIRES: uart is the uart channel
