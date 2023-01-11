@@ -46,12 +46,12 @@ void update_motor_speed(Motor *motor) {
 		} else if (motor->backward_limit_switch->is_activated && (motor->desired_speed < 0)) {
 			change_hbridge_pwm(motor->hbridge, 0);
 		} else {
-			change_hbridge_pwm(motor->hbridge, fabs(motor->desired_speed));
+			change_hbridge_pwm(motor->hbridge, fabsf(motor->desired_speed));
 		}
 		change_hbridge_dir_val(motor->hbridge, motor->desired_speed > 0);
 	}
 	else {
-		change_hbridge_pwm(motor->hbridge, fabs(motor->desired_speed));
+		change_hbridge_pwm(motor->hbridge, fabsf(motor->desired_speed));
 		change_hbridge_dir_val(motor->hbridge, motor->desired_speed > 0);
 	}
 
