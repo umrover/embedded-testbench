@@ -31,7 +31,7 @@ void change_hbridge_pwm(HBridge *hbridge, float duty_cycle) {
         duty_cycle = 1.0;
     }
 
-    hbridge->target_duty_cycle = duty_cycle * (float) *hbridge->ARR;
+    hbridge->target_duty_cycle = duty_cycle * (float) (*hbridge->ARR+1);
 
     *(hbridge->out_register) = hbridge->target_duty_cycle;
 
