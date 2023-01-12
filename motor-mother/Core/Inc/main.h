@@ -59,6 +59,9 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define I2C_ADDRESS 0x20
+#define COUNTER_LOOP_PERIOD 1000
+#define QUADRATURE_FILTER 8
 #define QUAD_A_1_Pin GPIO_PIN_0
 #define QUAD_A_1_GPIO_Port GPIOA
 #define QUAD_B_1_Pin GPIO_PIN_1

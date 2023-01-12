@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "motor.h"
+#include "i2c_bridge.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -31,6 +32,9 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+
+#define NUM_MOTORS 6
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -47,10 +51,28 @@ TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 TIM_HandleTypeDef htim15;
+TIM_HandleTypeDef htim16;
 
 UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
+
+Pin *hbridge_forward_pins[NUM_MOTORS] = {NULL};
+Pin *hbridge_backward_pins[NUM_MOTORS] = {NULL};
+HBridge *hbridges[NUM_MOTORS] = {NULL};
+
+Pin *forward_limit_switch_pins[NUM_MOTORS] = {NULL};
+Pin *backward_limit_switch_pins[NUM_MOTORS] = {NULL};
+
+LimitSwitch *forward_limit_switches[NUM_MOTORS] = {NULL};
+LimitSwitch *backward_limit_switches[NUM_MOTORS] = {NULL};
+
+QuadEncoder *quad_encoders[NUM_MOTORS] = {NULL};
+
+ClosedLoopControl *controls[NUM_MOTORS] = {NULL};
+
+Motor *motors[NUM_MOTORS] = {NULL};
+I2CBus *i2c_bus;
 
 /* USER CODE END PV */
 
@@ -65,12 +87,81 @@ static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM15_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_TIM16_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+    static float prev_speed = -1;
+    if (htim == &htim16) {
+        for (size_t i = 0; i < NUM_MOTORS; ++i) {
+            if (quad_encoders[i]) {
+                update_quad_encoder(quad_encoders[i]);
+            }
+            if (forward_limit_switches[i]) {
+                update_limit_switch(forward_limit_switches[i]);
+            }
+            if (backward_limit_switches[i]) {
+                update_limit_switch(backward_limit_switches[i]);
+            }
+            if (motors[i]->desired_speed != prev_speed) {
+                prev_speed = motors[i]->desired_speed;
+                update_motor_target(motors[i]);
+                update_motor_speed(motors[i]);
+            }
+        }
+    }
+}
+
+void HAL_I2C_AddrCallback(I2C_HandleTypeDef *hi2c, uint8_t TransferDirection, uint16_t AddrMatchCode) {
+    i2c_bus->motor_id = (0x000F & (AddrMatchCode >> 1));
+    if (TransferDirection == I2C_DIRECTION_TRANSMIT) {
+        HAL_I2C_Slave_Seq_Receive_IT(i2c_bus->i2c_bus_handle, i2c_bus->buffer, 1, I2C_LAST_FRAME);
+        i2c_bus->operation = UNKNOWN;
+    } else {
+        if (i2c_bus->motor_id < NUM_MOTORS) {
+            CH_prepare_send(i2c_bus, motors[i2c_bus->motor_id]);
+        }
+        uint8_t bytes_to_send = CH_num_send(i2c_bus);
+        if (bytes_to_send != 0) {
+            HAL_I2C_Slave_Seq_Transmit_IT(i2c_bus->i2c_bus_handle, i2c_bus->buffer, bytes_to_send, I2C_LAST_FRAME);
+        }
+    }
+    //HAL_IWDG_Refresh(watch_dog_handle);
+    i2c_bus->tick = 0;
+}
+
+void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c) {
+    if (i2c_bus->operation == UNKNOWN) {
+        i2c_bus->operation = i2c_bus->buffer[0];
+        uint8_t bytes_to_recieve = CH_num_receive(i2c_bus);
+        if (bytes_to_recieve != 0) {
+            HAL_I2C_Slave_Seq_Receive_IT(i2c_bus->i2c_bus_handle, i2c_bus->buffer, bytes_to_recieve, I2C_LAST_FRAME);
+        } else {
+            if (i2c_bus->motor_id < NUM_MOTORS) {
+                CH_process_received(i2c_bus, motors[i2c_bus->motor_id]);
+            }
+        }
+    } else {
+        if (i2c_bus->motor_id < NUM_MOTORS) {
+            CH_process_received(i2c_bus, motors[i2c_bus->motor_id]);
+        }
+    }
+}
+
+void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c) {
+    CH_reset(i2c_bus, motors, NUM_MOTORS);
+}
+
+void HAL_I2C_ListenCpltCallback(I2C_HandleTypeDef *hi2c) {
+    HAL_I2C_EnableListen_IT(i2c_bus->i2c_bus_handle);
+}
+
 
 /* USER CODE END 0 */
 
@@ -110,7 +201,92 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM15_Init();
   MX_USART1_UART_Init();
+  MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
+
+
+  hbridge_forward_pins[0] = new_pin(MOTOR_DIR_0_GPIO_Port, MOTOR_DIR_0_Pin);
+  hbridge_forward_pins[1] = new_pin(MOTOR_DIR_1_GPIO_Port, MOTOR_DIR_1_Pin);
+  hbridge_forward_pins[2] = new_pin(MOTOR_DIR_2_GPIO_Port, MOTOR_DIR_2_Pin);
+  hbridge_forward_pins[3] = new_pin(MOTOR_DIR_3_GPIO_Port, MOTOR_DIR_3_Pin);
+  hbridge_forward_pins[4] = new_pin(MOTOR_DIR_4_GPIO_Port, MOTOR_DIR_4_Pin);
+  hbridge_forward_pins[5] = new_pin(MOTOR_DIR_5_GPIO_Port, MOTOR_DIR_5_Pin);
+
+
+  hbridge_backward_pins[0] = new_pin(MOTOR_NDIR_0_GPIO_Port, MOTOR_NDIR_0_Pin);
+  hbridge_backward_pins[1] = new_pin(MOTOR_NDIR_1_GPIO_Port, MOTOR_NDIR_1_Pin);
+  hbridge_backward_pins[2] = new_pin(MOTOR_NDIR_2_GPIO_Port, MOTOR_NDIR_2_Pin);
+  hbridge_backward_pins[3] = new_pin(MOTOR_NDIR_3_GPIO_Port, MOTOR_NDIR_3_Pin);
+  hbridge_backward_pins[4] = new_pin(MOTOR_NDIR_4_GPIO_Port, MOTOR_NDIR_4_Pin);
+  hbridge_backward_pins[5] = new_pin(MOTOR_NDIR_5_GPIO_Port, MOTOR_NDIR_5_Pin);
+
+  hbridges[0] = new_hbridge(&htim4, TIM_CHANNEL_1, &(TIM4->CCR1), &(TIM4->ARR), hbridge_forward_pins[0],
+                            hbridge_backward_pins[0]);
+	hbridges[1] = new_hbridge(&htim4, TIM_CHANNEL_2, &(TIM4->CCR2), TIM4->ARR, hbridge_forward_pins[1], hbridge_backward_pins[1]);
+	hbridges[2] = new_hbridge(&htim4, TIM_CHANNEL_3, &(TIM4->CCR3), TIM4->ARR, hbridge_forward_pins[2], hbridge_backward_pins[2]);
+	hbridges[3] = new_hbridge(&htim4, TIM_CHANNEL_4, &(TIM4->CCR4), TIM4->ARR, hbridge_forward_pins[3], hbridge_backward_pins[3]);
+	hbridges[4] = new_hbridge(&htim15, TIM_CHANNEL_1, &(TIM15->CCR1), TIM15->ARR, hbridge_forward_pins[4], hbridge_backward_pins[4]);
+	hbridges[5] = new_hbridge(&htim15, TIM_CHANNEL_2, &(TIM15->CCR2), TIM15->ARR, hbridge_forward_pins[5], hbridge_backward_pins[5]);
+
+  for (size_t i = 0; i < NUM_MOTORS; ++i) {
+      if (hbridges[i]) {
+          init_hbridge(hbridges[i], 0.0f, true);
+      }
+  }
+
+  forward_limit_switch_pins[0] = new_pin(LIMIT_A_0_GPIO_Port, LIMIT_A_0_Pin);
+  forward_limit_switch_pins[1] = new_pin(LIMIT_A_1_GPIO_Port, LIMIT_A_1_Pin);
+  forward_limit_switch_pins[2] = new_pin(LIMIT_A_2_GPIO_Port, LIMIT_A_2_Pin);
+  forward_limit_switch_pins[3] = new_pin(LIMIT_A_3_GPIO_Port, LIMIT_A_3_Pin);
+  forward_limit_switch_pins[4] = new_pin(LIMIT_A_4_GPIO_Port, LIMIT_A_4_Pin);
+  forward_limit_switch_pins[5] = new_pin(LIMIT_A_5_GPIO_Port, LIMIT_A_5_Pin);
+
+  backward_limit_switch_pins[0] = new_pin(LIMIT_B_0_GPIO_Port, LIMIT_B_0_Pin);
+  backward_limit_switch_pins[1] = new_pin(LIMIT_B_1_GPIO_Port, LIMIT_B_1_Pin);
+  backward_limit_switch_pins[2] = new_pin(LIMIT_B_2_GPIO_Port, LIMIT_B_2_Pin);
+  backward_limit_switch_pins[3] = new_pin(LIMIT_B_3_GPIO_Port, LIMIT_B_3_Pin);
+  backward_limit_switch_pins[4] = new_pin(LIMIT_B_4_GPIO_Port, LIMIT_B_4_Pin);
+  backward_limit_switch_pins[5] = new_pin(LIMIT_B_5_GPIO_Port, LIMIT_B_5_Pin);
+
+  for (size_t i = 0; i < NUM_MOTORS; ++i) {
+      if (forward_limit_switches[i]) {
+          forward_limit_switches[i] = new_limit_switch(forward_limit_switch_pins[i]);
+      }
+      if (backward_limit_switches[i]) {
+          backward_limit_switches[i] = new_limit_switch(backward_limit_switch_pins[i]);
+      }
+  }
+
+  quad_encoders[0] = new_quad_encoder(&htim1, TIM1);
+  quad_encoders[1] = new_quad_encoder(&htim2, TIM2);
+  quad_encoders[2] = new_quad_encoder(&htim3, TIM3);
+//	quad_encoders[3] = new_quad_encoder(&htimX, TIMX);
+//	quad_encoders[4] = new_quad_encoder(&htimX, TIMX);
+//	quad_encoders[5] = new_quad_encoder(&htimX, TIMX);
+
+  for (size_t i = 0; i < NUM_MOTORS; ++i) {
+      if (quad_encoders[i]) {
+          init_quad_encoder(quad_encoders[i]);
+      }
+  }
+
+  for (size_t i = 0; i < NUM_MOTORS; ++i) {
+      controls[i] = new_closed_loop_control(0.01f, 0.0f, 0.0f, 0.0f);
+  }
+
+  for (size_t i = 0; i < NUM_MOTORS; ++i) {
+      motors[i] = new_motor(
+              hbridges[i],
+              forward_limit_switches[i],
+              backward_limit_switches[i],
+              quad_encoders[i],
+              controls[i]);
+      init_motor(motors[i], 0.0f);
+  }
+
+  i2c_bus = new_i2c_bus(&hi2c1);
+
+
 
   /* USER CODE END 2 */
 
@@ -181,8 +357,8 @@ static void MX_I2C1_Init(void)
   hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
+  hi2c1.Init.OwnAddress2 = 64;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
   if (HAL_I2C_Init(&hi2c1) != HAL_OK)
@@ -258,11 +434,11 @@ static void MX_TIM1_Init(void)
   sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC1Filter = 0;
+  sConfig.IC1Filter = QUADRATURE_FILTER;
   sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC2Filter = 0;
+  sConfig.IC2Filter = QUADRATURE_FILTER;
   if (HAL_TIM_Encoder_Init(&htim1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -307,11 +483,11 @@ static void MX_TIM2_Init(void)
   sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC1Filter = 0;
+  sConfig.IC1Filter = QUADRATURE_FILTER;
   sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC2Filter = 0;
+  sConfig.IC2Filter = QUADRATURE_FILTER;
   if (HAL_TIM_Encoder_Init(&htim2, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -356,11 +532,11 @@ static void MX_TIM3_Init(void)
   sConfig.IC1Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC1Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC1Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC1Filter = 0;
+  sConfig.IC1Filter = QUADRATURE_FILTER;
   sConfig.IC2Polarity = TIM_ICPOLARITY_RISING;
   sConfig.IC2Selection = TIM_ICSELECTION_DIRECTTI;
   sConfig.IC2Prescaler = TIM_ICPSC_DIV1;
-  sConfig.IC2Filter = 0;
+  sConfig.IC2Filter = QUADRATURE_FILTER;
   if (HAL_TIM_Encoder_Init(&htim3, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -504,6 +680,38 @@ static void MX_TIM15_Init(void)
 
   /* USER CODE END TIM15_Init 2 */
   HAL_TIM_MspPostInit(&htim15);
+
+}
+
+/**
+  * @brief TIM16 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM16_Init(void)
+{
+
+  /* USER CODE BEGIN TIM16_Init 0 */
+
+  /* USER CODE END TIM16_Init 0 */
+
+  /* USER CODE BEGIN TIM16_Init 1 */
+
+  /* USER CODE END TIM16_Init 1 */
+  htim16.Instance = TIM16;
+  htim16.Init.Prescaler = 7;
+  htim16.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim16.Init.Period = COUNTER_LOOP_PERIOD;
+  htim16.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim16.Init.RepetitionCounter = 0;
+  htim16.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim16) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM16_Init 2 */
+
+  /* USER CODE END TIM16_Init 2 */
 
 }
 
