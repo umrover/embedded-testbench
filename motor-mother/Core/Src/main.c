@@ -182,29 +182,6 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
-  SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_I2C1_Init();
-  MX_I2C2_Init();
-  MX_TIM1_Init();
-  MX_TIM2_Init();
-  MX_TIM3_Init();
-  MX_TIM4_Init();
-  MX_TIM15_Init();
-  MX_USART1_UART_Init();
-  MX_TIM16_Init();
-  /* USER CODE BEGIN 2 */
-
-
   hbridge_forward_pins[0] = new_pin(MOTOR_DIR_0_GPIO_Port, MOTOR_DIR_0_Pin);
   hbridge_forward_pins[1] = new_pin(MOTOR_DIR_1_GPIO_Port, MOTOR_DIR_1_Pin);
   hbridge_forward_pins[2] = new_pin(MOTOR_DIR_2_GPIO_Port, MOTOR_DIR_2_Pin);
@@ -287,11 +264,56 @@ int main(void)
   i2c_bus = new_i2c_bus(&hi2c1);
 
 
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_I2C1_Init();
+  MX_I2C2_Init();
+  MX_TIM1_Init();
+  MX_TIM2_Init();
+  MX_TIM3_Init();
+  MX_TIM4_Init();
+  MX_TIM15_Init();
+  MX_USART1_UART_Init();
+  MX_TIM16_Init();
+  /* USER CODE BEGIN 2 */
+
+  // TODO - Make this better so you wouldn't have to update on both sides (make a variable/class)
+  // TODO - Make sure this stuff works
+
+  // Start up the H-Bridge PWMs
+  for (size_t i = 0; i < NUM_MOTORS; ++i) {
+	  if (hbridges[i] != NULL) {
+		  HAL_TIM_PWM_Start(hbridges[i]->timer, hbridges[i]->channel);
+	  }
+  }
+
+  // Start up the quadrature encoders
+  for (size_t i = 0; i < NUM_MOTORS; ++i) {
+	  if (quad_encoders[i] != NULL) {
+		  HAL_TIM_Encoder_Start(quad_encoders[i]->htim, TIM_CHANNEL_ALL);
+	  }
+  }
+
+  // Start the logic loop timer
+  HAL_TIM_Base_Start_IT(&htim16);
+
+  // Start the I2C interrupts
+  HAL_I2C_EnableListen_IT(&hi2c1);
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
     /* USER CODE END WHILE */

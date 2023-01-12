@@ -259,7 +259,7 @@ int main(void) {
         init_motor(motors[i], 0.0f);
     }
 
-    //i2c_bus = new_i2c_bus(&hi2c1);
+    i2c_bus = new_i2c_bus(&hi2c1);
 
     /* USER CODE END Init */
 
