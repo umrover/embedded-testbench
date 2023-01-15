@@ -41,18 +41,18 @@ void set_motor_speed(Motor *motor, float speed) {
 void update_motor_speed(Motor *motor) {
     // when speed is positive, motor goes from rev lim to fwd lim
 	if (motor->limit_enabled) {
-		if (motor->forward_limit_switch->is_activated && (motor->desired_speed > 0)) {
-			change_hbridge_pwm(motor->hbridge, 0);
-		} else if (motor->backward_limit_switch->is_activated && (motor->desired_speed < 0)) {
-			change_hbridge_pwm(motor->hbridge, 0);
+		if (motor->forward_limit_switch->is_activated && (motor->output_pwm > 0.0f)) {
+			change_hbridge_pwm(motor->hbridge, 0.0f);
+		} else if (motor->backward_limit_switch->is_activated && (motor->output_pwm < 0.0f)) {
+			change_hbridge_pwm(motor->hbridge, 0.0f);
 		} else {
-			change_hbridge_pwm(motor->hbridge, fabsf(motor->desired_speed));
+			change_hbridge_pwm(motor->hbridge, fabsf(motor->output_pwm));
 		}
-		change_hbridge_dir_val(motor->hbridge, motor->desired_speed > 0);
+		change_hbridge_dir_val(motor->hbridge, motor->output_pwm > 0.0f);
 	}
 	else {
-		change_hbridge_pwm(motor->hbridge, fabsf(motor->desired_speed));
-		change_hbridge_dir_val(motor->hbridge, motor->desired_speed > 0);
+		change_hbridge_pwm(motor->hbridge, fabsf(motor->output_pwm));
+		change_hbridge_dir_val(motor->hbridge, motor->output_pwm > 0.0f);
 	}
 
 }

@@ -19,9 +19,9 @@ typedef struct {
     ClosedLoopControl *control;
 
     bool using_open_loop_control;
-    float output_pwm; // should be between -1 and 1
-    float max_pwm;  // should be between -1 and 1
-    float desired_speed; // should be between -1 and 1
+    float output_pwm; // USE FOR PWM! Should be between -max_pwm and max_pwm
+    float max_pwm;  // A configuration value! Should be between 0 and 1
+    float desired_speed; // Do not use raw value for PWM! Should be between -1 and 1
     int32_t desired_counts;
     bool limit_enabled;
     bool calibrated;
