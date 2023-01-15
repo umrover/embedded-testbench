@@ -109,6 +109,7 @@ uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg) {
     // Taken from datasheet
     uint8_t status;
 	uint8_t d;
+	uint8_t counter;
 	status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
 
 	if ((status & I2C_AS72XX_SLAVE_RX_VALID) != 0) {
@@ -116,21 +117,25 @@ uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg) {
 		d = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_READ_REG, DEVICE_SLAVE_ADDRESS);
 	}
 
+	counter = 0;
 	while(1) {
 		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
-		if ((status & I2C_AS72XX_SLAVE_TX_VALID) == 0) {
+		if (counter > 10 || ((status & I2C_AS72XX_SLAVE_TX_VALID) == 0)) {
 			break;
 		}
 		HAL_Delay(5); //delay for 5 ms
+		++counter;
 	}
 
 	smbus_write_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_WRITE_REG, v_reg, DEVICE_SLAVE_ADDRESS);
+	counter = 0;
 	while(1) {
 		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
-		if ((status & I2C_AS72XX_SLAVE_RX_VALID) != 0) {
+		if (counter > 10 || ((status & I2C_AS72XX_SLAVE_RX_VALID) != 0)) {
 			break;
 		}
 		HAL_Delay(5); //delay for 5 ms
+		++counter;
 	}
 
 	d = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_READ_REG, DEVICE_SLAVE_ADDRESS);

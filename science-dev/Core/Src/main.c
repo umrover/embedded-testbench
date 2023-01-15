@@ -129,6 +129,9 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	// Initialize spectral (in case it disconnected before and needs to reconnect)
+	initialize_spectral(spectral);
+
 	for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
 	  update_spectral_channel_data(spectral, i);
 	  spectral_data[i] = get_spectral_channel_data(spectral, i);
