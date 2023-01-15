@@ -1,12 +1,12 @@
-#ifndef SPECTRAL_H_
-#define SPECTRAL_H_
+#pragma once
 
 #include "stm32g0xx_hal.h"
 #include "smbus.h"	// for SMBus
 #include "stdint.h" // for uint types
 #include "stdlib.h" // for malloc
 
-#define CHANNELS 6
+#define SPECTRAL_DEVICES 1
+#define SPECTRAL_CHANNELS 6
 
 enum {
 	DEV_SEL = 0x4F,
@@ -50,36 +50,32 @@ enum {
 	INT_TIME = 0x05
 };
 
-// Spectral channel. Each sensor has 6 of them
-// We will combine the msb register and lsb register together
-// before sending out the data
-typedef struct
-{
-	uint8_t lsb_register;
-	uint8_t msb_register;
-} Channel;
-
 // AS7262 Spectral sensor
 typedef struct
 {
 	SMBus *smbus;
-	Channel channels[CHANNELS];
+	uint16_t channel_data[SPECTRAL_CHANNELS];
 } Spectral;
 
-// REQUIRES: i2c is the i2c channel
-// and uart is the debugging UART channel or NULL,
-// and dma tells if DMA is enabled
+// REQUIRES: SMBus declared by user
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Spectral object
-Spectral *new_spectral(
-	I2C_HandleTypeDef *i2c,
-	UART_HandleTypeDef *uart,
-	bool dma);
+Spectral *new_spectral(SMBus *smbus);
 
 // REQUIRES: spectral is a Spectral object
 // MODIFIES: nothing
 // EFFECTS: Initializes the spectral device
 void initialize_spectral(Spectral *spectral);
+
+// REQUIRES: spectral is an object
+// MODIFIES: spectral.channels array
+// EFFECTS: Updates values of spectral struct's channels array with data from spectral sensor
+void update_spectral_all_channel_data(Spectral *spectral);
+
+// REQUIRES: spectral is an object and 0 <= channel < 6
+// MODIFIES: spectral.channels array
+// EFFECTS: Updates values of spectral struct's channels array with data from spectral sensor
+void update_spectral_channel_data(Spectral *spectral, uint8_t channel);
 
 // REQUIRES: spectral is an object and 0 <= channel < 6
 // MODIFIES: nothing
@@ -99,7 +95,3 @@ void virtual_write_spectral(Spectral *spectral, uint8_t v_reg, uint8_t data);
 // EFFECTS: Returns the value read from the virtual register
 // as explained in page 18-20 of the datasheet
 uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg);
-
-#endif
-
-//#endif

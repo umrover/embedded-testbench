@@ -55,6 +55,12 @@ UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN PV */
 
+Bridge* bridge = NULL;
+SMBus* smbus = NULL;
+Spectral* spectral = NULL;
+
+uint16_t spectral_data[SPECTRAL_CHANNELS] = {0};
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -80,6 +86,10 @@ static void MX_USART1_UART_Init(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+
+	bridge = new_bridge(&huart1);
+	smbus = new_smbus(&hi2c1, NULL, false);
+	spectral = new_spectral(smbus);
 
   /* USER CODE END 1 */
 
@@ -108,10 +118,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
   // PB9 SDA, PB8 SCL
-  Spectral* spectral = new_spectral(&hi2c1, NULL, false);
 
-  initialize_spectral(spectral);
-  uint16_t spectral_channel_data[6];
 
   /* USER CODE END 2 */
 
@@ -122,10 +129,11 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  for (uint8_t i = 0; i < 6; ++i) {
-		  spectral_channel_data[i] = get_spectral_channel_data(spectral, i);
-		  HAL_Delay(150);
-	  }
+	for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
+	  update_spectral_channel_data(spectral, i);
+	  spectral_data[i] = get_spectral_channel_data(spectral, i);
+	}
+	bridge_send_spectral(bridge, spectral_data);
   }
   /* USER CODE END 3 */
 }

@@ -1,5 +1,4 @@
-#ifndef SMBUS_H_
-#define SMBUS_H_
+#pragma once
 
 #include "stm32g0xx_hal.h"
 #include "stdbool.h"  // for bools
@@ -14,7 +13,6 @@ typedef struct
     UART_HandleTypeDef *uart;
     HAL_StatusTypeDef ret;
     uint8_t buf[30];
-    uint8_t device_address;
     bool DMA;
 } SMBus;
 
@@ -26,14 +24,13 @@ typedef struct
 SMBus *new_smbus(
     I2C_HandleTypeDef *hi2c,
     UART_HandleTypeDef *huart,
-    uint8_t device_addr,
     bool _dma);
 
 // REQUIRES: smbus is an SMBus object
 // MODIFIES: nothing
 // EFFECTS: Checks if smbus->ret is HAL_OK.
 // If not HAL_OK, then reset the I2C smbus
-// and if smbus->uart is not NULL, then 
+// and if smbus->uart is not NULL, then
 // print out an error message.
 int smbus_check_error(SMBus *smbus);
 
@@ -43,7 +40,8 @@ int smbus_check_error(SMBus *smbus);
 // EFFECTS: Reads one byte from the register.
 long smbus_read_byte_data(
     SMBus *smbus,
-    char reg);
+    char reg,
+	uint8_t device_address);
 
 // REQUIRES: smbus is an SMBus object
 // and reg is the command/register being read.
@@ -51,7 +49,8 @@ long smbus_read_byte_data(
 // EFFECTS: Reads two bytes from the register.
 long smbus_read_word_data(
     SMBus *smbus,
-    char reg);
+    char reg,
+	uint8_t device_address);
 
 // REQUIRES: smbus is an SMBus object
 // MODIFIES: nothing
@@ -66,7 +65,8 @@ void smbus_reset(SMBus *smbus);
 void smbus_write_byte_data(
     SMBus *smbus,
     char reg,
-    uint8_t data);
+    uint8_t data,
+	uint8_t device_address);
 
 // REQUIRES: smbus is an SMBus object,
 // reg is the command/register being written to,
@@ -76,8 +76,5 @@ void smbus_write_byte_data(
 void smbus_write_word_data(
     SMBus *smbus,
     char reg,
-    uint16_t data);
-
-#endif
-
-//#endif
+    uint16_t data,
+	uint8_t device_address);
