@@ -146,13 +146,9 @@ void Error_Handler(void);
 #define DEBUG_LED_1_GPIO_Port GPIOB
 #define DEBUG_LED_0_Pin GPIO_PIN_4
 #define DEBUG_LED_0_GPIO_Port GPIOB
-#define USART1_TX_Pin GPIO_PIN_6
-#define USART1_TX_GPIO_Port GPIOB
-#define USART1_RX_Pin GPIO_PIN_7
-#define USART1_RX_GPIO_Port GPIOB
-#define I2C1_TO_JETSON_SCL_Pin GPIO_PIN_8
+#define I2C1_TO_JETSON_SCL_Pin GPIO_PIN_6
 #define I2C1_TO_JETSON_SCL_GPIO_Port GPIOB
-#define I2C1_TO_JETSON_SDA_Pin GPIO_PIN_9
+#define I2C1_TO_JETSON_SDA_Pin GPIO_PIN_7
 #define I2C1_TO_JETSON_SDA_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
