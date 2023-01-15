@@ -97,7 +97,6 @@ static void MX_TIM16_Init(void);
 
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
-    static float prev_speed = -1;
     if (htim == &htim16) {
         for (size_t i = 0; i < NUM_MOTORS; ++i) {
             if (quad_encoders[i]) {
@@ -109,8 +108,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
             if (backward_limit_switches[i]) {
                 update_limit_switch(backward_limit_switches[i]);
             }
-            if (motors[i]->desired_speed != prev_speed) {
-                prev_speed = motors[i]->desired_speed;
+            if (motors[i]) {
                 update_motor_target(motors[i]);
                 update_motor_speed(motors[i]);
             }
@@ -314,11 +312,13 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
   }
   /* USER CODE END 3 */
 }
