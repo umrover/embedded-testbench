@@ -23,6 +23,7 @@
 /* USER CODE BEGIN Includes */
 
 #include "adc_sensor.h"
+#include "auton_led.h"
 #include "bridge.h"
 #include "diag_curr_sensor.h"
 #include "diag_temp_sensor.h"
@@ -55,6 +56,15 @@
 #define HEATER_1_MOSFET_PIN 4
 #define HEATER_2_MOSFET_PIN 5
 
+#define AUTON_LED_RED_MOSFET_PIN 7
+#define AUTON_LED_GREEN_MOSFET_PIN 8
+#define AUTON_LED_BLUE_MOSFET_PIN 9
+
+// TODO - change eventually
+#define SERVO_0_DEFAULT_ANGLE 0
+#define SERVO_1_DEFAULT_ANGLE 0
+#define SERVO_2_DEFAULT_ANGLE 0
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -69,12 +79,14 @@ DMA_HandleTypeDef hdma_adc1;
 I2C_HandleTypeDef hi2c1;
 
 TIM_HandleTypeDef htim1;
+TIM_HandleTypeDef htim6;
 
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_rx;
 
 /* USER CODE BEGIN PV */
 
+AutonLED* auton_led = NULL;
 ADCSensor* adc_sensor = NULL;
 Bridge* bridge = NULL;
 DiagCurrentSensor* diag_current_sensors[NUM_DIAG_CURRENT_SENSORS] = {NULL};
@@ -106,6 +118,7 @@ static void MX_ADC1_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_TIM6_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -113,8 +126,14 @@ static void MX_USART1_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
+	if (htim == &htim6) {
+		update_auton_led_state(auton_led);
+	}
+}
+
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	receive_bridge(bridge, science_heaters, mosfet_pins, servos);
+	receive_bridge(bridge, science_heaters, mosfet_pins, servos, auton_led);
 }
 
 /* USER CODE END 0 */
@@ -156,6 +175,8 @@ int main(void)
 	mosfet_pins[9] = new_pin_data(MOSFET_9_GPIO_Port, MOSFET_9_Pin, PIN_IS_OUTPUT);
 	mosfet_pins[10] = new_pin_data(MOSFET_10_GPIO_Port, MOSFET_10_Pin, PIN_IS_OUTPUT);
 	mosfet_pins[11] = new_pin_data(MOSFET_11_GPIO_Port, MOSFET_11_Pin, PIN_IS_OUTPUT);
+
+	auton_led = new_auton_led(mosfet_pins[AUTON_LED_RED_MOSFET_PIN], mosfet_pins[AUTON_LED_GREEN_MOSFET_PIN], mosfet_pins[AUTON_LED_BLUE_MOSFET_PIN]);
 
 	heater_pins[0] = mosfet_pins[HEATER_0_MOSFET_PIN];
 	heater_pins[1] = mosfet_pins[HEATER_1_MOSFET_PIN];
@@ -202,9 +223,15 @@ int main(void)
   MX_I2C1_Init();
   MX_TIM1_Init();
   MX_USART1_UART_Init();
+  MX_TIM6_Init();
   /* USER CODE BEGIN 2 */
 
-  receive_bridge(bridge, science_heaters, mosfet_pins, servos);
+  receive_bridge(bridge, science_heaters, mosfet_pins, servos, auton_led);
+
+  initialize_servo(servos[0], SERVO_0_DEFAULT_ANGLE);
+  initialize_servo(servos[1], SERVO_1_DEFAULT_ANGLE);
+  initialize_servo(servos[2], SERVO_2_DEFAULT_ANGLE);
+  HAL_TIM_Base_Start_IT(&htim6);
 
   /* USER CODE END 2 */
 
@@ -543,6 +570,44 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 2 */
   HAL_TIM_MspPostInit(&htim1);
+
+}
+
+/**
+  * @brief TIM6 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM6_Init(void)
+{
+
+  /* USER CODE BEGIN TIM6_Init 0 */
+
+  /* USER CODE END TIM6_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM6_Init 1 */
+
+  /* USER CODE END TIM6_Init 1 */
+  htim6.Instance = TIM6;
+  htim6.Init.Prescaler = 15;
+  htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim6.Init.Period = TIMER_ONE_MS;
+  htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim6, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM6_Init 2 */
+
+  /* USER CODE END TIM6_Init 2 */
 
 }
 

@@ -1,7 +1,5 @@
 #include "adc_sensor.h"
 
-/** PUBLIC FUNCTIONS **/
-
 // REQUIRES: hadc is the adc and _total_channels are the total channels.
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created ADCSensor object
@@ -31,5 +29,3 @@ void update_adc_sensor_values(ADCSensor *adc_sensor) {
 		HAL_ADC_Start_DMA(adc_sensor->adc, adc_sensor->values, adc_sensor->total_channels);
 	}
 }
-
-/** PRIVATE FUNCTIONS MAY BE IN SOURCE FILE ONLY **/

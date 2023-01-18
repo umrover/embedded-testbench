@@ -10,8 +10,6 @@ typedef struct {
 	uint16_t values[10];
 } ADCSensor;
 
-/** PUBLIC FUNCTIONS **/
-
 // REQUIRES: hadc is the adc and _total_channels are the total channels.
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created ADCSensor object

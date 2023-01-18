@@ -15,10 +15,10 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart)
     return bridge;
 }
 
-// REQUIRES: bridge, heater, mosfet_device, and servo are objects
+// REQUIRES: bridge, heater, mosfet_device, servo, and auton_led are objects
 // MODIFIES: Nothing
 // EFFECTS: Receives the message and processes it
-void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12], Servo *servos[3]) {
+void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12], Servo *servos[3], AutonLED *auton_led) {
 	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
 	if (bridge->uart_buffer[0] == '$') {
 		// Expect it always to be a $ sign.
@@ -33,6 +33,9 @@ void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12]
 		}
 		else if (bridge->uart_buffer[1] == 'H') {
 			receive_bridge_heater_cmd(bridge, heaters);
+		}
+		else if (bridge->uart_buffer[1] == 'L') {
+			receive_bridge_auton_led_cmd(bridge, auton_led);
 		}
 	}
 }
@@ -138,6 +141,31 @@ void receive_bridge_heater_cmd(Bridge *bridge, Heater *heaters[3]) {
 		if (0 <= device && device < 3) {
 			change_heater_state(heaters[device], state);
 			heaters[device]->send_on = true;
+		}
+	}
+}
+
+// REQUIRES: bridge and auton_led are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the message if it is a auton_led message in the format:
+// "$LED, <REQUESTED_STATE>"
+// where number is 0 for red, 1 for blinking green, 2 for blue, and 3 for off
+void receive_bridge_auton_led_cmd(Bridge *bridge, AutonLED *auton_led) {
+	if (bridge->uart_buffer[0] != '$' || bridge->uart_buffer[1] != 'A') {
+		// This should be asserted.
+		// The function should not have been called if it was not the correct message
+		return;
+	}
+
+	char *identifier = strtok(bridge->uart_buffer, ",");
+
+	if (!strcmp(identifier,"$LED")){
+		int requested_state = -1;
+
+		requested_state = atoi(strtok(NULL, ","));
+
+		if (0 <= requested_state && requested_state < 4) {
+			change_auton_led_state(auton_led, requested_state);
 		}
 	}
 }

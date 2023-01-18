@@ -7,6 +7,7 @@
 
 #include "heater.h"
 #include "servo.h"
+#include "auton_led.h"
 
 // The communication bridge between the Jetson and the chip
 typedef struct
@@ -20,10 +21,10 @@ typedef struct
 // EFFECTS: Returns a pointer to a created Bridge object
 Bridge *new_bridge(UART_HandleTypeDef *_uart);
 
-// REQUIRES: bridge, heater, mosfet_device, and servo are objects
+// REQUIRES: bridge, heater, mosfet_device, servo, and auton_led are objects
 // MODIFIES: Nothing
 // EFFECTS: Receives the message and processes it
-void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12], Servo *servos[3]);
+void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12], Servo *servos[3], AutonLED *auton_led);
 
 // REQUIRES: bridge and mosfet_device are objects
 // MODIFIES: Nothing
@@ -48,6 +49,13 @@ void receive_bridge_auto_shutoff_cmd(Bridge *bridge, Heater *heaters[3]);
 // EFFECTS: Receives the message if it is a heater message in the format:
 // "$HEATER_CMD,<DEVICE>,<ENABLE>"
 void receive_bridge_heater_cmd(Bridge *bridge, Heater *heaters[3]);
+
+// REQUIRES: bridge and auton_led are objects
+// MODIFIES: Nothing
+// EFFECTS: Receives the message if it is a auton_led message in the format:
+// "$LED, <REQUESTED_STATE>"
+// where number is 0 for red, 1 for blinking green, 2 for blue, and 3 for off
+void receive_bridge_auton_led_cmd(Bridge *bridge, AutonLED *auton_led);
 
 // REQUIRES: nothing
 // MODIFIES: nothing
