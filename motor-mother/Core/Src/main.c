@@ -269,9 +269,6 @@ int main(void) {
         init_motor(motors[i], 0.0f);
     }
 
-    i2c_bus = new_i2c_bus(&hi2c1);
-
-
     /* USER CODE END Init */
 
     /* Configure the system clock */
@@ -292,6 +289,8 @@ int main(void) {
     MX_TIM15_Init();
     MX_TIM16_Init();
     /* USER CODE BEGIN 2 */
+
+    i2c_bus = new_i2c_bus(&hi2c2); // NOTE: hi2c1 orig
 
     // TODO - Make this better so you wouldn't have to update on both sides (make a variable/class)
     // TODO - Make sure this stuff works
@@ -314,7 +313,7 @@ int main(void) {
     HAL_TIM_Base_Start_IT(&htim16);
 
     // Start the I2C interrupts
-    HAL_I2C_EnableListen_IT(&hi2c1);
+    HAL_I2C_EnableListen_IT(&hi2c2); // NOTE: hi2c1 orig
 
     /* USER CODE END 2 */
 

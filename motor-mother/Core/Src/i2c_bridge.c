@@ -21,6 +21,12 @@ int WATCHDOG_TIMEOUT = 443;
 I2CBus *new_i2c_bus(I2C_HandleTypeDef *_i2c_bus_handle) {
     I2CBus *bus = (I2CBus *) malloc(sizeof(I2CBus));
     bus->i2c_bus_handle = _i2c_bus_handle;
+    bus->operation = UNKNOWN;
+    bus->tick = 0x00;
+    bus->motor_id = 0xFF;
+    for(size_t i = 0 ; i < 32 ; ++i) {
+        bus->buffer[i] = 0x00;
+    }
     return bus;
 }
 
