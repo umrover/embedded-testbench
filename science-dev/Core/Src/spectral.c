@@ -118,9 +118,10 @@ uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg) {
 	}
 
 	counter = 0;
-	while(1) {
+	while(counter < 3) {
 		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
-		if (counter > 10 || ((status & I2C_AS72XX_SLAVE_TX_VALID) == 0)) {
+		// Why leave when status == 0?
+		if ((status & I2C_AS72XX_SLAVE_TX_VALID) == 0) {
 			break;
 		}
 		HAL_Delay(5); //delay for 5 ms
@@ -129,9 +130,9 @@ uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg) {
 
 	smbus_write_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_WRITE_REG, v_reg, DEVICE_SLAVE_ADDRESS);
 	counter = 0;
-	while(1) {
+	while(counter < 3) {
 		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
-		if (counter > 10 || ((status & I2C_AS72XX_SLAVE_RX_VALID) != 0)) {
+		if ((status & I2C_AS72XX_SLAVE_RX_VALID) != 0) {
 			break;
 		}
 		HAL_Delay(5); //delay for 5 ms
