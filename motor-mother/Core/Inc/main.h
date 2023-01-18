@@ -94,10 +94,6 @@ void Error_Handler(void);
 #define QUAD_A_0_GPIO_Port GPIOE
 #define QUAD_B_0_Pin GPIO_PIN_11
 #define QUAD_B_0_GPIO_Port GPIOE
-#define I2C2_BACKUP_SCL_Pin GPIO_PIN_10
-#define I2C2_BACKUP_SCL_GPIO_Port GPIOB
-#define I2C2_BACKUP_SDA_Pin GPIO_PIN_11
-#define I2C2_BACKUP_SDA_GPIO_Port GPIOB
 #define MOTOR_DIR_0_Pin GPIO_PIN_12
 #define MOTOR_DIR_0_GPIO_Port GPIOB
 #define MOTOR_NDIR_0_Pin GPIO_PIN_13
