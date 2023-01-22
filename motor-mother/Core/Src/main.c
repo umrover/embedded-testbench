@@ -70,7 +70,7 @@ QuadEncoder *quad_encoders[NUM_MOTORS] = {NULL};
 ClosedLoopControl *controls[NUM_MOTORS] = {NULL};
 
 Motor *motors[NUM_MOTORS] = {NULL};
-I2CBus *i2c_bus;
+I2CBus *i2c_bus = NULL;
 
 /* USER CODE END PV */
 
@@ -281,6 +281,7 @@ int main(void)
   MX_TIM15_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
+    HAL_I2C_MspInit(&hi2c2);
 
     i2c_bus = new_i2c_bus(&hi2c2); // NOTE: hi2c1 orig
 
@@ -405,7 +406,9 @@ static void MX_I2C2_Init(void)
   /* USER CODE END I2C2_Init 0 */
 
   /* USER CODE BEGIN I2C2_Init 1 */
-
+	// setting input frequency to minimum 4MHz
+	I2C2->CR2 &= ~(0b111111);
+	I2C2->CR2 |= (4);
   /* USER CODE END I2C2_Init 1 */
   hi2c2.Instance = I2C2;
   hi2c2.Init.ClockSpeed = 400000;
