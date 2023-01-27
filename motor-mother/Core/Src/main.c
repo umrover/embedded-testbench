@@ -127,7 +127,7 @@ void HAL_I2C_AddrCallback(I2C_HandleTypeDef *hi2c, uint8_t TransferDirection, ui
             HAL_I2C_Slave_Seq_Transmit_IT(i2c_bus->i2c_bus_handle, i2c_bus->buffer, bytes_to_send, I2C_LAST_FRAME);
         }
     }
-    //HAL_IWDG_Refresh(watch_dog_handle);
+
     i2c_bus->tick = 0;
 }
 
@@ -306,7 +306,8 @@ int main(void)
     HAL_TIM_Base_Start_IT(&htim16);
 
     // Start the I2C interrupts
-    HAL_I2C_EnableListen_IT(&hi2c2); // NOTE: hi2c1 orig
+    HAL_I2C_EnableListen_IT(i2c_bus->i2c_bus_handle);
+//    HAL_I2C_EnableListen_IT(&hi2c2); // NOTE: hi2c1 orig
 
   /* USER CODE END 2 */
 
@@ -411,14 +412,14 @@ static void MX_I2C2_Init(void)
 	I2C2->CR2 |= (4);
   /* USER CODE END I2C2_Init 1 */
   hi2c2.Instance = I2C2;
-  hi2c2.Init.ClockSpeed = 400000;
+  hi2c2.Init.ClockSpeed = 100000;
   hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c2.Init.OwnAddress1 = 254;
+  hi2c2.Init.OwnAddress1 = 64;
   hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-  hi2c2.Init.OwnAddress2 = 64;
+  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c2.Init.OwnAddress2 = 0;
   hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
-  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_ENABLE;
   if (HAL_I2C_Init(&hi2c2) != HAL_OK)
   {
     Error_Handler();
