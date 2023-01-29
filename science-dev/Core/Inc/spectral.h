@@ -75,7 +75,7 @@ void update_spectral_all_channel_data(Spectral *spectral);
 // REQUIRES: spectral is an object and 0 <= channel < 6
 // MODIFIES: spectral.channels array
 // EFFECTS: Updates values of spectral struct's channels array with data from spectral sensor
-void update_spectral_channel_data(Spectral *spectral, uint8_t channel);
+void update_spectral_channel_data(Spectral *spectral, uint8_t channel, uint8_t *error_flag);
 
 // REQUIRES: spectral is an object and 0 <= channel < 6
 // MODIFIES: nothing
@@ -94,4 +94,4 @@ void virtual_write_spectral(Spectral *spectral, uint8_t v_reg, uint8_t data);
 // MODIFIES: nothing
 // EFFECTS: Returns the value read from the virtual register
 // as explained in page 18-20 of the datasheet
-uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg);
+uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg, uint8_t *error);

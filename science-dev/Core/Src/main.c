@@ -132,11 +132,22 @@ int main(void)
 	// Initialize spectral (in case it disconnected before and needs to reconnect)
 	initialize_spectral(spectral);
 
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_RESET);
+
 	for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
-	  update_spectral_channel_data(spectral, i);
+	  uint8_t error_flag = 0;
+	  update_spectral_channel_data(spectral, i, error_flag);
+
+	  // If spectral I2C NAKs, leave early
+	  if(error_flag) {
+		  break;
+	  }
+
 	  spectral_data[i] = get_spectral_channel_data(spectral, i);
 	}
 	bridge_send_spectral(bridge, spectral_data);
+
+	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
   }
   /* USER CODE END 3 */
 }

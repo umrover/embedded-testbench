@@ -76,7 +76,7 @@ long smbus_read_byte_data(
             smbus->buf,
             1);
     }
-    HAL_Delay(50);
+    HAL_Delay(10);
     smbus_check_error(smbus);
     return smbus->buf[0];
 }
@@ -166,7 +166,7 @@ void smbus_write_byte_data(
             smbus->buf,
             2);
     }
-    HAL_Delay(50);
+    HAL_Delay(10);
     smbus_check_error(smbus);
 }
 
