@@ -23,7 +23,6 @@
 /* USER CODE BEGIN Includes */
 
 #include "adc_sensor.h"
-#include "auton_led.h"
 #include "bridge.h"
 #include "diag_curr_sensor.h"
 #include "diag_temp_sensor.h"
@@ -270,35 +269,45 @@ int main(void)
 	  }
 	  bridge_send_science_thermistors(bridge, science_temperatures);
 
-//	  for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
-//		  update_spectral_channel_data(spectral, i);
-//		  spectral_data[i] = get_spectral_channel_data(spectral, i);
-//	  }
-//	  bridge_send_spectral(bridge, spectral_data);
+	  // Initialize spectral (in case it disconnected before and needs to reconnect)
+	  initialize_spectral(spectral);
 
-	  bool send_auto_shutoff = false;
-	  for (size_t i = 0; i < NUM_HEATERS; ++i) {
-		  heater_auto_shutoff_state = science_heaters[i]->auto_shutoff;
-		  if (science_heaters[i]->send_auto_shutoff) {
-			  science_heaters[i]->send_auto_shutoff = false;
-			  send_auto_shutoff = true;
-		  }
-	  }
-	  if (send_auto_shutoff) {
-		  bridge_send_heater_auto_shutoff(bridge, heater_auto_shutoff_state);
-	  }
+	  for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
+		  uint8_t error_flag = 0;
+		  update_spectral_channel_data(spectral, i, error_flag);
 
-	  bool send_heater_on = false;
-	  for (size_t i = 0; i < NUM_HEATERS; ++i) {
-		  heater_on_state[i] = science_heaters[i]->is_on;
-		  if (science_heaters[i]->send_on) {
-			  science_heaters[i]->send_on = false;
-			  send_heater_on = true;
+		  // If spectral I2C NAKs, leave early
+		  if(error_flag) {
+			  break;
 		  }
-	  }
-	  if (send_heater_on) {
-		  bridge_send_heater_state(bridge, heater_on_state);
-	  }
+
+		  spectral_data[i] = get_spectral_channel_data(spectral, i);
+	   }
+	   bridge_send_spectral(bridge, spectral_data);
+
+	   bool send_auto_shutoff = false;
+	   for (size_t i = 0; i < NUM_HEATERS; ++i) {
+		   heater_auto_shutoff_state = science_heaters[i]->auto_shutoff;
+		   if (science_heaters[i]->send_auto_shutoff) {
+			   science_heaters[i]->send_auto_shutoff = false;
+			   send_auto_shutoff = true;
+		   }
+	   }
+	   if (send_auto_shutoff) {
+		   bridge_send_heater_auto_shutoff(bridge, heater_auto_shutoff_state);
+	   }
+
+	   bool send_heater_on = false;
+	   for (size_t i = 0; i < NUM_HEATERS; ++i) {
+		   heater_on_state[i] = science_heaters[i]->is_on;
+		   if (science_heaters[i]->send_on) {
+			   science_heaters[i]->send_on = false;
+			   send_heater_on = true;
+		   }
+	   }
+	   if (send_heater_on) {
+		   bridge_send_heater_state(bridge, heater_on_state);
+	   }
 
   }
   /* USER CODE END 3 */
