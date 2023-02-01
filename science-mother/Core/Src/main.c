@@ -270,20 +270,20 @@ int main(void)
 	  bridge_send_science_thermistors(bridge, science_temperatures);
 
 	  // Initialize spectral (in case it disconnected before and needs to reconnect)
-	  initialize_spectral(spectral);
-
-	  for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
-		  uint8_t error_flag = 0;
-		  update_spectral_channel_data(spectral, i, error_flag);
-
-		  // If spectral I2C NAKs, leave early
-		  if(error_flag) {
-			  break;
-		  }
-
-		  spectral_data[i] = get_spectral_channel_data(spectral, i);
-	   }
-	   bridge_send_spectral(bridge, spectral_data);
+//	  initialize_spectral(spectral);
+//
+//	  for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
+//		  uint8_t error_flag = 0;
+//		  update_spectral_channel_data(spectral, i, error_flag);
+//
+//		  // If spectral I2C NAKs, leave early
+//		  if(error_flag) {
+//			  break;
+//		  }
+//
+//		  spectral_data[i] = get_spectral_channel_data(spectral, i);
+//	   }
+//	   bridge_send_spectral(bridge, spectral_data);
 
 	   bool send_auto_shutoff = false;
 	   for (size_t i = 0; i < NUM_HEATERS; ++i) {
