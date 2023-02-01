@@ -59,6 +59,7 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define TIMER_ONE_MS 1000
 #define DEBUG_LED_0_Pin GPIO_PIN_0
 #define DEBUG_LED_0_GPIO_Port GPIOC
 #define DEBUG_LED_1_Pin GPIO_PIN_1
