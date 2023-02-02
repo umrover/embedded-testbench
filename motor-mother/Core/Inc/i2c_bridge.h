@@ -14,19 +14,19 @@
 typedef struct {
     enum {
         OFF = 0x00,
-        ON = 0x0F,
-        OPEN = 0x10,
-        OPEN_PLUS = 0x1F,
-        CLOSED = 0x20,
-        CLOSED_PLUS = 0x2F,
-        CONFIG_PWM = 0x30,
-        CONFIG_K = 0x3F,
-        QUAD_ENC = 0x40,
-        ADJUST = 0x4F,
-        ABS_ENC = 0x50,
-        LIMIT = 0x60,
-        CALIBRATED = 0x6F,
-        LIMIT_ON = 0x7F,
+        ON = 0x01,
+        OPEN = 0x02,
+        OPEN_PLUS = 0x03,
+        CLOSED = 0x04,
+        CLOSED_PLUS = 0x05,
+        CONFIG_PWM = 0x06,
+        CONFIG_K = 0x07,
+        QUAD_ENC = 0x08,
+        ADJUST = 0x09,
+        ABS_ENC = 0x0A,
+        LIMIT = 0x0B,
+        CALIBRATED = 0x0C,
+        LIMIT_ON = 0x0D,
         UNKNOWN = 0xFF
     } operation;
     uint8_t motor_id;

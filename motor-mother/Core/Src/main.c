@@ -111,7 +111,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 }
 
 void HAL_I2C_AddrCallback(I2C_HandleTypeDef *hi2c, uint8_t TransferDirection, uint16_t AddrMatchCode) {
-	i2c_bus->motor_id = (0x000F & (AddrMatchCode >> 1));
 	if (TransferDirection == I2C_DIRECTION_TRANSMIT) {
 		HAL_I2C_Slave_Seq_Receive_IT(i2c_bus->i2c_bus_handle, i2c_bus->buffer, 1, I2C_LAST_FRAME);
 		i2c_bus->operation = UNKNOWN;
@@ -130,7 +129,8 @@ void HAL_I2C_AddrCallback(I2C_HandleTypeDef *hi2c, uint8_t TransferDirection, ui
 
 void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c) {
 	if (i2c_bus->operation == UNKNOWN) {
-		i2c_bus->operation = i2c_bus->buffer[0];
+		i2c_bus->motor_id = (i2c_bus->buffer[0] >> 5) & 0x07;
+		i2c_bus->operation = i2c_bus->buffer[0] & 0x1F;
 		uint8_t bytes_to_recieve = CH_num_receive(i2c_bus);
 		if (bytes_to_recieve != 0) {
 			HAL_I2C_Slave_Seq_Receive_IT(i2c_bus->i2c_bus_handle, i2c_bus->buffer, bytes_to_recieve, I2C_LAST_FRAME);
@@ -365,7 +365,7 @@ static void MX_I2C1_Init(void)
   hi2c1.Init.OwnAddress1 = 254;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
-  hi2c1.Init.OwnAddress2 = 64;
+  hi2c1.Init.OwnAddress2 = 32;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
   if (HAL_I2C_Init(&hi2c1) != HAL_OK)

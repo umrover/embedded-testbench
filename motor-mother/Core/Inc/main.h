@@ -59,7 +59,7 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define I2C_ADDRESS 0x20
+#define I2C_ADDRESS 0x10
 #define COUNTER_LOOP_PERIOD 1000
 #define QUADRATURE_FILTER 8
 #define QUAD_A_1_Pin GPIO_PIN_0
