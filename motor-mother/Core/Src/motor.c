@@ -14,7 +14,7 @@ Motor *new_motor(HBridge *_hbridge, LimitSwitch *_fwd_lim, LimitSwitch *_bwd_lim
     motor->max_pwm = 1;
     motor->desired_speed = 0;
     motor->desired_counts = 0;
-    motor->limit_enabled = false; // TODO this should be true... testing
+    motor->limit_enabled = true;// TODO this should be true... testing
 
     return motor;
 }
@@ -41,9 +41,9 @@ void set_motor_speed(Motor *motor, float speed) {
 void update_motor_speed(Motor *motor) {
     // when speed is positive, motor goes from rev lim to fwd lim
 	if (motor->limit_enabled) {
-		if (motor->forward_limit_switch->is_activated && (motor->output_pwm > 0.0f)) {
+		if (motor->forward_limit_switch && motor->forward_limit_switch->is_activated && (motor->output_pwm > 0.0f)) {
 			change_hbridge_pwm(motor->hbridge, 0.0f);
-		} else if (motor->backward_limit_switch->is_activated && (motor->output_pwm < 0.0f)) {
+		} else if (motor->backward_limit_switch && motor->backward_limit_switch->is_activated && (motor->output_pwm < 0.0f)) {
 			change_hbridge_pwm(motor->hbridge, 0.0f);
 		} else {
 			change_hbridge_pwm(motor->hbridge, fabsf(motor->output_pwm));

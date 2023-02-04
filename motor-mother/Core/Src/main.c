@@ -215,11 +215,11 @@ int main(void)
 	backward_limit_switch_pins[5] = new_pin(LIMIT_B_5_GPIO_Port, LIMIT_B_5_Pin);
 
 	for (size_t i = 0; i < NUM_MOTORS; ++i) {
-		if (forward_limit_switches[i]) {
+		if (forward_limit_switch_pins[i]) {
 			forward_limit_switches[i] = new_limit_switch(
 					forward_limit_switch_pins[i]);
 		}
-		if (backward_limit_switches[i]) {
+		if (backward_limit_switch_pins[i]) {
 			backward_limit_switches[i] = new_limit_switch(
 					backward_limit_switch_pins[i]);
 		}
