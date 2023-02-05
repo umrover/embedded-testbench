@@ -107,6 +107,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 				update_motor_speed(motors[i]);
 			}
 		}
+        CH_tick(i2c_bus, motors, NUM_MOTORS);
 	}
 }
 
