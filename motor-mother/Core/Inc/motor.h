@@ -24,7 +24,7 @@ typedef struct {
     float desired_speed; // Do not use raw value for PWM! Should be between -1 and 1
     int32_t desired_counts;
     bool limit_enabled;
-    bool calibrated;
+    bool is_calibrated;
 } Motor;
 
 Motor *new_motor(HBridge *_hbridge, LimitSwitch *_fwd_lim, LimitSwitch *_bwd_lim, QuadEncoder *_encoder, ClosedLoopControl *_control);
@@ -40,4 +40,6 @@ void update_motor_speed(Motor *motor);
 void update_motor_limits(Motor *motor);
 
 void move_motor_to_target(Motor *motor);
+
+void switch_limits(void);
 

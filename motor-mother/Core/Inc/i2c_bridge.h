@@ -25,8 +25,11 @@ typedef struct {
         ADJUST = 0x09,
         ABS_ENC = 0x0A,
         LIMIT = 0x0B,
-        CALIBRATED = 0x0C,
-        LIMIT_ON = 0x0D,
+        IS_CALIBRATED = 0x0C,
+        LIMIT_ENABLED = 0x0D,
+		CONFIG_LIMIT_A = 0x0E,
+		CONFIG_LIMIT_B = 0x0F,
+		LIMIT_POLARITY = 0x10,
         UNKNOWN = 0xFF
     } operation;
     uint8_t motor_id;

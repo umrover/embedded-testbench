@@ -6,6 +6,7 @@
  */
 
 #include "i2c_bridge.h"
+#include "motor.h"
 
 
 I2CBus i2c_bus_default = {
@@ -51,10 +52,15 @@ uint8_t CH_num_receive(I2CBus *i2c_bus) {
             return 4;
         case ABS_ENC:
         case LIMIT:
-        case CALIBRATED:
-            return 0;
-        case LIMIT_ON:
-            return 1;
+        case IS_CALIBRATED:
+        	return 0;
+        case LIMIT_ENABLED:
+        	return 1;
+        case CONFIG_LIMIT_A:
+        case CONFIG_LIMIT_B:
+        	return 4;
+        case LIMIT_POLARITY:
+        	return 1;
         case UNKNOWN:
             return 0;
     }
@@ -83,9 +89,12 @@ uint8_t CH_num_send(I2CBus *i2c_bus) {
         case ABS_ENC:
             return 4;
         case LIMIT:
-        case CALIBRATED:
+        case IS_CALIBRATED:
             return 1;
-        case LIMIT_ON:
+        case LIMIT_ENABLED:
+        case CONFIG_LIMIT_A:
+        case CONFIG_LIMIT_B:
+        case LIMIT_POLARITY:
         case UNKNOWN:
             return 0;
     }
@@ -129,10 +138,25 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
             return;
         case ABS_ENC:
         case LIMIT:
-        case CALIBRATED:
+        case IS_CALIBRATED:
             return;
-        case LIMIT_ON:
+        case LIMIT_ENABLED:
             memcpy(&(motor->limit_enabled), i2c_bus->buffer, 1);
+            return;
+        case CONFIG_LIMIT_A:
+        	memcpy(&(motor->forward_limit_switch->config_counts), i2c_bus->buffer, 4);
+        	return;
+        case CONFIG_LIMIT_B:
+        	memcpy(&(motor->backward_limit_switch->config_counts), i2c_bus->buffer, 4);
+        	return;
+        case LIMIT_POLARITY:
+        	uint8_t polarity;
+        	memcpy(&polarity, i2c_bus->buffer, 1);
+
+        	if (!polarity) {
+        		switch_limits(motor);
+        	}
+        	return;
         case UNKNOWN:
             return;
     }
@@ -167,10 +191,13 @@ void CH_prepare_send(I2CBus *i2c_bus, Motor *motor) {
         case LIMIT:
         	memcpy(i2c_bus->buffer, &(motor->forward_limit_switch->is_activated), 1);
             return; // TODO add cases for reverse limits
-        case CALIBRATED:
-            memcpy(i2c_bus->buffer, &(motor->calibrated), 1);
+        case IS_CALIBRATED:
+            memcpy(i2c_bus->buffer, &(motor->is_calibrated), 1);
             return;
-        case LIMIT_ON:
+        case LIMIT_ENABLED:
+        case CONFIG_LIMIT_A:
+        case CONFIG_LIMIT_B:
+        case LIMIT_POLARITY:
         case UNKNOWN:
             return;
     }

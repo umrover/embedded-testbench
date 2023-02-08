@@ -14,7 +14,9 @@ Motor *new_motor(HBridge *_hbridge, LimitSwitch *_fwd_lim, LimitSwitch *_bwd_lim
     motor->max_pwm = 1;
     motor->desired_speed = 0;
     motor->desired_counts = 0;
-    motor->limit_enabled = true;// TODO this should be true... testing
+    motor->limit_enabled = true;
+
+    motor->is_calibrated = false;
 
     return motor;
 }
@@ -61,6 +63,13 @@ void move_motor_to_target(Motor *motor) {
     // TODO need to test this blind implementation, may be some problems wrapping across counts boundaries
     float speed = calculate_pid(motor->control, motor->desired_counts, motor->encoder->counts);
     set_motor_speed(motor, speed);
+}
+
+void switch_limits(Motor *motor) {
+	// custom swap function
+	LimitSwitch *temp = motor->forward_limit_switch;
+	motor->forward_limit_switch = motor->backward_limit_switch;
+	motor->backward_limit_switch = temp;
 }
 
 

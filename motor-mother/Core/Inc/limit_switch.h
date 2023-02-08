@@ -9,6 +9,7 @@
 
 typedef struct {
     Pin *pin;
+    float config_counts;
     bool is_activated;
 } LimitSwitch;
 

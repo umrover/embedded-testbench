@@ -4,6 +4,7 @@
 LimitSwitch *new_limit_switch(Pin *_pin) {
 	LimitSwitch *limit_switch = (LimitSwitch *) malloc(sizeof(LimitSwitch));
 	limit_switch->pin = _pin;
+	limit_switch->config_counts = 0;
 	limit_switch->is_activated = false;
 	return limit_switch;
 }
