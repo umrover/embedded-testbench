@@ -72,11 +72,15 @@ void switch_limits(Motor *motor) {
 	motor->backward_limit_switch = temp;
 }
 
+// Changes encoder counts and sets the scalibration status
 void update_motor_limit_switches(Motor *motor) {
 	if (motor->backward_limit_switch->is_activated) {
 		motor->encoder->counts = motor->backward_limit_switch->config_counts;
+		motor->is_calibrated = true;
 	} else if (motor->forward_limit_switch->is_activated) {
 		motor->encoder->counts = motor->forward_limit_switch->config_counts;
+		motor->is_calibrated = true;
 	}
+
 }
 
