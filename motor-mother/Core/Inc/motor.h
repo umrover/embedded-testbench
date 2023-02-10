@@ -41,5 +41,6 @@ void update_motor_limits(Motor *motor);
 
 void move_motor_to_target(Motor *motor);
 
-void switch_limits(void);
+void switch_limits(Motor *motor);
 
+void update_motor_limit_switches(Motor *motor);
