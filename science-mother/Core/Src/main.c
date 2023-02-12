@@ -283,7 +283,7 @@ int main(void)
 //
 //		  spectral_data[i] = get_spectral_channel_data(spectral, i);
 //	   }
-//	   bridge_send_spectral(bridge, spectral_data);
+	   bridge_send_spectral(bridge, spectral_data);
 
 	   bool send_auto_shutoff = false;
 	   for (size_t i = 0; i < NUM_HEATERS; ++i) {
