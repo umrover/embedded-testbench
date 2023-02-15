@@ -3,11 +3,10 @@
 // REQUIRES: uart is the uart channel
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Bridge object
-Bridge *new_bridge(UART_HandleTypeDef *_uart)
-{
+Bridge *new_bridge(UART_HandleTypeDef *_uart) {
     Bridge *bridge = (Bridge *)malloc(sizeof(Bridge));
     bridge->uart = _uart;
-	for (int i = 0; i < 30; ++i) {
+	for (int i = 0; i < UART_BUFFER_SIZE; ++i) {
 		bridge->uart_buffer[i] = 0;
 	}
 	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
@@ -20,6 +19,7 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart)
 // EFFECTS: Receives the message and processes it
 void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12], Servo *servos[3], AutonLED *auton_led) {
 	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
+	shift_uart_buffer(bridge);
 	if (bridge->uart_buffer[0] == '$') {
 		// Expect it always to be a $ sign.
 		if (bridge->uart_buffer[1] == 'M') {
@@ -174,8 +174,7 @@ void receive_bridge_auton_led_cmd(Bridge *bridge, AutonLED *auton_led) {
 // MODIFIES: nothing
 // EFFECTS: Sends diagnostic current and thermistor data in format:
 // $DIAG,,<TEMP_0>,<TEMP_1>,<TEMP_2>,<CURR_0>,<CURR_1>,<CURR_2>
-void bridge_send_diagnostic(Bridge *bridge, float temps[3], float currs[3])
-{
+void bridge_send_diagnostic(Bridge *bridge, float temps[3], float currs[3]) {
     char msg[90];
 
     snprintf(msg, sizeof(msg), "$DIAG,%f,%f,%f,%f,%f,%f,", temps[0], temps[1],
@@ -190,8 +189,7 @@ void bridge_send_diagnostic(Bridge *bridge, float temps[3], float currs[3])
 // MODIFIES: nothing
 // EFFECTS: Sends spectral data in format:
 // "$SPECTRAL, <ch0>, <ch1>, <ch2>, <ch3>, <ch4>, <ch5>""
-void bridge_send_spectral(Bridge *bridge, uint16_t ch_data[6])
-{
+void bridge_send_spectral(Bridge *bridge, uint16_t ch_data[6]) {
     char msg[50];
 
     snprintf(msg, sizeof(msg), "$SPECTRAL,%u,%u,%u,%u,%u,%u,", ch_data[0],
@@ -207,8 +205,7 @@ void bridge_send_spectral(Bridge *bridge, uint16_t ch_data[6])
 // MODIFIES: nothing
 // EFFECTS: Sends science temperatures in format:
 // "$SCIENCE_TEMP,<TEMP_0>,<TEMP_1>,<TEMP_2>"
-void bridge_send_science_thermistors(Bridge *bridge, float temps[3])
-{
+void bridge_send_science_thermistors(Bridge *bridge, float temps[3]) {
     char msg[50];
     snprintf(msg, sizeof(msg), "$SCIENCE_TEMP,%f,%f,%f,", temps[0], temps[1], temps[2]);
     HAL_Delay(100);
@@ -238,4 +235,37 @@ void bridge_send_heater_state(Bridge *bridge, bool states[3]) {
 	HAL_Delay(100);
 	HAL_UART_Transmit(bridge->uart, (uint8_t *)msg, 25, 200);
 	HAL_Delay(100);
+}
+
+// REQUIRES: nothing
+// MODIFIES: bridge->uart_buffer
+// EFFECTS: eliminates any padding at the beginning of a uart message and shifts
+// 			the message itself to begin at position zero
+// 			e.g. ",,,,,,,$SERVO..." ---> "$SERVO..."
+void shift_uart_buffer(Bridge *bridge) {
+	// find beginning of message
+	int message_begin_idx = -1;
+	for (int i = 0; i < UART_BUFFER_SIZE; ++i) {
+		if (bridge->uart_buffer[i] == '$') { // message found
+			message_begin_idx = i;
+			break;
+		}
+	}
+
+	// no message found in buffer, nothing to be done
+	if (message_begin_idx == -1) {
+		return;
+	}
+
+	// shift message to beginning
+	int write_idx = 0;
+	for (int i = message_begin_idx; i < UART_BUFFER_SIZE; ++i) {
+		bridge->uart_buffer[write_idx] = bridge->uart_buffer[i];
+		++write_idx;
+	}
+
+	// pad message with commas
+	for (int i = write_idx; i < UART_BUFFER_SIZE; ++i) {
+		bridge->uart_buffer[i] = ',';
+	}
 }

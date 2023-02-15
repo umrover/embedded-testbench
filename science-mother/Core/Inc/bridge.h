@@ -9,11 +9,13 @@
 #include "servo.h"
 #include "auton_led.h"
 
+#define UART_BUFFER_SIZE 30 // size of uart message
+
 // The communication bridge between the Jetson and the chip
 typedef struct
 {
 	UART_HandleTypeDef *uart;
-	char uart_buffer[30];
+	char uart_buffer[UART_BUFFER_SIZE];
 } Bridge;
 
 // REQUIRES: uart is the uart channel
@@ -86,3 +88,9 @@ void bridge_send_heater_auto_shutoff(Bridge *bridge, bool state);
 // EFFECTS: Sends heater state in format:
 // "$HEATER_DATA,<STATE_0>,<STATE_1>,<STATE_2>"
 void bridge_send_heater_state(Bridge *bridge, bool states[3]);
+
+// REQUIRES: nothing
+// MODIFIES: bridge->uart_buffer
+// EFFECTS: eliminates any padding at the beginning of a uart message and shifts
+// 			the message itself to begin at position zero
+void shift_uart_buffer(Bridge *bridge);
