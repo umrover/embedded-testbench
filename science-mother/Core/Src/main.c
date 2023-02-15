@@ -59,10 +59,9 @@
 #define AUTON_LED_GREEN_MOSFET_PIN 8
 #define AUTON_LED_BLUE_MOSFET_PIN 9
 
-// TODO - change eventually
-#define SERVO_0_DEFAULT_ANGLE 100
-#define SERVO_1_DEFAULT_ANGLE 100
-#define SERVO_2_DEFAULT_ANGLE 100
+#define SERVO_0_DEFAULT_ANGLE 110
+#define SERVO_1_DEFAULT_ANGLE 100  // TODO - change eventually too
+#define SERVO_2_DEFAULT_ANGLE 70
 
 /* USER CODE END PD */
 
@@ -274,19 +273,19 @@ int main(void)
 	  bridge_send_science_thermistors(bridge, science_temperatures);
 
 	  // Initialize spectral (in case it disconnected before and needs to reconnect)
-//	  initialize_spectral(spectral);
-//
-//	  for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
-//		  uint8_t error_flag = 0;
-//		  update_spectral_channel_data(spectral, i, error_flag);
-//
-//		  // If spectral I2C NAKs, leave early
-//		  if(error_flag) {
-//			  break;
-//		  }
-//
-//		  spectral_data[i] = get_spectral_channel_data(spectral, i);
-//	   }
+	  initialize_spectral(spectral);
+
+	  for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
+		  uint8_t error_flag = 0;
+		  update_spectral_channel_data(spectral, i, &error_flag);
+
+		  // If spectral I2C NAKs, leave early
+		  if(error_flag) {
+			  break;
+		  }
+
+		  spectral_data[i] = get_spectral_channel_data(spectral, i);
+	   }
 	   bridge_send_spectral(bridge, spectral_data);
 
 	   bool send_auto_shutoff = false;
