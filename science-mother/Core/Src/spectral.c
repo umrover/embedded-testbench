@@ -111,17 +111,14 @@ uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg, uint8_t *error)
     uint8_t has_error;
 	uint8_t d;
 	uint8_t counter;
-//	has_error = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
 	has_error = ~smbus_check_error(spectral->smbus);
 
 	if ((has_error & I2C_AS72XX_SLAVE_RX_VALID) != 0) {
-		// d = nucleo_byte_read(I2C_AS72XX_SLAVE_READ_REG);
 		d = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_READ_REG, DEVICE_SLAVE_ADDRESS);
 	}
 
 	counter = 0;
 	while(counter < 3) {
-//		has_error = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
 		has_error = ~smbus_check_error(spectral->smbus);
 		// Why leave when status == 0?
 		HAL_Delay(5); //delay for 5 ms
@@ -134,7 +131,6 @@ uint8_t virtual_read_spectral(Spectral *spectral, uint8_t v_reg, uint8_t *error)
 	smbus_write_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_WRITE_REG, v_reg, DEVICE_SLAVE_ADDRESS);
 	counter = 0;
 	while(counter < 3) {
-//		status = smbus_read_byte_data(spectral->smbus, I2C_AS72XX_SLAVE_STATUS_REG, DEVICE_SLAVE_ADDRESS);
 		has_error = ~smbus_check_error(spectral->smbus);
 		HAL_Delay(5); //delay for 5 ms
 		++counter;
