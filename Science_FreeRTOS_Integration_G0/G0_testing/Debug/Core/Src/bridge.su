@@ -1,0 +1,11 @@
+../Core/Src/bridge.c:6:9:new_bridge	24	static
+../Core/Src/bridge.c:21:6:receive_bridge	24	static
+../Core/Src/bridge.c:44:6:receive_bridge_mosfet_cmd	40	static
+../Core/Src/bridge.c:70:6:receive_bridge_servo_cmd	32	static
+../Core/Src/bridge.c:96:6:receive_bridge_auto_shutoff_cmd	40	static
+../Core/Src/bridge.c:122:6:receive_bridge_heater_cmd	40	static
+../Core/Src/bridge.c:149:6:bridge_send_diagnostic	216	static
+../Core/Src/bridge.c:165:6:bridge_send_spectral	112	static
+../Core/Src/bridge.c:182:6:bridge_send_science_thermistors	120	static
+../Core/Src/bridge.c:195:6:bridge_send_heater_auto_shutoff	48	static
+../Core/Src/bridge.c:207:6:bridge_send_heater_state	64	static

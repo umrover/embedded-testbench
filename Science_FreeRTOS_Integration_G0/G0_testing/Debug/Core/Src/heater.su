@@ -1,0 +1,7 @@
+../Core/Src/heater.c:6:6:turn_heater_off	16	static
+../Core/Src/heater.c:15:6:turn_heater_on	16	static
+../Core/Src/heater.c:25:9:new_heater	24	static
+../Core/Src/heater.c:41:6:update_heater_temperature	16	static
+../Core/Src/heater.c:50:6:update_heater_state	16	static
+../Core/Src/heater.c:64:6:change_heater_state	16	static
+../Core/Src/heater.c:85:6:change_heater_auto_shutoff	16	static

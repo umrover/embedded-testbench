@@ -1,0 +1,3 @@
+../Core/Src/thermistor.c:22:13:new_thermistor	24	static
+../Core/Src/thermistor.c:34:6:update_thermistor_temperature	48	static
+../Core/Src/thermistor.c:79:7:get_thermistor_temperature	16	static
