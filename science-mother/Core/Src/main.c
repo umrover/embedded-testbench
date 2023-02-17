@@ -59,9 +59,9 @@
 #define AUTON_LED_GREEN_MOSFET_PIN 8
 #define AUTON_LED_BLUE_MOSFET_PIN 9
 
-#define SERVO_0_DEFAULT_ANGLE 110
-#define SERVO_1_DEFAULT_ANGLE 100  // TODO - change eventually too
-#define SERVO_2_DEFAULT_ANGLE 70
+#define SERVO_0_DEFAULT_ANGLE 100
+#define SERVO_1_DEFAULT_ANGLE 90  // TODO - change eventually too
+#define SERVO_2_DEFAULT_ANGLE 50
 
 /* USER CODE END PD */
 
