@@ -9,8 +9,8 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart) {
 	for (int i = 0; i < UART_BUFFER_SIZE; ++i) {
 		bridge->uart_buffer[i] = 0;
 	}
-	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
-
+//	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
+	// why is this needed ^^
     return bridge;
 }
 
@@ -18,10 +18,15 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart) {
 // MODIFIES: Nothing
 // EFFECTS: Receives the message and processes it
 void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12], Servo *servos[3], AutonLED *auton_led) {
-	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
-	shift_uart_buffer(bridge);
+	// receive single char and place into uart_buffer[0]
+	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, 1);
+
+	// only if that char was '$', get the rest of message
 	if (bridge->uart_buffer[0] == '$') {
-		// Expect it always to be a $ sign.
+		// retrieve rest of uart message into uart_buffer[1] ... uart_buffer[29]
+		HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer + 1, sizeof(bridge->uart_buffer) - 1);
+
+		// decide what to do
 		if (bridge->uart_buffer[1] == 'M') {
 			receive_bridge_mosfet_cmd(bridge, mosfet_pins);
 		}
