@@ -162,6 +162,7 @@ void CH_prepare_send(I2CBus *i2c_bus, Motor *motor) {
             return;
             // case ABS_ENC: memcpy(i2c_bus->buffer, &(motor->abs_enc_value), 4); return;
         case ABS_ENC:
+        	memcpy(i2c_bus->buffer, &(motor->abs_encoder->angle_rad), 4);
             return; // TODO add support for abs encoder
             // case LIMIT: memcpy(i2c_bus->buffer, &(motor->limit), 1); return;
         case LIMIT:

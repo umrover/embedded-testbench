@@ -1,12 +1,14 @@
 
 #include "motor.h"
 
-Motor *new_motor(HBridge *_hbridge, LimitSwitch *_fwd_lim, LimitSwitch *_bwd_lim, QuadEncoder *_encoder, ClosedLoopControl *_control) {
+Motor *new_motor(bool _valid, HBridge *_hbridge, LimitSwitch *_fwd_lim, LimitSwitch *_bwd_lim, QuadEncoder *_encoder, AbsEncoder *_abs_encoder, ClosedLoopControl *_control) {
     Motor *motor = (Motor *) malloc(sizeof(Motor));
+    motor->valid = _valid;
     motor->hbridge = _hbridge;
     motor->forward_limit_switch = _fwd_lim;
     motor->backward_limit_switch = _bwd_lim;
     motor->encoder = _encoder;
+    motor->abs_encoder = _abs_encoder;
 
     motor->control = _control;
     motor->using_open_loop_control = true;
@@ -61,6 +63,12 @@ void move_motor_to_target(Motor *motor) {
     // TODO need to test this blind implementation, may be some problems wrapping across counts boundaries
     float speed = calculate_pid(motor->control, motor->desired_counts, motor->encoder->counts);
     set_motor_speed(motor, speed);
+}
+
+void refresh_motor_absolute_encoder_value(Motor *motor) {
+	if (motor->abs_encoder->valid) {
+		refresh_angle_radians(motor->abs_encoder);
+	}
 }
 
 

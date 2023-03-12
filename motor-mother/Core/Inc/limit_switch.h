@@ -10,8 +10,9 @@
 typedef struct {
     Pin *pin;
     bool is_activated;
+    bool valid;
 } LimitSwitch;
 
-LimitSwitch *new_limit_switch(Pin *_pin);
+LimitSwitch *new_limit_switch(bool _valid, Pin *_pin);
 
 void update_limit_switch(LimitSwitch *limit_switch);

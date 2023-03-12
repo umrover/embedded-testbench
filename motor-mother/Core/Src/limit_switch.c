@@ -1,8 +1,9 @@
 #include "limit_switch.h"
 
 
-LimitSwitch *new_limit_switch(Pin *_pin) {
+LimitSwitch *new_limit_switch(bool _valid, Pin *_pin) {
 	LimitSwitch *limit_switch = (LimitSwitch *) malloc(sizeof(LimitSwitch));
+	limit_switch->valid = _valid;
 	limit_switch->pin = _pin;
 	limit_switch->is_activated = false;
 	return limit_switch;

@@ -1,10 +1,12 @@
 #pragma once
 
 #include <stdlib.h>
+#include <stdbool.h>
 #include "stm32f1xx_hal.h"
 #include "pin.h"
 
 typedef struct {
+	bool valid;
     TIM_HandleTypeDef *timer;
     uint32_t channel;
     uint32_t *out_register;
@@ -17,6 +19,7 @@ typedef struct {
 
 // Returns pointer to a new hbridge object
 HBridge *new_hbridge(
+		bool _valid,
 		TIM_HandleTypeDef *_timer,
 		uint32_t _channel,
 		uint32_t *_out_register,
