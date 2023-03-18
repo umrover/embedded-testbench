@@ -24,12 +24,16 @@ typedef struct {
         QUAD_ENC = 0x08,
         ADJUST = 0x09,
         ABS_ENC = 0x0A,
-        LIMIT = 0x0B,
-        IS_CALIBRATED = 0x0C,
-        LIMIT_ENABLED = 0x0D,
-		CONFIG_LIMIT_A = 0x0E,
-		CONFIG_LIMIT_B = 0x0F,
-		LIMIT_POLARITY = 0x10,
+        IS_CALIBRATED = 0x0B,
+		ENABLE_LIMIT_A = 0x0C,
+		ENABLE_LIMIT_B = 0x0D,
+		ACTIVE_LIMIT_A = 0x0E,
+		ACTIVE_LIMIT_B = 0x0F,
+		COUNTS_LIMIT_A = 0x10,
+		COUNTS_LIMIT_B = 0x11,
+		LIMIT_A = 0x12,
+		LIMIT_B = 0x13,
+		LIMIT_A_IS_FWD = 0x14,
         UNKNOWN = 0xFF
     } operation;
     uint8_t motor_id;

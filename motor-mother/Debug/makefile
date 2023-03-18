@@ -60,8 +60,8 @@ all: main-build
 main-build: motor-mother.elf secondary-outputs
 
 # Tool invocations
-motor-mother.elf motor-mother.map: $(OBJS) $(USER_OBJS) C:\Users\isabe\Documents\rover\embedded-testbench\motor-mother\STM32F100VBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "motor-mother.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\isabe\Documents\rover\embedded-testbench\motor-mother\STM32F100VBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="motor-mother.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+motor-mother.elf motor-mother.map: $(OBJS) $(USER_OBJS) C:\Users\gutst\Documents\embedded-testbench\motor-mother\STM32F100VBTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "motor-mother.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\Users\gutst\Documents\embedded-testbench\motor-mother\STM32F100VBTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="motor-mother.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

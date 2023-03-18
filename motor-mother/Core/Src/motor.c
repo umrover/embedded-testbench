@@ -1,12 +1,14 @@
 
 #include "motor.h"
 
-Motor *new_motor(HBridge *_hbridge, LimitSwitch *_fwd_lim, LimitSwitch *_bwd_lim, QuadEncoder *_encoder, ClosedLoopControl *_control) {
+Motor *new_motor(bool _valid, HBridge *_hbridge, LimitSwitch *_limit_switch_a, LimitSwitch *_limit_switch_b, QuadEncoder *_encoder, AbsEncoder *_abs_encoder, ClosedLoopControl *_control) {
     Motor *motor = (Motor *) malloc(sizeof(Motor));
+    motor->valid = _valid;
     motor->hbridge = _hbridge;
-    motor->forward_limit_switch = _fwd_lim;
-    motor->backward_limit_switch = _bwd_lim;
+    motor->limit_switch_a = _limit_switch_a;
+    motor->limit_switch_b = _limit_switch_b;
     motor->encoder = _encoder;
+    motor->abs_encoder = _abs_encoder;
 
     motor->control = _control;
     motor->using_open_loop_control = true;
@@ -17,6 +19,7 @@ Motor *new_motor(HBridge *_hbridge, LimitSwitch *_fwd_lim, LimitSwitch *_bwd_lim
     motor->limit_enabled = true;
 
     motor->is_calibrated = false;
+    motor->limit_a_is_forward = true;
 
     return motor;
 }
@@ -42,18 +45,34 @@ void set_motor_speed(Motor *motor, float speed) {
 
 void update_motor_speed(Motor *motor) {
     // when speed is positive, motor goes from rev lim to fwd lim
-	if (motor->limit_enabled) {
-		if (motor->forward_limit_switch && motor->forward_limit_switch->is_activated && (motor->output_pwm > 0.0f)) {
+	if (motor->limit_a_is_forward) {
+		if (motor->limit_switch_a->valid &&
+				motor->limit_switch_a->enabled &&
+				motor->limit_switch_a->is_activated &&
+				(motor->output_pwm > 0.0f)) {
 			change_hbridge_pwm(motor->hbridge, 0.0f);
-		} else if (motor->backward_limit_switch && motor->backward_limit_switch->is_activated && (motor->output_pwm < 0.0f)) {
+		}
+		else if (motor->limit_switch_b->valid &&
+				motor->limit_switch_b->enabled &&
+				motor->limit_switch_b->is_activated &&
+				(motor->output_pwm < 0.0f)) {
 			change_hbridge_pwm(motor->hbridge, 0.0f);
-		} else {
+		}
+		else {
 			change_hbridge_pwm(motor->hbridge, fabsf(motor->output_pwm));
 		}
 		change_hbridge_dir_val(motor->hbridge, motor->output_pwm > 0.0f);
 	}
 	else {
-		change_hbridge_pwm(motor->hbridge, fabsf(motor->output_pwm));
+		if (motor->limit_switch_a->valid && motor->limit_switch_a->is_activated && (motor->output_pwm < 0.0f)) {
+			change_hbridge_pwm(motor->hbridge, 0.0f);
+		}
+		else if (motor->limit_switch_b->valid && motor->limit_switch_b->is_activated && (motor->output_pwm > 0.0f)) {
+			change_hbridge_pwm(motor->hbridge, 0.0f);
+		}
+		else {
+			change_hbridge_pwm(motor->hbridge, fabsf(motor->output_pwm));
+		}
 		change_hbridge_dir_val(motor->hbridge, motor->output_pwm > 0.0f);
 	}
 
@@ -65,22 +84,25 @@ void move_motor_to_target(Motor *motor) {
     set_motor_speed(motor, speed);
 }
 
-void switch_limits(Motor *motor) {
-	// custom swap function
-	LimitSwitch *temp = motor->forward_limit_switch;
-	motor->forward_limit_switch = motor->backward_limit_switch;
-	motor->backward_limit_switch = temp;
-}
-
-// Changes encoder counts and sets the scalibration status
+// Changes encoder counts and sets the calibration status
 void update_motor_limit_switches(Motor *motor) {
-	if (motor->backward_limit_switch->is_activated) {
-		motor->encoder->counts = motor->backward_limit_switch->config_counts;
+	if (motor->limit_switch_a->valid &&
+			motor->limit_switch_a->enabled &&
+			motor->limit_switch_a->is_activated) {
+		motor->encoder->counts = motor->limit_switch_a->associated_count;
 		motor->is_calibrated = true;
-	} else if (motor->forward_limit_switch->is_activated) {
-		motor->encoder->counts = motor->forward_limit_switch->config_counts;
+	} else if (motor->limit_switch_b->valid &&
+			motor->limit_switch_b->enabled &&
+			motor->limit_switch_b->is_activated) {
+		motor->encoder->counts = motor->limit_switch_b->associated_count;
 		motor->is_calibrated = true;
 	}
 
+}
+
+void refresh_motor_absolute_encoder_value(Motor *motor) {
+	if (motor->abs_encoder->valid) {
+		refresh_angle_radians(motor->abs_encoder);
+	}
 }
 

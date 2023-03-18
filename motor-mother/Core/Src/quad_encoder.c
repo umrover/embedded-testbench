@@ -1,7 +1,8 @@
 #include "quad_encoder.h"
 
-QuadEncoder *new_quad_encoder(TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim) {
+QuadEncoder *new_quad_encoder(bool _valid, TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim) {
     QuadEncoder *quad_encoder = (QuadEncoder *) malloc(sizeof(QuadEncoder));
+    quad_encoder->valid = _valid;
     quad_encoder->tim = _tim;
     quad_encoder->htim = _htim;
     quad_encoder->counts = 0;

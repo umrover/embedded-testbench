@@ -13,14 +13,15 @@ typedef struct {
     TIM_HandleTypeDef *htim;
     TIM_TypeDef *tim;
 
+    bool valid;
     int32_t counts;
     int16_t counts_raw_prev;
     int16_t counts_raw_now;
 } QuadEncoder;
 
-void init_quad_encoder(QuadEncoder* quad_encoder);
+QuadEncoder *new_quad_encoder(bool _valid, TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim);
 
-QuadEncoder *new_quad_encoder(TIM_HandleTypeDef *_htim, TIM_TypeDef *_tim);
+void init_quad_encoder(QuadEncoder* quad_encoder);
 
 void update_quad_encoder(QuadEncoder* quad_encoder);
 

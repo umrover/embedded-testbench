@@ -2,9 +2,10 @@
 #include "hbridge.h"
 
 
-HBridge *new_hbridge(TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t *_ARR, Pin *fwd,
+HBridge *new_hbridge(bool _valid, TIM_HandleTypeDef *_timer, uint32_t _channel, uint32_t *_out_register, uint32_t *_ARR, Pin *fwd,
                      Pin *bwd) {
     HBridge *hbr = (HBridge *) malloc(sizeof(HBridge));
+    hbr->valid = _valid;
     hbr->timer = _timer;
     hbr->channel = _channel;
     hbr->out_register = _out_register;

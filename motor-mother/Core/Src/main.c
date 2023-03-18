@@ -44,6 +44,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 I2C_HandleTypeDef hi2c1;
+I2C_HandleTypeDef hi2c2;
 
 TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim2;
@@ -66,10 +67,14 @@ LimitSwitch *backward_limit_switches[NUM_MOTORS] = { NULL };
 
 QuadEncoder *quad_encoders[NUM_MOTORS] = { NULL };
 
+AbsEncoder *abs_encoders[NUM_MOTORS] = { NULL };
+
 ClosedLoopControl *controls[NUM_MOTORS] = { NULL };
 
 Motor *motors[NUM_MOTORS] = { NULL };
 I2CBus *i2c_bus = NULL;
+
+I2CBus *absolute_enc_i2c_bus = NULL;
 
 /* USER CODE END PV */
 
@@ -83,6 +88,7 @@ static void MX_TIM3_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_TIM15_Init(void);
 static void MX_TIM16_Init(void);
+static void MX_I2C2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -93,16 +99,16 @@ static void MX_TIM16_Init(void);
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim16) {
 		for (size_t i = 0; i < NUM_MOTORS; ++i) {
-			if (quad_encoders[i]) {
+			if (quad_encoders[i]->valid) {
 				update_quad_encoder(quad_encoders[i]);
 			}
-			if (forward_limit_switches[i]) {
+			if (forward_limit_switches[i]->valid) {
 				update_limit_switch(forward_limit_switches[i]);
 			}
-			if (backward_limit_switches[i]) {
+			if (backward_limit_switches[i]->valid) {
 				update_limit_switch(backward_limit_switches[i]);
 			}
-			if (motors[i]) {
+			if (motors[i]->valid) {
 				update_motor_target(motors[i]);
 				update_motor_speed(motors[i]);
 				update_motor_limit_switches(motors[i]); // TODO
@@ -189,15 +195,15 @@ int main(void)
 	hbridge_backward_pins[4] = new_pin(MOTOR_NDIR_4_GPIO_Port, MOTOR_NDIR_4_Pin);
 	hbridge_backward_pins[5] = new_pin(MOTOR_NDIR_5_GPIO_Port, MOTOR_NDIR_5_Pin);
 
-	hbridges[0] = new_hbridge(&htim4, TIM_CHANNEL_1, &(TIM4->CCR1), &(TIM4->ARR), hbridge_forward_pins[0], hbridge_backward_pins[0]);
-	hbridges[1] = new_hbridge(&htim4, TIM_CHANNEL_2, &(TIM4->CCR2), &(TIM4->ARR), hbridge_forward_pins[1], hbridge_backward_pins[1]);
-	hbridges[2] = new_hbridge(&htim4, TIM_CHANNEL_3, &(TIM4->CCR3), &(TIM4->ARR), hbridge_forward_pins[2], hbridge_backward_pins[2]);
-	hbridges[3] = new_hbridge(&htim4, TIM_CHANNEL_4, &(TIM4->CCR4), &(TIM4->ARR), hbridge_forward_pins[3], hbridge_backward_pins[3]);
-	hbridges[4] = new_hbridge(&htim15, TIM_CHANNEL_1, &(TIM15->CCR1), &(TIM15->ARR), hbridge_forward_pins[4], hbridge_backward_pins[4]);
-	hbridges[5] = new_hbridge(&htim15, TIM_CHANNEL_2, &(TIM15->CCR2), &(TIM15->ARR), hbridge_forward_pins[5], hbridge_backward_pins[5]);
+	hbridges[0] = new_hbridge(1, &htim4, TIM_CHANNEL_1, &(TIM4->CCR1), &(TIM4->ARR), hbridge_forward_pins[0], hbridge_backward_pins[0]);
+	hbridges[1] = new_hbridge(1, &htim4, TIM_CHANNEL_2, &(TIM4->CCR2), &(TIM4->ARR), hbridge_forward_pins[1], hbridge_backward_pins[1]);
+	hbridges[2] = new_hbridge(1, &htim4, TIM_CHANNEL_3, &(TIM4->CCR3), &(TIM4->ARR), hbridge_forward_pins[2], hbridge_backward_pins[2]);
+	hbridges[3] = new_hbridge(1, &htim4, TIM_CHANNEL_4, &(TIM4->CCR4), &(TIM4->ARR), hbridge_forward_pins[3], hbridge_backward_pins[3]);
+	hbridges[4] = new_hbridge(1, &htim15, TIM_CHANNEL_1, &(TIM15->CCR1), &(TIM15->ARR), hbridge_forward_pins[4], hbridge_backward_pins[4]);
+	hbridges[5] = new_hbridge(1, &htim15, TIM_CHANNEL_2, &(TIM15->CCR2), &(TIM15->ARR), hbridge_forward_pins[5], hbridge_backward_pins[5]);
 
 	for (size_t i = 0; i < NUM_MOTORS; ++i) {
-		if (hbridges[i]) {
+		if (hbridges[i]->valid) {
 			init_hbridge(hbridges[i], 0.0f, true);
 		}
 	}
@@ -217,25 +223,34 @@ int main(void)
 	backward_limit_switch_pins[5] = new_pin(LIMIT_B_5_GPIO_Port, LIMIT_B_5_Pin);
 
 	for (size_t i = 0; i < NUM_MOTORS; ++i) {
-		if (forward_limit_switch_pins[i]) {
-			forward_limit_switches[i] = new_limit_switch(
-					forward_limit_switch_pins[i]);
-		}
-		if (backward_limit_switch_pins[i]) {
-			backward_limit_switches[i] = new_limit_switch(
-					backward_limit_switch_pins[i]);
-		}
+		forward_limit_switches[i] = new_limit_switch(
+				forward_limit_switch_pins[i] != NULL,
+				forward_limit_switch_pins[i]);
+		backward_limit_switches[i] = new_limit_switch(
+				backward_limit_switch_pins[i] != NULL,
+				backward_limit_switch_pins[i]);
 	}
 
-	quad_encoders[0] = new_quad_encoder(&htim1, TIM1);
-	quad_encoders[1] = new_quad_encoder(&htim2, TIM2);
-	quad_encoders[2] = new_quad_encoder(&htim3, TIM3);
-//	quad_encoders[3] = new_quad_encoder(&htimX, TIMX);
-//	quad_encoders[4] = new_quad_encoder(&htimX, TIMX);
-//	quad_encoders[5] = new_quad_encoder(&htimX, TIMX);
+	quad_encoders[0] = new_quad_encoder(1, &htim1, TIM1);
+	quad_encoders[1] = new_quad_encoder(1, &htim2, TIM2);
+	quad_encoders[2] = new_quad_encoder(1, &htim3, TIM3);
+
+	// THE OTHER QUAD ENCODERS DO NOT EXIST. Only first value matters.
+	quad_encoders[3] = new_quad_encoder(0, &htim1, TIM1);
+	quad_encoders[4] = new_quad_encoder(0, &htim1, TIM1);
+	quad_encoders[5] = new_quad_encoder(0, &htim1, TIM1);
+
+	abs_encoders[0] = abs_encoder_init(1, &hi2c2, FALSE, FALSE);
+	abs_encoders[1] = abs_encoder_init(1, &hi2c2, TRUE, TRUE);
+
+	// THE OTHER ABS ENCODERS DO NOT EXIST. Only first value matters.
+	abs_encoders[2] = abs_encoder_init(0, &hi2c2, FALSE, FALSE);
+	abs_encoders[3] = abs_encoder_init(0, &hi2c2, FALSE, FALSE);
+	abs_encoders[4] = abs_encoder_init(0, &hi2c2, FALSE, FALSE);
+	abs_encoders[5] = abs_encoder_init(0, &hi2c2, FALSE, FALSE);
 
 	for (size_t i = 0; i < NUM_MOTORS; ++i) {
-		if (quad_encoders[i]) {
+		if (quad_encoders[i]->valid) {
 			init_quad_encoder(quad_encoders[i]);
 		}
 	}
@@ -245,7 +260,7 @@ int main(void)
 	}
 
 	for (size_t i = 0; i < NUM_MOTORS; ++i) {
-		motors[i] = new_motor(hbridges[i], forward_limit_switches[i], backward_limit_switches[i], quad_encoders[i], controls[i]);
+		motors[i] = new_motor(1, hbridges[i], forward_limit_switches[i], backward_limit_switches[i], quad_encoders[i], abs_encoders[i], controls[i]);
 		init_motor(motors[i], 0.0f);
 	}
 
@@ -267,24 +282,26 @@ int main(void)
   MX_TIM4_Init();
   MX_TIM15_Init();
   MX_TIM16_Init();
+  MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
 	HAL_I2C_MspInit(&hi2c1);
 
 	i2c_bus = new_i2c_bus(&hi2c1); // NOTE: hi2c1 orig
+	absolute_enc_i2c_bus = new_i2c_bus(&hi2c1);
 
 	// TODO - Make this better so you wouldn't have to update on both sides (make a variable/class)
 	// TODO - Make sure this stuff works
 
 	// Start up the H-Bridge PWMs
 	for (size_t i = 0; i < NUM_MOTORS; ++i) {
-		if (hbridges[i] != NULL) {
+		if (hbridges[i]->valid) {
 			HAL_TIM_PWM_Start(hbridges[i]->timer, hbridges[i]->channel);
 		}
 	}
 
 	// Start up the quadrature encoders
 	for (size_t i = 0; i < NUM_MOTORS; ++i) {
-		if (quad_encoders[i] != NULL) {
+		if (quad_encoders[i]->valid) {
 			HAL_TIM_Encoder_Start(quad_encoders[i]->htim, TIM_CHANNEL_ALL);
 		}
 	}
@@ -300,11 +317,19 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+	if (I2C_ADDRESS == 0x10)
+	{
+		while (1) {
+			refresh_motor_absolute_encoder_value(motors[0]);
+		}
+	}
 
 	while (1) {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+
 
 	}
   /* USER CODE END 3 */
@@ -377,6 +402,40 @@ static void MX_I2C1_Init(void)
   /* USER CODE BEGIN I2C1_Init 2 */
 
   /* USER CODE END I2C1_Init 2 */
+
+}
+
+/**
+  * @brief I2C2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_I2C2_Init(void)
+{
+
+  /* USER CODE BEGIN I2C2_Init 0 */
+
+  /* USER CODE END I2C2_Init 0 */
+
+  /* USER CODE BEGIN I2C2_Init 1 */
+
+  /* USER CODE END I2C2_Init 1 */
+  hi2c2.Instance = I2C2;
+  hi2c2.Init.ClockSpeed = 100000;
+  hi2c2.Init.DutyCycle = I2C_DUTYCYCLE_2;
+  hi2c2.Init.OwnAddress1 = 0;
+  hi2c2.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+  hi2c2.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+  hi2c2.Init.OwnAddress2 = 0;
+  hi2c2.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+  hi2c2.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+  if (HAL_I2C_Init(&hi2c2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN I2C2_Init 2 */
+
+  /* USER CODE END I2C2_Init 2 */
 
 }
 
