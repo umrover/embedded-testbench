@@ -44,6 +44,9 @@ void set_motor_speed(Motor *motor, float speed) {
 }
 
 void update_motor_speed(Motor *motor) {
+	if (!motor->hbridge->valid) {
+		return;
+	}
     // when speed is positive, motor goes from rev lim to fwd lim
 	if (motor->limit_a_is_forward) {
 		if (motor->limit_switch_a->valid &&

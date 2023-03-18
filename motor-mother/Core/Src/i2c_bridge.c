@@ -136,7 +136,7 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
             int max = 0;
             memcpy(&(max), i2c_bus->buffer, 2);
             motor->max_pwm = ((float) max) / 100.0f;
-            return; // UPDATED
+            return;
         }
         case CONFIG_K:
             memcpy(&(motor->control->kP), i2c_bus->buffer, 4);
@@ -205,6 +205,7 @@ void CH_prepare_send(I2CBus *i2c_bus, Motor *motor) {
             return;
         case ABS_ENC:
         	memcpy(i2c_bus->buffer, &(motor->abs_encoder->angle_rad), 4);
+        	return;
         case IS_CALIBRATED:
             memcpy(i2c_bus->buffer, &(motor->is_calibrated), 1);
             return;
