@@ -151,29 +151,29 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
         case ABS_ENC:
         case IS_CALIBRATED:
             return;
-//        case ENABLE_LIMIT_A:
-//        	memcpy(&(motor->limit_switch_a->enabled), i2c_bus->buffer, 1);
-//        	return;
-//        case ENABLE_LIMIT_B:
-//        	memcpy(&(motor->limit_switch_b->enabled), i2c_bus->buffer, 1);
-//        	return;
-//        case ACTIVE_LIMIT_A:
-//        	memcpy(&(motor->limit_switch_a->active_high), i2c_bus->buffer, 1);
-//        	return;
-//        case ACTIVE_LIMIT_B:
-//        	memcpy(&(motor->limit_switch_b->active_high), i2c_bus->buffer, 1);
-//        	return;
-//        case COUNTS_LIMIT_A:
-//        	memcpy(&(motor->limit_switch_a->associated_count), i2c_bus->buffer, 4);
-//        	return;
-//        case COUNTS_LIMIT_B:
-//        	memcpy(&(motor->limit_switch_b->associated_count), i2c_bus->buffer, 4);
-//        	return;
-//        case LIMIT_A:
-//        case LIMIT_B:
-//        	return;
-//        case LIMIT_A_IS_FWD:
-//        	memcpy(&(motor->limit_a_is_forward), i2c_bus->buffer, 1);
+        case ENABLE_LIMIT_A:
+        	memcpy(&(motor->limit_switch_a->enabled), i2c_bus->buffer, 1);
+        	return;
+        case ENABLE_LIMIT_B:
+        	memcpy(&(motor->limit_switch_b->enabled), i2c_bus->buffer, 1);
+        	return;
+        case ACTIVE_LIMIT_A:
+        	memcpy(&(motor->limit_switch_a->active_high), i2c_bus->buffer, 1);
+        	return;
+        case ACTIVE_LIMIT_B:
+        	memcpy(&(motor->limit_switch_b->active_high), i2c_bus->buffer, 1);
+        	return;
+        case COUNTS_LIMIT_A:
+        	memcpy(&(motor->limit_switch_a->associated_count), i2c_bus->buffer, 4);
+        	return;
+        case COUNTS_LIMIT_B:
+        	memcpy(&(motor->limit_switch_b->associated_count), i2c_bus->buffer, 4);
+        	return;
+        case LIMIT_A:
+        case LIMIT_B:
+        	return;
+        case LIMIT_A_IS_FWD:
+        	memcpy(&(motor->limit_a_is_forward), i2c_bus->buffer, 1);
 
         	return;
         case UNKNOWN:
@@ -207,22 +207,22 @@ void CH_prepare_send(I2CBus *i2c_bus, Motor *motor) {
         	memcpy(i2c_bus->buffer, &(motor->abs_encoder->angle_rad), 4);
         	return;
         case IS_CALIBRATED:
-//            memcpy(i2c_bus->buffer, &(motor->is_calibrated), 1);
-//            return;
-//        case ENABLE_LIMIT_A:
-//        case ENABLE_LIMIT_B:
-//        case ACTIVE_LIMIT_A:
-//        case ACTIVE_LIMIT_B:
-//        case COUNTS_LIMIT_A:
-//        case COUNTS_LIMIT_B:
-//        	return;
-//        case LIMIT_A:
-//        	memcpy(i2c_bus->buffer, &(motor->limit_switch_a->is_activated), 1);
-//			return;
-//        case LIMIT_B:
-//        	memcpy(i2c_bus->buffer, &(motor->limit_switch_b->is_activated), 1);
-//        	return;
-//        case LIMIT_A_IS_FWD:
+            memcpy(i2c_bus->buffer, &(motor->is_calibrated), 1);
+            return;
+        case ENABLE_LIMIT_A:
+        case ENABLE_LIMIT_B:
+        case ACTIVE_LIMIT_A:
+        case ACTIVE_LIMIT_B:
+        case COUNTS_LIMIT_A:
+        case COUNTS_LIMIT_B:
+        	return;
+        case LIMIT_A:
+        	memcpy(i2c_bus->buffer, &(motor->limit_switch_a->is_activated), 1);
+			return;
+        case LIMIT_B:
+        	memcpy(i2c_bus->buffer, &(motor->limit_switch_b->is_activated), 1);
+        	return;
+        case LIMIT_A_IS_FWD:
         case UNKNOWN:
             return;
     }

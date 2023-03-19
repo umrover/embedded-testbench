@@ -290,7 +290,6 @@ int main(void)
 	absolute_enc_i2c_bus = new_i2c_bus(&hi2c1);
 
 	// TODO - Make this better so you wouldn't have to update on both sides (make a variable/class)
-	// TODO - Make sure this stuff works
 
 	// Start up the H-Bridge PWMs
 	for (size_t i = 0; i < NUM_MOTORS; ++i) {

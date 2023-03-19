@@ -3,7 +3,6 @@
 #include <closed_loop_control.h>
 #include <stdlib.h>
 #include <math.h>
-#include "stdbool.h"
 #include "stm32f1xx_hal.h"
 
 #include "limit_switch.h"
@@ -20,15 +19,15 @@ typedef struct {
     AbsEncoder *abs_encoder;
     ClosedLoopControl *control;
 
-    bool valid;
-    bool using_open_loop_control;
+    uint8_t valid;
+    uint8_t using_open_loop_control;
     float output_pwm; // USE FOR PWM! Should be between -max_pwm and max_pwm
     float max_pwm;  // A configuration value! Should be between 0 and 1
     float desired_speed; // Do not use raw value for PWM! Should be between -1 and 1
     int32_t desired_counts;
-    bool limit_enabled;
-    bool is_calibrated;
-    bool limit_a_is_forward;
+    uint8_t limit_enabled;
+    uint8_t is_calibrated;
+    uint8_t limit_a_is_forward;
 } Motor;
 
 Motor *new_motor(bool _valid, HBridge *_hbridge, LimitSwitch *_limit_switch_a, LimitSwitch *_limit_switch_b, QuadEncoder *_encoder, AbsEncoder *_abs_encoder, ClosedLoopControl *_control);

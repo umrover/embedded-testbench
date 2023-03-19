@@ -11,15 +11,15 @@ Motor *new_motor(bool _valid, HBridge *_hbridge, LimitSwitch *_limit_switch_a, L
     motor->abs_encoder = _abs_encoder;
 
     motor->control = _control;
-    motor->using_open_loop_control = true;
+    motor->using_open_loop_control = 1;
     motor->output_pwm = 0;
     motor->max_pwm = 1;
     motor->desired_speed = 0;
     motor->desired_counts = 0;
-    motor->limit_enabled = true;
+    motor->limit_enabled = 1;
 
-    motor->is_calibrated = false;
-    motor->limit_a_is_forward = true;
+    motor->is_calibrated = 0;
+    motor->limit_a_is_forward = 1;
 
     return motor;
 }
@@ -93,12 +93,12 @@ void update_motor_limit_switches(Motor *motor) {
 			motor->limit_switch_a->enabled &&
 			motor->limit_switch_a->is_activated) {
 		motor->encoder->counts = motor->limit_switch_a->associated_count;
-		motor->is_calibrated = true;
+		motor->is_calibrated = 1;
 	} else if (motor->limit_switch_b->valid &&
 			motor->limit_switch_b->enabled &&
 			motor->limit_switch_b->is_activated) {
 		motor->encoder->counts = motor->limit_switch_b->associated_count;
-		motor->is_calibrated = true;
+		motor->is_calibrated = 1;
 	}
 
 }
