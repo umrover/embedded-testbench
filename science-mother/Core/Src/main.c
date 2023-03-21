@@ -24,8 +24,6 @@
 
 #include "adc_sensor.h"
 #include "bridge.h"
-#include "diag_curr_sensor.h"
-#include "diag_temp_sensor.h"
 #include "heater.h"
 #include "pin_data.h"
 #include "servo.h"
@@ -44,8 +42,6 @@
 /* USER CODE BEGIN PD */
 
 #define NUM_MOSFET_DEVICES 12
-#define NUM_DIAG_CURRENT_SENSORS 3
-#define NUM_DIAG_TEMP_SENSORS 3
 #define NUM_SCIENCE_TEMP_SENSORS 3
 #define NUM_SERVOS 3
 #define NUM_HEATERS 3
@@ -80,17 +76,13 @@ TIM_HandleTypeDef htim1;
 TIM_HandleTypeDef htim6;
 
 UART_HandleTypeDef huart1;
-UART_HandleTypeDef huart3;
 DMA_HandleTypeDef hdma_usart1_rx;
-DMA_HandleTypeDef hdma_usart3_rx;
 
 /* USER CODE BEGIN PV */
 
 AutonLED* auton_led = NULL;
 ADCSensor* adc_sensor = NULL;
 Bridge* bridge = NULL;
-DiagCurrentSensor* diag_current_sensors[NUM_DIAG_CURRENT_SENSORS] = {NULL};
-DiagTempSensor* diag_temp_sensors[NUM_DIAG_TEMP_SENSORS] = {NULL};
 Heater* science_heaters[NUM_HEATERS] = {NULL};
 PinData* debug_leds[NUM_DEBUG_LEDS] = {NULL};
 PinData* heater_pins[NUM_HEATERS] = {NULL};
@@ -100,9 +92,6 @@ SMBus* smbus = NULL;
 Spectral* spectral = NULL;
 Thermistor* science_temp_sensors[NUM_SCIENCE_TEMP_SENSORS] = {NULL};
 
-
-float diag_temperatures[NUM_DIAG_TEMP_SENSORS] = {0};
-float diag_currents[NUM_DIAG_CURRENT_SENSORS] = {0};
 float science_temperatures[NUM_SCIENCE_TEMP_SENSORS] = {0};
 uint16_t spectral_data[SPECTRAL_CHANNELS] = {0};
 bool heater_auto_shutoff_state = false;
@@ -119,7 +108,6 @@ static void MX_I2C1_Init(void);
 static void MX_TIM1_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM6_Init(void);
-static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -147,17 +135,9 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
-	adc_sensor = new_adc_sensor(&hadc1, 9);
+	adc_sensor = new_adc_sensor(&hadc1, 3);
 
 	bridge = new_bridge(&huart1);
-
-	diag_current_sensors[0] = new_diag_current_sensor(adc_sensor, 3);
-	diag_current_sensors[1] = new_diag_current_sensor(adc_sensor, 4);
-	diag_current_sensors[2] = new_diag_current_sensor(adc_sensor, 5);
-
-	diag_temp_sensors[0] = new_diag_temp_sensor(adc_sensor, 6);
-	diag_temp_sensors[1] = new_diag_temp_sensor(adc_sensor, 7);
-	diag_temp_sensors[2] = new_diag_temp_sensor(adc_sensor, 8);
 
 	debug_leds[0] = new_pin_data(DEBUG_LED_0_GPIO_Port, DEBUG_LED_0_Pin, PIN_IS_OUTPUT);
 	debug_leds[1] = new_pin_data(DEBUG_LED_1_GPIO_Port, DEBUG_LED_1_Pin, PIN_IS_OUTPUT);
@@ -225,7 +205,6 @@ int main(void)
   MX_TIM1_Init();
   MX_USART1_UART_Init();
   MX_TIM6_Init();
-  MX_USART3_UART_Init();
   /* USER CODE BEGIN 2 */
 
   receive_bridge(bridge, science_heaters, mosfet_pins, servos, auton_led);
@@ -248,22 +227,12 @@ int main(void)
 
 	  /*
 	   * In a while loop, we will need to get the following data and send it over:
-	   * Diagnostic Temperatures and Currents
 	   * Science Temperatures
 	   * Spectral sensor data
 	   * State of auto-shut off state of the heater (upon change).
 	   * State of the heater (upon change).
 	   */
 	  update_adc_sensor_values(adc_sensor);
-	  for (size_t i = 0; i < NUM_DIAG_TEMP_SENSORS; ++i) {
-		  update_diag_temp_sensor_val(diag_temp_sensors[i]);
-		  diag_temperatures[i] = get_diag_temp_sensor_val(diag_temp_sensors[i]);
-	  }
-	  for (size_t i = 0; i < NUM_DIAG_CURRENT_SENSORS; ++i) {
-		  update_diag_current_sensor_val(diag_current_sensors[i]);
-		  diag_currents[i] = get_diag_current_sensor_val(diag_current_sensors[i]);
-	  }
-	  bridge_send_diagnostic(bridge, diag_temperatures, diag_currents);
 
 	  for (size_t i = 0; i < NUM_HEATERS; ++i) {
 		  update_heater_temperature(science_heaters[i]);
@@ -385,7 +354,7 @@ static void MX_ADC1_Init(void)
   hadc1.Init.DiscontinuousConvMode = DISABLE;
   hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
-  hadc1.Init.NbrOfConversion = 9;
+  hadc1.Init.NbrOfConversion = 3;
   if (HAL_ADC_Init(&hadc1) != HAL_OK)
   {
     Error_Handler();
@@ -414,60 +383,6 @@ static void MX_ADC1_Init(void)
   */
   sConfig.Channel = ADC_CHANNEL_2;
   sConfig.Rank = ADC_REGULAR_RANK_3;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_3;
-  sConfig.Rank = ADC_REGULAR_RANK_4;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_4;
-  sConfig.Rank = ADC_REGULAR_RANK_5;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_5;
-  sConfig.Rank = ADC_REGULAR_RANK_6;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_6;
-  sConfig.Rank = ADC_REGULAR_RANK_7;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_7;
-  sConfig.Rank = ADC_REGULAR_RANK_8;
-  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  /** Configure Regular Channel
-  */
-  sConfig.Channel = ADC_CHANNEL_14;
-  sConfig.Rank = ADC_REGULAR_RANK_9;
   if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
   {
     Error_Handler();
@@ -657,39 +572,6 @@ static void MX_USART1_UART_Init(void)
 }
 
 /**
-  * @brief USART3 Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_USART3_UART_Init(void)
-{
-
-  /* USER CODE BEGIN USART3_Init 0 */
-
-  /* USER CODE END USART3_Init 0 */
-
-  /* USER CODE BEGIN USART3_Init 1 */
-
-  /* USER CODE END USART3_Init 1 */
-  huart3.Instance = USART3;
-  huart3.Init.BaudRate = 9600;
-  huart3.Init.WordLength = UART_WORDLENGTH_8B;
-  huart3.Init.StopBits = UART_STOPBITS_1;
-  huart3.Init.Parity = UART_PARITY_NONE;
-  huart3.Init.Mode = UART_MODE_TX_RX;
-  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
-  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
-  if (HAL_UART_Init(&huart3) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN USART3_Init 2 */
-
-  /* USER CODE END USART3_Init 2 */
-
-}
-
-/**
   * Enable DMA controller clock
   */
 static void MX_DMA_Init(void)
@@ -702,9 +584,6 @@ static void MX_DMA_Init(void)
   /* DMA1_Channel1_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
-  /* DMA1_Channel3_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
   /* DMA1_Channel5_IRQn interrupt configuration */
   HAL_NVIC_SetPriority(DMA1_Channel5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel5_IRQn);

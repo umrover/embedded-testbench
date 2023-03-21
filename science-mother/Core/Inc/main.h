@@ -66,14 +66,6 @@ void Error_Handler(void);
 #define SCIENCE_TEMP_1_GPIO_Port GPIOA
 #define SCIENCE_TEMP_2_Pin GPIO_PIN_2
 #define SCIENCE_TEMP_2_GPIO_Port GPIOA
-#define DIAG_CURR_0_Pin GPIO_PIN_3
-#define DIAG_CURR_0_GPIO_Port GPIOA
-#define DIAG_CURR_1_Pin GPIO_PIN_4
-#define DIAG_CURR_1_GPIO_Port GPIOA
-#define DIAG_CURR_2_Pin GPIO_PIN_5
-#define DIAG_CURR_2_GPIO_Port GPIOA
-#define DIAG_TEMP_0_Pin GPIO_PIN_6
-#define DIAG_TEMP_0_GPIO_Port GPIOA
 #define DIAG_TEMP_1_Pin GPIO_PIN_7
 #define DIAG_TEMP_1_GPIO_Port GPIOA
 #define DIAG_TEMP_2_Pin GPIO_PIN_4
