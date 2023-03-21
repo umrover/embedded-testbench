@@ -59,7 +59,7 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define I2C_ADDRESS 0x02
+#define I2C_ADDRESS 0x01
 #define COUNTER_LOOP_PERIOD 1000
 #define QUADRATURE_FILTER 8
 #define QUAD_A_1_Pin GPIO_PIN_0
@@ -142,9 +142,9 @@ void Error_Handler(void);
 #define DEBUG_LED_1_GPIO_Port GPIOB
 #define DEBUG_LED_0_Pin GPIO_PIN_4
 #define DEBUG_LED_0_GPIO_Port GPIOB
-#define I2C1_TO_JETSON_SCL_Pin GPIO_PIN_6
+#define I2C1_TO_JETSON_SCL_Pin GPIO_PIN_8
 #define I2C1_TO_JETSON_SCL_GPIO_Port GPIOB
-#define I2C1_TO_JETSON_SDA_Pin GPIO_PIN_7
+#define I2C1_TO_JETSON_SDA_Pin GPIO_PIN_9
 #define I2C1_TO_JETSON_SDA_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
 
