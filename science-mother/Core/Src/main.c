@@ -149,7 +149,7 @@ int main(void)
 
 	adc_sensor = new_adc_sensor(&hadc1, 9);
 
-	bridge = new_bridge(&huart3);
+	bridge = new_bridge(&huart1);
 
 	diag_current_sensors[0] = new_diag_current_sensor(adc_sensor, 3);
 	diag_current_sensors[1] = new_diag_current_sensor(adc_sensor, 4);
