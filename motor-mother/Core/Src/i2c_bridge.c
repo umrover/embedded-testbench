@@ -147,6 +147,7 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
             return;
         case ADJUST:
             memcpy(&(motor->encoder->counts), i2c_bus->buffer, 4);
+	    motor->is_calibrated = 1;
             return;
         case ABS_ENC:
         case IS_CALIBRATED:
