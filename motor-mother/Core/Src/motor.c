@@ -82,9 +82,11 @@ void update_motor_speed(Motor *motor) {
 }
 
 void move_motor_to_target(Motor *motor) {
-    // TODO need to test this blind implementation, may be some problems wrapping across counts boundaries
-    float speed = calculate_pid(motor->control, motor->desired_counts, motor->encoder->counts);
-    set_motor_speed(motor, speed);
+	if (motor->is_calibrated) {
+		// TODO there might be problems here
+		float speed = calculate_pid(motor->control, motor->desired_counts, motor->encoder->counts);
+		set_motor_speed(motor, speed);
+	}
 }
 
 // Changes encoder counts and sets the calibration status
