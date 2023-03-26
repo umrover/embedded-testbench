@@ -1,0 +1,12 @@
+../Core/Src/spectral.c:10:6:send_spectral_data	272	static
+../Core/Src/spectral.c:51:11:new_spectral	40	static
+../Core/Src/spectral.c:64:6:enable_spectral	16	static
+../Core/Src/spectral.c:73:5:get_spectral_data	24	static
+../Core/Src/spectral.c:85:6:del_spectral	24	static
+../Core/Src/spectral.c:96:6:_virtual_write	24	static
+../Core/Src/spectral.c:119:9:_virtual_read	24	static
+../Core/Src/spectral.c:150:5:_get_channel_data	24	static
+../Core/Src/spectral.c:162:10:_new_channel	24	static
+../Core/Src/spectral.c:170:10:_get_val	24	static
+../Core/Src/spectral.c:175:6:_del_channel	16	static
+../Core/Src/spectral.c:181:5:check_ready	16	static

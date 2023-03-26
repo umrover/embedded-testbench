@@ -9,6 +9,9 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart) {
 	for (int i = 0; i < UART_BUFFER_SIZE; ++i) {
 		bridge->uart_buffer[i] = 0;
 	}
+	for (int i = 0; i < TOTAL_UART_MESSAGE_SIZE; ++i) {
+		bridge->message_buffer[i] = 0;
+	}
 	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
 
     return bridge;
@@ -19,23 +22,31 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart) {
 // EFFECTS: Receives the message and processes it
 void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12], Servo *servos[3], AutonLED *auton_led) {
 	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
-	shift_uart_buffer(bridge);
-	if (bridge->uart_buffer[0] == '$') {
-		// Expect it always to be a $ sign.
-		if (bridge->uart_buffer[1] == 'M') {
-			receive_bridge_mosfet_cmd(bridge, mosfet_pins);
-		}
-		else if (bridge->uart_buffer[1] == 'S') {
-			receive_bridge_servo_cmd(bridge, servos);
-		}
-		else if (bridge->uart_buffer[1] == 'A') {
-			receive_bridge_auto_shutoff_cmd(bridge, heaters);
-		}
-		else if (bridge->uart_buffer[1] == 'H') {
-			receive_bridge_heater_cmd(bridge, heaters);
-		}
-		else if (bridge->uart_buffer[1] == 'L') {
-			receive_bridge_auton_led_cmd(bridge, auton_led);
+	fill_message_buffer(bridge);
+	//If the message has been created
+	if(bridge->msg_length_counter >= 30)
+	{
+		// Could be redundant check for $, but I'll keep it for now
+		// Also, before the first message is recieved, it will come in here
+		// because msg_length_counter starts at 30.
+		// But it should then get kicked out immediately, so prob no issues
+		if (bridge->message_buffer[0] == '$') {
+			// Expect it always to be a $ sign.
+			if (bridge->message_buffer[1] == 'M') {
+				receive_bridge_mosfet_cmd(bridge, mosfet_pins);
+			}
+			else if (bridge->message_buffer[1] == 'S') {
+				receive_bridge_servo_cmd(bridge, servos);
+			}
+			else if (bridge->message_buffer[1] == 'A') {
+				receive_bridge_auto_shutoff_cmd(bridge, heaters);
+			}
+			else if (bridge->message_buffer[1] == 'H') {
+				receive_bridge_heater_cmd(bridge, heaters);
+			}
+			else if (bridge->message_buffer[1] == 'L') {
+				receive_bridge_auton_led_cmd(bridge, auton_led);
+			}
 		}
 	}
 }
@@ -45,13 +56,13 @@ void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12]
 // EFFECTS: Receives the message if it is a mosfet message in the format:
 // "$MOSFET,<DEVICE>,<ENABLE>"
 void receive_bridge_mosfet_cmd(Bridge *bridge , PinData *mosfet_pins[12]) {
-	if (bridge->uart_buffer[0] != '$' || bridge->uart_buffer[1] != 'M') {
+	if (bridge->message_buffer[0] != '$' || bridge->message_buffer[1] != 'M') {
 		// This should be asserted.
 		// The function should not have been called if it was not the correct message
 		return;
 	}
 
-	char *identifier = strtok(bridge->uart_buffer, ",");
+	char *identifier = strtok(bridge->message_buffer, ",");
 
 	if (!strcmp(identifier,"$MOSFET")){
 		int device = -1;
@@ -71,13 +82,13 @@ void receive_bridge_mosfet_cmd(Bridge *bridge , PinData *mosfet_pins[12]) {
 // EFFECTS: Receives the message if it is a servo message in the format:
 // "$SERVO,<SERVO ID>,<ANGLE>"
 void receive_bridge_servo_cmd(Bridge *bridge, Servo *servos[3]) {
-	if (bridge->uart_buffer[0] != '$' || bridge->uart_buffer[1] != 'S') {
+	if (bridge->message_buffer[0] != '$' || bridge->message_buffer[1] != 'S') {
 		// This should be asserted.
 		// The function should not have been called if it was not the correct message
 		return;
 	}
 
-	char *identifier = strtok(bridge->uart_buffer, ",");
+	char *identifier = strtok(bridge->message_buffer, ",");
 
 	if (!strcmp(identifier,"$SERVO")){
 		int device = -1;
@@ -97,13 +108,13 @@ void receive_bridge_servo_cmd(Bridge *bridge, Servo *servos[3]) {
 // EFFECTS: Receives the message if it is an auto shutoff message in the format:
 // "$AUTO_SHUTOFF,<VAL>"
 void receive_bridge_auto_shutoff_cmd(Bridge *bridge, Heater *heaters[3]) {
-	if (bridge->uart_buffer[0] != '$' || bridge->uart_buffer[1] != 'A') {
+	if (bridge->message_buffer[0] != '$' || bridge->message_buffer[1] != 'A') {
 		// This should be asserted.
 		// The function should not have been called if it was not the correct message
 		return;
 	}
 
-	char *identifier = strtok(bridge->uart_buffer, ",");
+	char *identifier = strtok(bridge->message_buffer, ",");
 
 	if (!strcmp(identifier,"$AUTO_SHUTOFF")){
 		bool state = false;
@@ -123,13 +134,13 @@ void receive_bridge_auto_shutoff_cmd(Bridge *bridge, Heater *heaters[3]) {
 // EFFECTS: Receives the message if it is a heater message in the format:
 // "$HEATER_CMD,<DEVICE>,<ENABLE>"
 void receive_bridge_heater_cmd(Bridge *bridge, Heater *heaters[3]) {
-	if (bridge->uart_buffer[0] != '$' || bridge->uart_buffer[1] != 'H') {
+	if (bridge->message_buffer[0] != '$' || bridge->message_buffer[1] != 'H') {
 		// This should be asserted.
 		// The function should not have been called if it was not the correct message
 		return;
 	}
 
-	char *identifier = strtok(bridge->uart_buffer, ",");
+	char *identifier = strtok(bridge->message_buffer, ",");
 
 	if (!strcmp(identifier,"$HEATER_CMD")){
 		int device = -1;
@@ -151,13 +162,13 @@ void receive_bridge_heater_cmd(Bridge *bridge, Heater *heaters[3]) {
 // "$LED, <REQUESTED_STATE>"
 // where number is 0 for red, 1 for blinking green, 2 for blue, and 3 for off
 void receive_bridge_auton_led_cmd(Bridge *bridge, AutonLED *auton_led) {
-	if (bridge->uart_buffer[0] != '$' || bridge->uart_buffer[1] != 'A') {
+	if (bridge->message_buffer[0] != '$' || bridge->message_buffer[1] != 'A') {
 		// This should be asserted.
 		// The function should not have been called if it was not the correct message
 		return;
 	}
 
-	char *identifier = strtok(bridge->uart_buffer, ",");
+	char *identifier = strtok(bridge->message_buffer, ",");
 
 	if (!strcmp(identifier,"$LED")){
 		int requested_state = -1;
@@ -238,34 +249,21 @@ void bridge_send_heater_state(Bridge *bridge, bool states[3]) {
 }
 
 // REQUIRES: nothing
-// MODIFIES: bridge->uart_buffer
-// EFFECTS: eliminates any padding at the beginning of a uart message and shifts
-// 			the message itself to begin at position zero
-// 			e.g. ",,,,,,,$SERVO..." ---> "$SERVO..."
-void shift_uart_buffer(Bridge *bridge) {
-	// find beginning of message
-	int message_begin_idx = -1;
-	for (int i = 0; i < UART_BUFFER_SIZE; ++i) {
-		if (bridge->uart_buffer[i] == '$') { // message found
-			message_begin_idx = i;
-			break;
-		}
+// MODIFIES: bridge->message_buffer
+// EFFECTS: Starts creating the message if the uart buffer reads in a $
+//          Fills in the 30 char message buffer
+//          example finished message: "$SERVO..."
+void fill_message_buffer(Bridge *bridge) {
+	// Look for $ in uart buffer
+	// Sets msg_length_counter to 0 to prepare to create message
+	if(bridge->uart_buffer[0] =='$')
+	{
+		bridge->msg_length_counter = 0;
 	}
-
-	// no message found in buffer, nothing to be done
-	if (message_begin_idx == -1) {
-		return;
-	}
-
-	// shift message to beginning
-	int write_idx = 0;
-	for (int i = message_begin_idx; i < UART_BUFFER_SIZE; ++i) {
-		bridge->uart_buffer[write_idx] = bridge->uart_buffer[i];
-		++write_idx;
-	}
-
-	// pad message with commas
-	for (int i = write_idx; i < UART_BUFFER_SIZE; ++i) {
-		bridge->uart_buffer[i] = ',';
+	// create the message if msg_length_counter is a valid index
+	if(bridge->msg_length_counter < 30)
+	{	
+		bridge->message_buffer[bridge->msg_length_counter] = bridge->uart_buffer[0];
+		bridge->msg_length_counter = bridge->msg_length_counter++;
 	}
 }

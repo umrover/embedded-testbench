@@ -1,0 +1,4 @@
+../Core/Src/mosfet.c:6:15:new_mosfet_device	24	static
+../Core/Src/mosfet.c:17:6:turn_mosfet_device_on	24	static
+../Core/Src/mosfet.c:27:6:turn_mosfet_device_off	24	static
+../Core/Src/mosfet.c:37:6:set_mosfet_device_state	16	static

@@ -1,0 +1,3 @@
+../Core/Src/diagnostic_temp_sensor.c:15:14:new_diagnostic_temp_sensor	24	static
+../Core/Src/diagnostic_temp_sensor.c:27:6:update_temp_sensor_value	24	static
+../Core/Src/diagnostic_temp_sensor.c:36:7:get_temp_sensor_temp	16	static
