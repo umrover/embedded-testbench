@@ -1,22 +1,25 @@
 
 #include "motor.h"
 
-Motor *new_motor(bool _valid, HBridge *_hbridge, LimitSwitch *_fwd_lim, LimitSwitch *_bwd_lim, QuadEncoder *_encoder, AbsEncoder *_abs_encoder, ClosedLoopControl *_control) {
+Motor *new_motor(bool _valid, HBridge *_hbridge, LimitSwitch *_limit_switch_a, LimitSwitch *_limit_switch_b, QuadEncoder *_encoder, AbsEncoder *_abs_encoder, ClosedLoopControl *_control) {
     Motor *motor = (Motor *) malloc(sizeof(Motor));
     motor->valid = _valid;
     motor->hbridge = _hbridge;
-    motor->forward_limit_switch = _fwd_lim;
-    motor->backward_limit_switch = _bwd_lim;
+    motor->limit_switch_a = _limit_switch_a;
+    motor->limit_switch_b = _limit_switch_b;
     motor->encoder = _encoder;
     motor->abs_encoder = _abs_encoder;
 
     motor->control = _control;
-    motor->using_open_loop_control = true;
+    motor->using_open_loop_control = 1;
     motor->output_pwm = 0;
     motor->max_pwm = 1;
     motor->desired_speed = 0;
     motor->desired_counts = 0;
-    motor->limit_enabled = true;// TODO this should be true... testing
+    motor->limit_enabled = 1;
+
+    motor->is_calibrated = 0;
+    motor->limit_a_is_forward = 1;
 
     return motor;
 }
@@ -41,28 +44,65 @@ void set_motor_speed(Motor *motor, float speed) {
 }
 
 void update_motor_speed(Motor *motor) {
+	if (!motor->hbridge->valid) {
+		return;
+	}
     // when speed is positive, motor goes from rev lim to fwd lim
-	if (motor->limit_enabled) {
-		if (motor->forward_limit_switch && motor->forward_limit_switch->is_activated && (motor->output_pwm > 0.0f)) {
+	if (motor->limit_a_is_forward) {
+		if (motor->limit_switch_a->valid &&
+				motor->limit_switch_a->enabled &&
+				motor->limit_switch_a->is_activated &&
+				(motor->output_pwm > 0.0f)) {
 			change_hbridge_pwm(motor->hbridge, 0.0f);
-		} else if (motor->backward_limit_switch && motor->backward_limit_switch->is_activated && (motor->output_pwm < 0.0f)) {
+		}
+		else if (motor->limit_switch_b->valid &&
+				motor->limit_switch_b->enabled &&
+				motor->limit_switch_b->is_activated &&
+				(motor->output_pwm < 0.0f)) {
 			change_hbridge_pwm(motor->hbridge, 0.0f);
-		} else {
+		}
+		else {
 			change_hbridge_pwm(motor->hbridge, fabsf(motor->output_pwm));
 		}
 		change_hbridge_dir_val(motor->hbridge, motor->output_pwm > 0.0f);
 	}
 	else {
-		change_hbridge_pwm(motor->hbridge, fabsf(motor->output_pwm));
+		if (motor->limit_switch_a->valid && motor->limit_switch_a->is_activated && (motor->output_pwm < 0.0f)) {
+			change_hbridge_pwm(motor->hbridge, 0.0f);
+		}
+		else if (motor->limit_switch_b->valid && motor->limit_switch_b->is_activated && (motor->output_pwm > 0.0f)) {
+			change_hbridge_pwm(motor->hbridge, 0.0f);
+		}
+		else {
+			change_hbridge_pwm(motor->hbridge, fabsf(motor->output_pwm));
+		}
 		change_hbridge_dir_val(motor->hbridge, motor->output_pwm > 0.0f);
 	}
 
 }
 
 void move_motor_to_target(Motor *motor) {
-    // TODO need to test this blind implementation, may be some problems wrapping across counts boundaries
-    float speed = calculate_pid(motor->control, motor->desired_counts, motor->encoder->counts);
-    set_motor_speed(motor, speed);
+	if (motor->is_calibrated) {
+		// TODO there might be problems here
+		float speed = calculate_pid(motor->control, motor->desired_counts, motor->encoder->counts);
+		set_motor_speed(motor, speed);
+	}
+}
+
+// Changes encoder counts and sets the calibration status
+void update_motor_limit_switches(Motor *motor) {
+	if (motor->limit_switch_a->valid &&
+			motor->limit_switch_a->enabled &&
+			motor->limit_switch_a->is_activated) {
+		motor->encoder->counts = motor->limit_switch_a->associated_count;
+		motor->is_calibrated = 1;
+	} else if (motor->limit_switch_b->valid &&
+			motor->limit_switch_b->enabled &&
+			motor->limit_switch_b->is_activated) {
+		motor->encoder->counts = motor->limit_switch_b->associated_count;
+		motor->is_calibrated = 1;
+	}
+
 }
 
 void refresh_motor_absolute_encoder_value(Motor *motor) {
@@ -70,5 +110,4 @@ void refresh_motor_absolute_encoder_value(Motor *motor) {
 		refresh_angle_radians(motor->abs_encoder);
 	}
 }
-
 

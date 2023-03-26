@@ -111,6 +111,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 			if (motors[i]->valid) {
 				update_motor_target(motors[i]);
 				update_motor_speed(motors[i]);
+				update_motor_limit_switches(motors[i]);
 			}
 		}
 	}
@@ -288,7 +289,6 @@ int main(void)
 	absolute_enc_i2c_bus = new_i2c_bus(&hi2c1);
 
 	// TODO - Make this better so you wouldn't have to update on both sides (make a variable/class)
-	// TODO - Make sure this stuff works
 
 	// Start up the H-Bridge PWMs
 	for (size_t i = 0; i < NUM_MOTORS; ++i) {
@@ -387,7 +387,7 @@ static void MX_I2C1_Init(void)
   hi2c1.Instance = I2C1;
   hi2c1.Init.ClockSpeed = 400000;
   hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
-  hi2c1.Init.OwnAddress1 = 4;
+  hi2c1.Init.OwnAddress1 = 2;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
   hi2c1.Init.OwnAddress2 = 0;
