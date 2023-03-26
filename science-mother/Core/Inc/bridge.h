@@ -9,13 +9,16 @@
 #include "servo.h"
 #include "auton_led.h"
 
-#define UART_BUFFER_SIZE 30 // size of uart message
+#define UART_BUFFER_SIZE 1 // read in 1 byte at a time
+#define TOTAL_UART_MESSAGE_SIZE 30// size of uart message
 
 // The communication bridge between the Jetson and the chip
 typedef struct
 {
 	UART_HandleTypeDef *uart;
 	char uart_buffer[UART_BUFFER_SIZE];
+	char message_buffer[TOTAL_UART_MESSAGE_SIZE];
+	uint32_t msg_length_counter = 30; // Keeps track of message length. Once it is 30, we have the full message
 } Bridge;
 
 // REQUIRES: uart is the uart channel
@@ -90,7 +93,8 @@ void bridge_send_heater_auto_shutoff(Bridge *bridge, bool state);
 void bridge_send_heater_state(Bridge *bridge, bool states[3]);
 
 // REQUIRES: nothing
-// MODIFIES: bridge->uart_buffer
-// EFFECTS: eliminates any padding at the beginning of a uart message and shifts
-// 			the message itself to begin at position zero
-void shift_uart_buffer(Bridge *bridge);
+// MODIFIES: bridge->message_buffer
+// EFFECTS: Starts creating the message if the uart buffer reads in a $
+//          Fills in the 30 char message buffer
+//          example finished message: "$SERVO..."
+void fill_message_buffer(Bridge *bridge);
