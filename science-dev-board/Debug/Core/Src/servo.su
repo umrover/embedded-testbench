@@ -1,4 +1,0 @@
-../Core/Src/servo.c:4:9:constrain	16	static
-../Core/Src/servo.c:24:8:new_servo	32	static
-../Core/Src/servo.c:37:6:initialize_servo	16	static
-../Core/Src/servo.c:49:6:set_servo_angle	16	static

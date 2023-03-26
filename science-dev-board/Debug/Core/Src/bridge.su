@@ -1,5 +1,0 @@
-../Core/Src/bridge.c:6:9:new_bridge	24	static
-../Core/Src/bridge.c:19:6:bridge_send_diagnostic	264	static
-../Core/Src/bridge.c:35:6:bridge_send_spectral	208	static
-../Core/Src/bridge.c:52:6:bridge_send_science_thermistors	208	static
-../Core/Src/bridge.c:61:6:send_uart_string	16	static

@@ -1,3 +1,0 @@
-../Core/Src/adc_sensor.c:8:12:new_adc_sensor	24	static
-../Core/Src/adc_sensor.c:22:10:get_adc_sensor_value	16	static
-../Core/Src/adc_sensor.c:29:6:update_adc_sensor_values	24	static
