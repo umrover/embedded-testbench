@@ -13,6 +13,7 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart) {
 		bridge->message_buffer[i] = 0;
 	}
 	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
+	bridge->msg_length_counter = 30;
 
     return bridge;
 }
@@ -24,6 +25,7 @@ void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12]
 	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
 	fill_message_buffer(bridge);
 	//If the message has been created
+
 	if(bridge->msg_length_counter >= 30)
 	{
 		// Could be redundant check for $, but I'll keep it for now
@@ -264,6 +266,6 @@ void fill_message_buffer(Bridge *bridge) {
 	if(bridge->msg_length_counter < 30)
 	{	
 		bridge->message_buffer[bridge->msg_length_counter] = bridge->uart_buffer[0];
-		bridge->msg_length_counter = bridge->msg_length_counter++;
+		bridge->msg_length_counter++;
 	}
 }

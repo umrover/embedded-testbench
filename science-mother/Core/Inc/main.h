@@ -93,6 +93,8 @@ void Error_Handler(void);
 #define MOSFET_2_GPIO_Port GPIOB
 #define MOSFET_3_Pin GPIO_PIN_15
 #define MOSFET_3_GPIO_Port GPIOB
+#define MOSFET_4_Pin GPIO_PIN_8
+#define MOSFET_4_GPIO_Port GPIOD
 #define MOSFET_5_Pin GPIO_PIN_9
 #define MOSFET_5_GPIO_Port GPIOD
 #define MOSFET_6_Pin GPIO_PIN_10

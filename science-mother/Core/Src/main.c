@@ -742,7 +742,7 @@ static void MX_GPIO_Init(void)
                           |DEBUG_LED_1_Pin|DEBUG_LED_0_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_8|MOSFET_5_Pin|MOSFET_6_Pin|MOSFET_7_Pin
+  HAL_GPIO_WritePin(GPIOD, MOSFET_4_Pin|MOSFET_5_Pin|MOSFET_6_Pin|MOSFET_7_Pin
                           |MOSFET_8_Pin|MOSFET_9_Pin|MOSFET_10_Pin|MOSFET_11_Pin
                           |DEBUG_LED_3_Pin|DEBUG_LED_2_Pin, GPIO_PIN_RESET);
 
@@ -755,10 +755,10 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PD8 MOSFET_5_Pin MOSFET_6_Pin MOSFET_7_Pin
+  /*Configure GPIO pins : MOSFET_4_Pin MOSFET_5_Pin MOSFET_6_Pin MOSFET_7_Pin
                            MOSFET_8_Pin MOSFET_9_Pin MOSFET_10_Pin MOSFET_11_Pin
                            DEBUG_LED_3_Pin DEBUG_LED_2_Pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_8|MOSFET_5_Pin|MOSFET_6_Pin|MOSFET_7_Pin
+  GPIO_InitStruct.Pin = MOSFET_4_Pin|MOSFET_5_Pin|MOSFET_6_Pin|MOSFET_7_Pin
                           |MOSFET_8_Pin|MOSFET_9_Pin|MOSFET_10_Pin|MOSFET_11_Pin
                           |DEBUG_LED_3_Pin|DEBUG_LED_2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
