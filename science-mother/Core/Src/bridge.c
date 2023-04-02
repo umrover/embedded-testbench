@@ -12,7 +12,6 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart) {
 	for (int i = 0; i < TOTAL_UART_MESSAGE_SIZE; ++i) {
 		bridge->message_buffer[i] = 0;
 	}
-	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
 	bridge->msg_length_counter = 0;
 
     return bridge;

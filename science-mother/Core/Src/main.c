@@ -140,6 +140,39 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
 
+
+  /* USER CODE END 1 */
+
+  /* MCU Configuration--------------------------------------------------------*/
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* Configure the system clock */
+  SystemClock_Config();
+
+  /* USER CODE BEGIN SysInit */
+  // Delay so Jetson doen't kill it with noise
+  HAL_Delay(60000);
+
+  /* USER CODE END SysInit */
+
+  /* Initialize all configured peripherals */
+  MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_ADC1_Init();
+  MX_I2C1_Init();
+  MX_TIM1_Init();
+  MX_TIM6_Init();
+  MX_USART3_UART_Init();
+  MX_I2C2_Init();
+  MX_USART1_UART_Init();
+  /* USER CODE BEGIN 2 */
+
 	adc_sensor = new_adc_sensor(&hadc1, 3);
 
 	bridge = new_bridge(&huart1);
@@ -182,39 +215,6 @@ int main(void)
 	science_heaters[0] = new_heater(heater_pins[0], science_temp_sensors[0]);
 	science_heaters[1] = new_heater(heater_pins[1], science_temp_sensors[1]);
 	science_heaters[2] = new_heater(heater_pins[2], science_temp_sensors[2]);
-
-
-  /* USER CODE END 1 */
-
-  /* MCU Configuration--------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
-  SystemClock_Config();
-
-  /* USER CODE BEGIN SysInit */
-
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
-  MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_ADC1_Init();
-  MX_I2C1_Init();
-  MX_TIM1_Init();
-  MX_TIM6_Init();
-  MX_USART3_UART_Init();
-  MX_I2C2_Init();
-  // Delay so Jetson doen't kill it with noise
-  HAL_Delay(20000);
-  MX_USART1_UART_Init();
-  /* USER CODE BEGIN 2 */
 
   receive_bridge(bridge, science_heaters, mosfet_pins, servos, auton_led);
 
