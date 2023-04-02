@@ -208,10 +208,12 @@ int main(void)
   MX_ADC1_Init();
   MX_I2C1_Init();
   MX_TIM1_Init();
-  MX_USART1_UART_Init();
   MX_TIM6_Init();
   MX_USART3_UART_Init();
   MX_I2C2_Init();
+  // Delay so Jetson doen't kill it with noise
+  HAL_Delay(20000);
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 
   receive_bridge(bridge, science_heaters, mosfet_pins, servos, auton_led);
