@@ -157,7 +157,12 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
   // Delay so Jetson doen't kill it with noise
+
+  // Temporarily disable USART to be resistant to noise (does this even work?)
+  // 0x18 is the address of the RCC_APB2ENR register
+  CLEAR_BIT(0x18, RCC_APB2ENR_USART1EN);
   HAL_Delay(60000);
+  SET_BIT(0x18, RCC_APB2ENR_USART1EN);
 
   /* USER CODE END SysInit */
 
