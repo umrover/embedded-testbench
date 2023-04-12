@@ -129,6 +129,30 @@ motor-mother.elf/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/motor-mother.elf.dir/build.make CMakeFiles/motor-mother.elf.dir/build
 .PHONY : motor-mother.elf/fast
 
+Core/Src/abs_enc_reading.obj: Core/Src/abs_enc_reading.c.obj
+.PHONY : Core/Src/abs_enc_reading.obj
+
+# target to build an object file
+Core/Src/abs_enc_reading.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/motor-mother.elf.dir/build.make CMakeFiles/motor-mother.elf.dir/Core/Src/abs_enc_reading.c.obj
+.PHONY : Core/Src/abs_enc_reading.c.obj
+
+Core/Src/abs_enc_reading.i: Core/Src/abs_enc_reading.c.i
+.PHONY : Core/Src/abs_enc_reading.i
+
+# target to preprocess a source file
+Core/Src/abs_enc_reading.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/motor-mother.elf.dir/build.make CMakeFiles/motor-mother.elf.dir/Core/Src/abs_enc_reading.c.i
+.PHONY : Core/Src/abs_enc_reading.c.i
+
+Core/Src/abs_enc_reading.s: Core/Src/abs_enc_reading.c.s
+.PHONY : Core/Src/abs_enc_reading.s
+
+# target to generate assembly for a file
+Core/Src/abs_enc_reading.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/motor-mother.elf.dir/build.make CMakeFiles/motor-mother.elf.dir/Core/Src/abs_enc_reading.c.s
+.PHONY : Core/Src/abs_enc_reading.c.s
+
 Core/Src/closed_loop_control.obj: Core/Src/closed_loop_control.c.obj
 .PHONY : Core/Src/closed_loop_control.obj
 
@@ -794,6 +818,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... motor-mother.elf"
+	@echo "... Core/Src/abs_enc_reading.obj"
+	@echo "... Core/Src/abs_enc_reading.i"
+	@echo "... Core/Src/abs_enc_reading.s"
 	@echo "... Core/Src/closed_loop_control.obj"
 	@echo "... Core/Src/closed_loop_control.i"
 	@echo "... Core/Src/closed_loop_control.s"

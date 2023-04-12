@@ -25,7 +25,6 @@ typedef struct {
     float max_pwm;  // A configuration value! Should be between 0 and 1
     float desired_speed; // Do not use raw value for PWM! Should be between -1 and 1
     int32_t desired_counts;
-    uint8_t limit_enabled;
     uint8_t is_calibrated;
     uint8_t limit_a_is_forward;
 } Motor;

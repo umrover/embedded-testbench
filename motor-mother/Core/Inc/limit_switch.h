@@ -9,7 +9,7 @@
 typedef struct {
     Pin *pin;
     uint8_t enabled;
-    uint8_t is_activated;
+    uint8_t is_pressed;
     uint8_t valid;
     uint8_t active_high;
     int32_t associated_count;

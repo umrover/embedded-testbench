@@ -16,7 +16,6 @@ Motor *new_motor(bool _valid, HBridge *_hbridge, LimitSwitch *_limit_switch_a, L
     motor->max_pwm = 1;
     motor->desired_speed = 0;
     motor->desired_counts = 0;
-    motor->limit_enabled = 1;
 
     motor->is_calibrated = 0;
     motor->limit_a_is_forward = 1;
@@ -50,15 +49,15 @@ void update_motor_speed(Motor *motor) {
     // when speed is positive, motor goes from rev lim to fwd lim
 	if (motor->limit_a_is_forward) {
 		if (motor->limit_switch_a->valid &&
-				motor->limit_switch_a->enabled &&
-				motor->limit_switch_a->is_activated &&
-				(motor->output_pwm > 0.0f)) {
+            motor->limit_switch_a->enabled &&
+            motor->limit_switch_a->is_pressed &&
+            (motor->output_pwm > 0.0f)) {
 			change_hbridge_pwm(motor->hbridge, 0.0f);
 		}
 		else if (motor->limit_switch_b->valid &&
-				motor->limit_switch_b->enabled &&
-				motor->limit_switch_b->is_activated &&
-				(motor->output_pwm < 0.0f)) {
+                 motor->limit_switch_b->enabled &&
+                 motor->limit_switch_b->is_pressed &&
+                 (motor->output_pwm < 0.0f)) {
 			change_hbridge_pwm(motor->hbridge, 0.0f);
 		}
 		else {
@@ -67,10 +66,10 @@ void update_motor_speed(Motor *motor) {
 		change_hbridge_dir_val(motor->hbridge, motor->output_pwm > 0.0f);
 	}
 	else {
-		if (motor->limit_switch_a->valid && motor->limit_switch_a->is_activated && (motor->output_pwm < 0.0f)) {
+		if (motor->limit_switch_a->valid && motor->limit_switch_a->is_pressed && (motor->output_pwm < 0.0f)) {
 			change_hbridge_pwm(motor->hbridge, 0.0f);
 		}
-		else if (motor->limit_switch_b->valid && motor->limit_switch_b->is_activated && (motor->output_pwm > 0.0f)) {
+		else if (motor->limit_switch_b->valid && motor->limit_switch_b->is_pressed && (motor->output_pwm > 0.0f)) {
 			change_hbridge_pwm(motor->hbridge, 0.0f);
 		}
 		else {
@@ -93,12 +92,12 @@ void move_motor_to_target(Motor *motor) {
 void update_motor_limit_switches(Motor *motor) {
 	if (motor->limit_switch_a->valid &&
 			motor->limit_switch_a->enabled &&
-			motor->limit_switch_a->is_activated) {
+			motor->limit_switch_a->is_pressed) {
 		motor->encoder->counts = motor->limit_switch_a->associated_count;
 		motor->is_calibrated = 1;
 	} else if (motor->limit_switch_b->valid &&
 			motor->limit_switch_b->enabled &&
-			motor->limit_switch_b->is_activated) {
+			motor->limit_switch_b->is_pressed) {
 		motor->encoder->counts = motor->limit_switch_b->associated_count;
 		motor->is_calibrated = 1;
 	}

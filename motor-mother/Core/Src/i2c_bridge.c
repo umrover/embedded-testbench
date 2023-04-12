@@ -218,10 +218,10 @@ void CH_prepare_send(I2CBus *i2c_bus, Motor *motor) {
         case COUNTS_LIMIT_B:
         	return;
         case LIMIT_A:
-        	memcpy(i2c_bus->buffer, &(motor->limit_switch_a->is_activated), 1);
+        	memcpy(i2c_bus->buffer, &(motor->limit_switch_a->is_pressed), 1);
 			return;
         case LIMIT_B:
-        	memcpy(i2c_bus->buffer, &(motor->limit_switch_b->is_activated), 1);
+        	memcpy(i2c_bus->buffer, &(motor->limit_switch_b->is_pressed), 1);
         	return;
         case LIMIT_A_IS_FWD:
         case UNKNOWN:
