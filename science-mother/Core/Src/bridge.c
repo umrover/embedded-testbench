@@ -163,7 +163,7 @@ void receive_bridge_heater_cmd(Bridge *bridge, Heater *heaters[3]) {
 // "$LED, <REQUESTED_STATE>"
 // where number is 0 for red, 1 for blinking green, 2 for blue, and 3 for off
 void receive_bridge_auton_led_cmd(Bridge *bridge, AutonLED *auton_led) {
-	if (bridge->message_buffer[0] != '$' || bridge->message_buffer[1] != 'A') {
+	if (bridge->message_buffer[0] != '$' || bridge->message_buffer[1] != 'L') {
 		// This should be asserted.
 		// The function should not have been called if it was not the correct message
 		return;
