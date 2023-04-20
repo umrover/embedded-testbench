@@ -231,10 +231,15 @@ void CH_prepare_send(I2CBus *i2c_bus, Motor *motor) {
 
 void CH_reset(I2CBus *i2c_bus, Motor *motors[], uint8_t num_motors) {
     i2c_bus->operation = UNKNOWN;
+    // The reason why we have a DeInit/Init is to clear the errors of the I2C bus by resetting it.
+	// If we don't do this, then it's possible for the I2C bus to have errors and never receive new messages.
+	HAL_I2C_DeInit(i2c_bus->i2c_bus_handle);
     for (int i = 0; i < num_motors; ++i) {
         motors[i]->desired_speed = 0; // open loop setpoint
         motors[i]->using_open_loop_control = 1;
     }
+    HAL_I2C_Init(i2c_bus->i2c_bus_handle);
+	HAL_I2C_EnableListen_IT(i2c_bus->i2c_bus_handle);
 }
 
 void CH_tick(I2CBus *i2c_bus, Motor *motors[], uint8_t num_motors) {
