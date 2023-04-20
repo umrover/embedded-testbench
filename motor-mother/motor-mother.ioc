@@ -1,4 +1,7 @@
 #MicroXplorer Configuration settings - do not modify
+CAD.formats=
+CAD.pinconfig=
+CAD.provider=
 File.Version=6
 GPIO.groupedBy=Group By Peripherals
 I2C1.DualAddressMode=I2C_DUALADDRESS_DISABLE
@@ -292,6 +295,7 @@ ProjectManager.PreviousToolchain=
 ProjectManager.ProjectBuild=false
 ProjectManager.ProjectFileName=motor-mother.ioc
 ProjectManager.ProjectName=motor-mother
+ProjectManager.ProjectStructure=
 ProjectManager.RegisterCallBack=
 ProjectManager.StackSize=0x400
 ProjectManager.TargetToolchain=STM32CubeIDE

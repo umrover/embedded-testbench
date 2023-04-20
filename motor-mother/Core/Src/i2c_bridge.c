@@ -230,14 +230,11 @@ void CH_prepare_send(I2CBus *i2c_bus, Motor *motor) {
 }
 
 void CH_reset(I2CBus *i2c_bus, Motor *motors[], uint8_t num_motors) {
-    HAL_I2C_DeInit(i2c_bus->i2c_bus_handle);
     i2c_bus->operation = UNKNOWN;
     for (int i = 0; i < num_motors; ++i) {
         motors[i]->desired_speed = 0; // open loop setpoint
         motors[i]->using_open_loop_control = 1;
     }
-    HAL_I2C_Init(i2c_bus->i2c_bus_handle);
-    HAL_I2C_EnableListen_IT(i2c_bus->i2c_bus_handle);
 }
 
 void CH_tick(I2CBus *i2c_bus, Motor *motors[], uint8_t num_motors) {
