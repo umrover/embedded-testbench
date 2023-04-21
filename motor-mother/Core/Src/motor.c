@@ -19,6 +19,7 @@ Motor *new_motor(bool _valid, HBridge *_hbridge, LimitSwitch *_limit_switch_a, L
 
     motor->is_calibrated = 0;
     motor->limit_a_is_forward = 1;
+    motor->ms_since_last_commanded = 0;
 
     return motor;
 }
@@ -26,6 +27,16 @@ Motor *new_motor(bool _valid, HBridge *_hbridge, LimitSwitch *_limit_switch_a, L
 void init_motor(Motor *motor, float speed) {
     init_hbridge(motor->hbridge, speed, speed);
     set_motor_speed(motor, speed);
+}
+
+void tick_motor(Motor *motor) {
+	motor->ms_since_last_commanded += 1;
+	if (motor->ms_since_last_commanded >= MOTORS_WATCHDOG_TIMEOUT) {
+		motor->ms_since_last_commanded = 0;
+		// Reset the motors
+		motor->desired_speed = 0; // open loop setpoint
+		motor->using_open_loop_control = 1;
+	}
 }
 
 void update_motor_target(Motor *motor) {

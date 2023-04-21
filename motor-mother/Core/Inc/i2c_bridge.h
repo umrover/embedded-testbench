@@ -11,6 +11,9 @@
 #include "motor.h"
 #include <string.h>
 
+// timeout ~half a second, prime number to avoid hitting unit testing reset bug again
+#define I2C_WATCHDOG_TIMEOUT 443
+
 typedef struct {
     enum {
         OFF = 0x00,
@@ -52,6 +55,6 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor);
 
 void CH_prepare_send(I2CBus *i2c_bus, Motor *motor);
 
-void CH_reset(I2CBus *i2c_bus, Motor *motors[], uint8_t num_motors);
+void CH_reset(I2CBus *i2c_bus);
 
-void CH_tick(I2CBus *i2c_bus, Motor *motors[], uint8_t num_motors);
+void CH_tick(I2CBus *i2c_bus);

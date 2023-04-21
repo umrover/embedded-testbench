@@ -11,6 +11,8 @@
 #include "quad_encoder.h"
 #include "abs_enc_reading.h"
 
+#define MOTORS_WATCHDOG_TIMEOUT 443
+
 typedef struct {
     HBridge *hbridge;
     LimitSwitch *limit_switch_a;
@@ -27,11 +29,14 @@ typedef struct {
     int32_t desired_counts;
     uint8_t is_calibrated;
     uint8_t limit_a_is_forward;
+    uint32_t ms_since_last_commanded;
 } Motor;
 
 Motor *new_motor(bool _valid, HBridge *_hbridge, LimitSwitch *_limit_switch_a, LimitSwitch *_limit_switch_b, QuadEncoder *_encoder, AbsEncoder *_abs_encoder, ClosedLoopControl *_control);
 
 void init_motor(Motor *motor, float speed);
+
+void tick_motor(Motor *motor);
 
 void update_motor_target(Motor *motor);
 

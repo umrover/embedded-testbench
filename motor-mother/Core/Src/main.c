@@ -99,7 +99,11 @@ static void MX_I2C2_Init(void);
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim16) {
 
-		CH_tick(i2c_bus, motors, NUM_MOTORS);
+		for (int i = 0; i < NUM_MOTORS; ++i) {
+			tick_motor(motors[i]);
+		}
+
+		CH_tick(i2c_bus);
 
 		for (size_t i = 0; i < NUM_MOTORS; ++i) {
 			if (quad_encoders[i]->valid) {
@@ -157,7 +161,7 @@ void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c) {
 }
 
 void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c) {
-	CH_reset(i2c_bus, motors, NUM_MOTORS);
+	CH_reset(i2c_bus);
 }
 
 void HAL_I2C_ListenCpltCallback(I2C_HandleTypeDef *hi2c) {
