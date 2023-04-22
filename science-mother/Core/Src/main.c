@@ -123,7 +123,9 @@ static void MX_I2C2_Init(void);
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim6) {
 		update_auton_led_state(auton_led);
+    UART_CH_tick(bridge);
 	}
+
 }
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {

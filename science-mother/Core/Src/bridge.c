@@ -6,6 +6,7 @@
 Bridge *new_bridge(UART_HandleTypeDef *_uart) {
     Bridge *bridge = (Bridge *)malloc(sizeof(Bridge));
     bridge->uart = _uart;
+	bridge->tick = 0;
 	for (int i = 0; i < UART_BUFFER_SIZE; ++i) {
 		bridge->uart_buffer[i] = 0;
 	}
@@ -16,7 +17,19 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart) {
 
     return bridge;
 }
+void UART_CH_reset(Bridge *UART_channel) {
+    
+    // The reason why we have a DeInit/Init is to clear the errors of the I2C bus by resetting it.
+	// If we don't do this, then it's possible for the I2C bus to have errors and never receive new messages.
+	HAL_UART_Abort(Bridge->uart); 
+}
 
+void UART_CH_tick(Bridge *UART_channel) {
+    UART_channel->tick += 1;
+    if (UART_channel->tick >= UART_WATCHDOG_TIMEOUT) {
+        UART_channel->tick = 0;
+        UART_CH_reset(UART_channel);
+    }
 // REQUIRES: bridge, heater, mosfet_device, servo, and auton_led are objects
 // MODIFIES: Nothing
 // EFFECTS: Receives the message and processes it
