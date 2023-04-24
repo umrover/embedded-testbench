@@ -7,6 +7,7 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart) {
     Bridge *bridge = (Bridge *)malloc(sizeof(Bridge));
     bridge->uart = _uart;
 	bridge->tick = 0;
+	bridge->UART_watchdog_flag = false;
 	for (int i = 0; i < UART_BUFFER_SIZE; ++i) {
 		bridge->uart_buffer[i] = 0;
 	}
@@ -18,18 +19,18 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart) {
     return bridge;
 }
 void UART_CH_reset(Bridge *UART_channel) {
-    
-    // The reason why we have a DeInit/Init is to clear the errors of the I2C bus by resetting it.
-	// If we don't do this, then it's possible for the I2C bus to have errors and never receive new messages.
-	HAL_UART_Abort(Bridge->uart); 
+	HAL_UART_DeInit(UART_channel->uart);
+	HAL_UART_Init(UART_channel->uart);
+	UART_channel->UART_watchdog_flag = false;
 }
 
 void UART_CH_tick(Bridge *UART_channel) {
     UART_channel->tick += 1;
     if (UART_channel->tick >= UART_WATCHDOG_TIMEOUT) {
         UART_channel->tick = 0;
-        UART_CH_reset(UART_channel);
+        UART_channel->UART_watchdog_flag = true;
     }
+}
 // REQUIRES: bridge, heater, mosfet_device, servo, and auton_led are objects
 // MODIFIES: Nothing
 // EFFECTS: Receives the message and processes it
@@ -41,7 +42,7 @@ void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12]
 	if(bridge->msg_length_counter >= 30)
 	{
 		// Could be redundant check for $, but I'll keep it for now
-		// Also, before the first message is recieved, it will come in here
+		// Also, before the first message is received, it will come in here
 		// because msg_length_counter starts at 30.
 		// But it should then get kicked out immediately, so prob no issues
 		if (bridge->message_buffer[0] == '$') {
@@ -60,6 +61,11 @@ void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12]
 			}
 			else if (bridge->message_buffer[1] == 'L') {
 				receive_bridge_auton_led_cmd(bridge, auton_led);
+			}
+			else if(bridge->message_buffer[1] == 'W'){
+				// This is looking for the watchdog NMEA message
+				bridge->tick = 0;
+				bridge->UART_watchdog_flag = false;
 			}
 		}
 	}

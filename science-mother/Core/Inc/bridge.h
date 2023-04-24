@@ -11,6 +11,7 @@
 
 #define UART_BUFFER_SIZE 1 // read in 1 byte at a time
 #define TOTAL_UART_MESSAGE_SIZE 30// size of uart message
+#define UART_WATCHDOG_TIMEOUT 5000
 
 // The communication bridge between the Jetson and the chip
 typedef struct
@@ -20,6 +21,7 @@ typedef struct
 	char message_buffer[TOTAL_UART_MESSAGE_SIZE];
 	uint32_t msg_length_counter; // Keeps track of message length. Once it is 30, we have the full message
 	uint32_t tick;
+	bool UART_watchdog_flag;
 } Bridge;
 
 // REQUIRES: uart is the uart channel

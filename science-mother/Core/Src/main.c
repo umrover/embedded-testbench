@@ -83,6 +83,7 @@ DMA_HandleTypeDef hdma_usart3_rx;
 
 /* USER CODE BEGIN PV */
 
+bool UART_watchdog = false;
 AutonLED* auton_led = NULL;
 ADCSensor* adc_sensor = NULL;
 Bridge* bridge = NULL;
@@ -123,7 +124,7 @@ static void MX_I2C2_Init(void);
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim6) {
 		update_auton_led_state(auton_led);
-    UART_CH_tick(bridge);
+		UART_CH_tick(bridge);
 	}
 
 }
@@ -162,9 +163,9 @@ int main(void)
 
   // Temporarily disable USART to be resistant to noise (does this even work?)
   // 0x18 is the address of the RCC_APB2ENR register
-  CLEAR_BIT(0x18, RCC_APB2ENR_USART1EN);
+  // CLEAR_BIT(0x18, RCC_APB2ENR_USART1EN);
   HAL_Delay(60000);
-  SET_BIT(0x18, RCC_APB2ENR_USART1EN);
+  // SET_BIT(0x18, RCC_APB2ENR_USART1EN);
 
   /* USER CODE END SysInit */
 
@@ -223,7 +224,7 @@ int main(void)
 	science_heaters[1] = new_heater(heater_pins[1], science_temp_sensors[1]);
 	science_heaters[2] = new_heater(heater_pins[2], science_temp_sensors[2]);
 
-  receive_bridge(bridge, science_heaters, mosfet_pins, servos, auton_led);
+	receive_bridge(bridge, science_heaters, mosfet_pins, servos, auton_led);
 
   initialize_servo(servos[0], SERVO_0_DEFAULT_ANGLE);
   initialize_servo(servos[1], SERVO_1_DEFAULT_ANGLE);
@@ -296,7 +297,9 @@ int main(void)
 	   if (send_heater_on) {
 		   bridge_send_heater_state(bridge, heater_on_state);
 	   }
-
+	   if (bridge->UART_watchdog_flag){
+		   UART_CH_reset(bridge);
+	   }
   }
   /* USER CODE END 3 */
 }
