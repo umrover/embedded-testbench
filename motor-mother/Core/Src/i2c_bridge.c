@@ -112,7 +112,6 @@ uint8_t CH_num_send(I2CBus *i2c_bus) {
 
 
 void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
-	motor->ms_since_last_commanded = 0;
     switch (i2c_bus->operation) {
         case OFF:
             set_motor_speed(motor, 0.0f);
@@ -121,11 +120,13 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
             return;
         case OPEN:
         case OPEN_PLUS:
+        	motor->ms_since_last_commanded = 0;
             motor->using_open_loop_control = 1;
             memcpy(&(motor->desired_speed), i2c_bus->buffer, 4);
             return;
         case CLOSED:
         case CLOSED_PLUS:
+        	motor->ms_since_last_commanded = 0;
             motor->using_open_loop_control = 0;
             memcpy(&(motor->control->kF), i2c_bus->buffer, 4);
             memcpy(&(motor->desired_counts), i2c_bus->buffer + 4, 4);
