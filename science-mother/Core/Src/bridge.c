@@ -18,9 +18,11 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart) {
 
     return bridge;
 }
+
 void UART_CH_reset(Bridge *UART_channel) {
 	HAL_UART_DeInit(UART_channel->uart);
 	HAL_UART_Init(UART_channel->uart);
+	HAL_UART_Receive_DMA(UART_channel->uart, (uint8_t *)UART_channel->uart_buffer, sizeof(UART_channel->uart_buffer));
 	UART_channel->UART_watchdog_flag = false;
 }
 
