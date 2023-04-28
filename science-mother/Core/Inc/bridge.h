@@ -11,7 +11,7 @@
 
 #define UART_BUFFER_SIZE 1 // read in 1 byte at a time
 #define TOTAL_UART_MESSAGE_SIZE 30// size of uart message
-#define UART_WATCHDOG_TIMEOUT 5000
+#define UART_WATCHDOG_TIMEOUT 443
 
 // The communication bridge between the Jetson and the chip
 typedef struct
@@ -28,6 +28,10 @@ typedef struct
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Bridge object
 Bridge *new_bridge(UART_HandleTypeDef *_uart);
+
+void UART_CH_reset(Bridge *UART_channel);
+
+void UART_CH_tick(Bridge *UART_channel);
 
 // REQUIRES: bridge, heater, mosfet_device, servo, and auton_led are objects
 // MODIFIES: Nothing
