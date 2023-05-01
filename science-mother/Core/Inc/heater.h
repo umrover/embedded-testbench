@@ -29,7 +29,7 @@ Heater *new_heater(PinData *_heater_pin, Thermistor *_thermistor);
 // MODIFIES: nothing
 // EFFECTS: Ticks the ms_since_last_received_heater_msg.
 // If it's been too long since last received a heater msg AND it's ON, then turn it off.
-void tick_heater_state(Heater *heater);
+void tick_heater(Heater *heater);
 
 // REQUIRES: nothing
 // MODIFIES: nothing

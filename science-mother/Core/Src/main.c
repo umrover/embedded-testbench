@@ -125,6 +125,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim) {
 	if (htim == &htim6) {
 		update_auton_led_state(auton_led);
 		UART_CH_tick(bridge);
+		for (size_t i = 0; i < NUM_HEATERS; ++i) {
+			tick_heater(science_heaters[i]);
+		}
 	}
 
 }
