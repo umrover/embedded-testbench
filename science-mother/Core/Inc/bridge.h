@@ -20,7 +20,7 @@ typedef struct
 	char uart_buffer[UART_BUFFER_SIZE];
 	char message_buffer[TOTAL_UART_MESSAGE_SIZE];
 	uint32_t msg_length_counter; // Keeps track of message length. Once it is 30, we have the full message
-	uint32_t tick;
+	uint32_t ms_since_last_received_uart_msg;
 	bool UART_watchdog_flag;
 } Bridge;
 

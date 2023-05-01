@@ -6,6 +6,7 @@
 #include "thermistor.h"
 
 #define MAX_HEATER_TEMP 65.0f
+#define HEATER_WATCHDOG_TIMEOUT 443
 
 typedef struct
 {
@@ -15,6 +16,7 @@ typedef struct
     bool is_on;
     bool send_auto_shutoff;
     bool send_on;
+    uint32_t ms_since_last_received_heater_msg;
 } Heater;
 
 // REQUIRES: _heater_pin is a pointer to a PinData object and therm
@@ -22,6 +24,12 @@ typedef struct
 // MODIFIES: nothing
 // EFFECTS: Returns a pointer to a created Heater object
 Heater *new_heater(PinData *_heater_pin, Thermistor *_thermistor);
+
+// REQUIRES: nothing
+// MODIFIES: nothing
+// EFFECTS: Ticks the ms_since_last_received_heater_msg.
+// If it's been too long since last received a heater msg AND it's ON, then turn it off.
+void tick_heater_state(Heater *heater);
 
 // REQUIRES: nothing
 // MODIFIES: nothing

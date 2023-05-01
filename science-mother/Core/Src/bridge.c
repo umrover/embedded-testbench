@@ -6,7 +6,7 @@
 Bridge *new_bridge(UART_HandleTypeDef *_uart) {
     Bridge *bridge = (Bridge *)malloc(sizeof(Bridge));
     bridge->uart = _uart;
-	bridge->tick = 0;
+	bridge->ms_since_last_received_uart_msg = 0;
 	bridge->UART_watchdog_flag = false;
 	for (int i = 0; i < UART_BUFFER_SIZE; ++i) {
 		bridge->uart_buffer[i] = 0;
@@ -27,9 +27,9 @@ void UART_CH_reset(Bridge *UART_channel) {
 }
 
 void UART_CH_tick(Bridge *UART_channel) {
-    UART_channel->tick += 1;
-    if (UART_channel->tick >= UART_WATCHDOG_TIMEOUT) {
-        UART_channel->tick = 0;
+    UART_channel->ms_since_last_received_uart_msg += 1;
+    if (UART_channel->ms_since_last_received_uart_msg >= UART_WATCHDOG_TIMEOUT) {
+        UART_channel->ms_since_last_received_uart_msg = 0;
         UART_channel->UART_watchdog_flag = true;
     }
 }
@@ -66,7 +66,7 @@ void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12]
 			}
 			else if(bridge->message_buffer[1] == 'W'){
 				// This is looking for the watchdog NMEA message
-				bridge->tick = 0;
+				bridge->ms_since_last_received_uart_msg = 0;
 				bridge->UART_watchdog_flag = false;
 			}
 		}
@@ -172,6 +172,7 @@ void receive_bridge_heater_cmd(Bridge *bridge, Heater *heaters[3]) {
 		state = atoi(strtok(NULL, ","));
 
 		if (0 <= device && device < 3) {
+			heaters[device]->ms_since_last_received_heater_msg = 0;
 			change_heater_state(heaters[device], state);
 			heaters[device]->send_on = true;
 		}

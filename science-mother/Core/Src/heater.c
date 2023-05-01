@@ -3,6 +3,7 @@
 // REQUIRES: nothing
 // MODIFIES: is_on
 // EFFECTS:  Turns heater off
+// The difference between this and
 void turn_heater_off(Heater *heater)
 {
 	set_pin_value(heater->heater_pin, false);
@@ -32,7 +33,20 @@ Heater *new_heater(PinData *_heater_pin, Thermistor *_thermistor)
     heater->is_on = false;
     heater->send_auto_shutoff = true;
     heater->send_on = true;
+    heater->ms_since_last_received_heater_msg = 0;
     return heater;
+}
+
+// REQUIRES: nothing
+// MODIFIES: nothing
+// EFFECTS: Ticks the ms_since_last_received_heater_msg.
+// If it's been too long since last received a heater msg AND it's ON, then turn it off.
+void tick_heater_state(Heater *heater) {
+	heater->ms_since_last_received_heater_msg += 1;
+	if (heater->ms_since_last_received_heater_msg >= HEATER_WATCHDOG_TIMEOUT) {
+		change_heater_state(heater, false);
+		heater->ms_since_last_received_heater_msg = 0;
+	}
 }
 
 // REQUIRES: nothing
@@ -46,7 +60,7 @@ void update_heater_temperature(Heater *heater)
 // REQUIRES: nothing
 // MODIFIES: is_on
 // EFFECTS:  Turns heater off if it is on AND thermistor temperature exceeds
-// permitted temperature AND auto_shutoff is enabled
+// permitted temperature AND auto_shutoff is enabled.
 void update_heater_state(Heater *heater)
 {
     if (heater->is_on && get_thermistor_temperature(heater->thermistor) >= MAX_HEATER_TEMP && heater->auto_shutoff)
