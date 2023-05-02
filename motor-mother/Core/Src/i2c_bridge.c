@@ -63,6 +63,8 @@ uint8_t CH_num_receive(I2CBus *i2c_bus) {
         	return 0;
         case LIMIT_A_IS_FWD:
         	return 1;
+        case LIMIT_DATA:
+        	return 0;
         case UNKNOWN:
             return 0;
     }
@@ -104,6 +106,8 @@ uint8_t CH_num_send(I2CBus *i2c_bus) {
         	return 1;
         case LIMIT_A_IS_FWD:
         	return 0;
+        case LIMIT_DATA:
+        	return 1;
         case UNKNOWN:
             return 0;
     }
@@ -174,7 +178,8 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
         	return;
         case LIMIT_A_IS_FWD:
         	memcpy(&(motor->limit_a_is_forward), i2c_bus->buffer, 1);
-
+        	return;
+        case LIMIT_DATA:
         	return;
         case UNKNOWN:
             return;
@@ -223,6 +228,16 @@ void CH_prepare_send(I2CBus *i2c_bus, Motor *motor) {
         	memcpy(i2c_bus->buffer, &(motor->limit_switch_b->is_pressed), 1);
         	return;
         case LIMIT_A_IS_FWD:
+        	return;
+        case LIMIT_DATA: ;
+        	// 0th (least significant) bit is a boolean (bit) that tells if the motor has been calibrated or not.
+			// 1st bit is a boolean (bit) that is the state of limit switch a.
+			// 2nd bit is a boolean (bit) that is the state of limit switch b.
+			uint8_t limit_data_val = 0;
+			limit_data_val |= (motor->is_calibrated & 0x1);
+			limit_data_val |= ((motor->limit_switch_a->is_pressed & 0x1) << 1);
+			limit_data_val |= ((motor->limit_switch_b->is_pressed & 0x1) << 2);
+			memcpy(i2c_bus->buffer, &limit_data_val, 1);
         case UNKNOWN:
             return;
     }

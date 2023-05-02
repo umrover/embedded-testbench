@@ -37,6 +37,7 @@ typedef struct {
 		LIMIT_A = 0x12,
 		LIMIT_B = 0x13,
 		LIMIT_A_IS_FWD = 0x14,
+		LIMIT_DATA = 0x15,
         UNKNOWN = 0xFF
     } operation;
     uint8_t motor_id;
