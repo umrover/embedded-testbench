@@ -6,7 +6,7 @@
 #include "thermistor.h"
 
 #define MAX_HEATER_TEMP 65.0f
-#define HEATER_WATCHDOG_TIMEOUT 443
+#define HEATER_WATCHDOG_TIMEOUT 3000
 
 typedef struct
 {
