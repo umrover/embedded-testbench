@@ -22,8 +22,8 @@ Bridge *new_bridge(UART_HandleTypeDef *_uart) {
 void UART_CH_reset(Bridge *UART_channel) {
 	HAL_UART_DeInit(UART_channel->uart);
 	HAL_UART_Init(UART_channel->uart);
-	HAL_UART_Receive_DMA(UART_channel->uart, (uint8_t *)UART_channel->uart_buffer, sizeof(UART_channel->uart_buffer));
 	UART_channel->UART_watchdog_flag = false;
+	HAL_UART_Receive_DMA(UART_channel->uart, (uint8_t *)UART_channel->uart_buffer, sizeof(UART_channel->uart_buffer));
 }
 
 void UART_CH_tick(Bridge *UART_channel) {
@@ -37,7 +37,6 @@ void UART_CH_tick(Bridge *UART_channel) {
 // MODIFIES: Nothing
 // EFFECTS: Receives the message and processes it
 void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12], Servo *servos[3], AutonLED *auton_led) {
-	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
 	fill_message_buffer(bridge);
 	//If the message has been created
 
@@ -71,6 +70,7 @@ void receive_bridge(Bridge *bridge, Heater *heaters[3], PinData *mosfet_pins[12]
 			}
 		}
 	}
+	HAL_UART_Receive_DMA(bridge->uart, (uint8_t *)bridge->uart_buffer, sizeof(bridge->uart_buffer));
 }
 
 // REQUIRES: bridge and mosfet_device are objects
@@ -284,9 +284,10 @@ void fill_message_buffer(Bridge *bridge) {
 		bridge->msg_length_counter = 0;
 	}
 	// create the message if msg_length_counter is a valid index
-	if(bridge->msg_length_counter < 30)
+	int bridge_msg_length_counter = bridge->msg_length_counter;
+	if (bridge_msg_length_counter < 30)
 	{	
-		bridge->message_buffer[bridge->msg_length_counter] = bridge->uart_buffer[0];
+		bridge->message_buffer[bridge_msg_length_counter] = bridge->uart_buffer[0];
 		bridge->msg_length_counter++;
 	}
 }
