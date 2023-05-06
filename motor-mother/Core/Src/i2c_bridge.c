@@ -156,9 +156,11 @@ void CH_process_received(I2CBus *i2c_bus, Motor *motor) {
         case IS_CALIBRATED:
             return;
         case ENABLE_LIMIT_A:
+        	motor->is_calibrated = 0;
         	memcpy(&(motor->limit_switch_a->enabled), i2c_bus->buffer, 1);
         	return;
         case ENABLE_LIMIT_B:
+        	motor->is_calibrated = 0;
         	memcpy(&(motor->limit_switch_b->enabled), i2c_bus->buffer, 1);
         	return;
         case ACTIVE_LIMIT_A:
