@@ -13,7 +13,7 @@ Motor *new_motor(bool _valid, HBridge *_hbridge, LimitSwitch *_limit_switch_a, L
     motor->control = _control;
     motor->using_open_loop_control = 1;
     motor->output_pwm = 0;
-    motor->max_pwm = 1;
+    motor->max_pwm = 0;
     motor->desired_speed = 0;
     motor->desired_counts = 0;
 
