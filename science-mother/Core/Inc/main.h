@@ -105,10 +105,10 @@ void Error_Handler(void);
 #define MOSFET_8_GPIO_Port GPIOD
 #define MOSFET_9_Pin GPIO_PIN_13
 #define MOSFET_9_GPIO_Port GPIOD
-#define MOSFET_10_Pin GPIO_PIN_14
-#define MOSFET_10_GPIO_Port GPIOD
-#define MOSFET_11_Pin GPIO_PIN_15
+#define MOSFET_11_Pin GPIO_PIN_14
 #define MOSFET_11_GPIO_Port GPIOD
+#define MOSFET_10_Pin GPIO_PIN_15
+#define MOSFET_10_GPIO_Port GPIOD
 #define USART1_TX_Pin GPIO_PIN_9
 #define USART1_TX_GPIO_Port GPIOA
 #define USART1_RX_Pin GPIO_PIN_10
