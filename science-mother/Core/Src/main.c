@@ -47,7 +47,7 @@
 #define NUM_HEATERS 3
 #define NUM_DEBUG_LEDS 4
 
-#define HEATER_0_MOSFET_PIN 3
+#define HEATER_0_MOSFET_PIN 10
 #define HEATER_1_MOSFET_PIN 4
 #define HEATER_2_MOSFET_PIN 5
 
@@ -57,7 +57,7 @@
 
 #define SERVO_0_DEFAULT_ANGLE 100
 #define SERVO_1_DEFAULT_ANGLE 90  // TODO - change eventually too
-#define SERVO_2_DEFAULT_ANGLE 50
+#define SERVO_2_DEFAULT_ANGLE 80
 
 /* USER CODE END PD */
 
