@@ -1,0 +1,34 @@
+2023-09-05 11:18:37,590 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 568353432 Bytes (1073741824)
+2023-09-05 11:18:38,695 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 593258768 Bytes (1073741824)
+2023-09-05 11:18:39,930 [INFO] UtilMem:75 - End SaveConfig() Used Memory: 638347536 Bytes (1073741824)
+2023-09-05 11:18:40,253 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: TIM1_8F3
+2023-09-05 11:18:40,253 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: RCC
+2023-09-05 11:18:40,253 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: NVIC
+2023-09-05 11:18:40,253 [INFO] BlockDiagram:2759 - set Specific Code input for plugin: GPIO
+2023-09-05 11:18:40,253 [INFO] CodeGenerator:793 - code generatio: config db path: C:\ST\STM32CubeIDE_1.12.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.8.0.202302231600\\db\
+2023-09-05 11:18:40,474 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\isabe\Documents\rover\new-member\Servo\MXTmpFiles\license.tmp_save
+2023-09-05 11:18:40,568 [INFO] CodeEngine:279 - Generated code: C:\Users\isabe\Documents\rover\new-member\Servo\MXTmpFiles\license.tmp
+2023-09-05 11:18:40,620 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\isabe\Documents\rover\new-member\Servo\MXTmpFiles\gpio.tmp_save
+2023-09-05 11:18:40,769 [INFO] CodeEngine:279 - Generated code: C:\Users\isabe\Documents\rover\new-member\Servo\MXTmpFiles\gpio.tmp
+2023-09-05 11:18:40,877 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\isabe\Documents\rover\new-member\Servo\Core\Src\stm32f3xx_it.c_save
+2023-09-05 11:18:41,169 [INFO] CodeEngine:279 - Generated code: C:\Users\isabe\Documents\rover\new-member\Servo\Core\Src\stm32f3xx_it.c
+2023-09-05 11:18:41,177 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\isabe\Documents\rover\new-member\Servo\Core\Inc\stm32f3xx_it.h_save
+2023-09-05 11:18:41,290 [INFO] CodeEngine:279 - Generated code: C:\Users\isabe\Documents\rover\new-member\Servo\Core\Inc\stm32f3xx_it.h
+2023-09-05 11:18:41,387 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\isabe\Documents\rover\new-member\Servo\Core\Src\stm32f3xx_hal_msp.c_save
+2023-09-05 11:18:41,524 [INFO] CodeEngine:279 - Generated code: C:\Users\isabe\Documents\rover\new-member\Servo\Core\Src\stm32f3xx_hal_msp.c
+2023-09-05 11:18:41,537 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\isabe\Documents\rover\new-member\Servo\MXTmpFiles\system.tmp_save
+2023-09-05 11:18:41,612 [INFO] CodeEngine:279 - Generated code: C:\Users\isabe\Documents\rover\new-member\Servo\MXTmpFiles\system.tmp
+2023-09-05 11:18:41,635 [INFO] CodeEngine:311 - oldGeneratedFile, C:\Users\isabe\Documents\rover\new-member\Servo\Core\Inc\stm32f3xx_hal_conf.h_save
+2023-09-05 11:18:41,754 [INFO] CodeEngine:335 - Generated code: C:\Users\isabe\Documents\rover\new-member\Servo\Core\Inc\stm32f3xx_hal_conf.h
+2023-09-05 11:18:41,785 [WARN] IPConfigManager:3431 - IP not found : TIM
+2023-09-05 11:18:41,785 [WARN] CodeGenerator:3754 - IP not found : null
+2023-09-05 11:18:41,818 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\isabe\Documents\rover\new-member\Servo\Core\Inc\main.h_save
+2023-09-05 11:18:41,921 [INFO] CodeEngine:279 - Generated code: C:\Users\isabe\Documents\rover\new-member\Servo\Core\Inc\main.h
+2023-09-05 11:18:41,946 [INFO] CodeEngine:255 - oldGeneratedFile, C:\Users\isabe\Documents\rover\new-member\Servo\Core\Src\main.c_save
+2023-09-05 11:18:42,089 [INFO] CodeEngine:279 - Generated code: C:\Users\isabe\Documents\rover\new-member\Servo\Core\Src\main.c
+2023-09-05 11:18:42,911 [INFO] ProjectBuilder:2996 - Time for Copy HAL[1] : 251mS.
+2023-09-05 11:18:42,912 [INFO] ProjectBuilder:4304 - Project Generator version: 3.19.2
+2023-09-05 11:18:43,288 [INFO] ConfigFileManager:1483 - The Die is : DIE446
+2023-09-05 11:18:45,535 [INFO] ProjectBuilder:4505 - Time for Generating toolchain IDE Files: 2623mS.
+2023-09-05 11:18:45,535 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 0mS.
+2023-09-05 11:18:45,544 [INFO] ProjectBuilder:2867 - Time for Copy CMSIS : 0mS.

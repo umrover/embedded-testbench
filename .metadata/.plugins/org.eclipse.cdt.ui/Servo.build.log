@@ -1,0 +1,25 @@
+14:50:57 **** Incremental Build of configuration Debug for project Servo ****
+make -j8 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F303xE -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:92:44: warning: passing argument 3 of 'new_servo' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   92 |   servo = new_servo(&htim1, TIM_CHANNEL_1, &(TIM1->CCR1));
+      |                                            ^~~~~~~~~~~~~
+In file included from ../Core/Src/main.c:24:
+../Core/Inc/servo.h:22:74: note: expected 'uint32_t *' {aka 'long unsigned int *'} but argument is of type 'volatile uint32_t *' {aka 'volatile long unsigned int *'}
+   22 | Servo *new_servo(TIM_HandleTypeDef* _timer, uint32_t _channel, uint32_t* _output);
+      |                                                                ~~~~~~~~~~^~~~~~~
+arm-none-eabi-gcc -o "Servo.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\isabe\Documents\rover\new-member\Servo\STM32F303RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Servo.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Servo.elf
+ 
+arm-none-eabi-size   Servo.elf 
+arm-none-eabi-objdump -h -S  Servo.elf  > "Servo.list"
+   text	   data	    bss	    dec	    hex	filename
+  14248	    120	   1672	  16040	   3ea8	Servo.elf
+Finished building: default.size.stdout
+ 
+Finished building: Servo.list
+ 
+
+14:51:04 Build Finished. 0 errors, 1 warnings. (took 7s.482ms)
+
