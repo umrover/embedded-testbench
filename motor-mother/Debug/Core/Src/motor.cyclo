@@ -1,8 +1,0 @@
-motor.c:4:8:new_motor	1
-motor.c:27:6:init_motor	2
-motor.c:32:6:update_motor_target	2
-motor.c:42:6:set_motor_speed	1
-motor.c:46:6:update_motor_speed	19
-motor.c:84:6:move_motor_to_target	2
-motor.c:93:6:update_motor_limit_switches	7
-motor.c:108:6:refresh_motor_absolute_encoder_value	2

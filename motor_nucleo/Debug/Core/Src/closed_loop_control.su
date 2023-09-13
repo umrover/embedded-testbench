@@ -1,3 +1,0 @@
-../Core/Src/closed_loop_control.c:3:20:new_closed_loop_control	32	static
-../Core/Src/closed_loop_control.c:18:7:calculate_pid	48	static
-../Core/Src/closed_loop_control.c:35:7:signum	16	static

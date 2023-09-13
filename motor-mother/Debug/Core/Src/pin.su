@@ -1,3 +1,0 @@
-../Core/Src/pin.c:3:6:new_pin	24	static
-../Core/Src/pin.c:11:6:read_pin_value	16	static
-../Core/Src/pin.c:15:6:write_pin_value	16	static

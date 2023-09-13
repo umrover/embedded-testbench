@@ -1,4 +1,0 @@
-../Core/Src/quad_encoder.c:3:14:new_quad_encoder	24	static
-../Core/Src/quad_encoder.c:13:6:init_quad_encoder	16	static
-../Core/Src/quad_encoder.c:17:6:update_quad_encoder	16	static
-../Core/Src/quad_encoder.c:23:6:set_encoder_counts	16	static

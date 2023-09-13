@@ -1,7 +1,0 @@
-../Core/Src/i2c_bridge.c:22:9:new_i2c_bus	24	static
-../Core/Src/i2c_bridge.c:34:9:CH_num_receive	16	static
-../Core/Src/i2c_bridge.c:75:9:CH_num_send	16	static
-../Core/Src/i2c_bridge.c:117:6:CH_process_received	24	static
-../Core/Src/i2c_bridge.c:185:6:CH_prepare_send	16	static
-../Core/Src/i2c_bridge.c:232:6:CH_reset	32	static
-../Core/Src/i2c_bridge.c:243:6:CH_tick	24	static

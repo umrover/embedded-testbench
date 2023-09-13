@@ -1,9 +1,0 @@
-../Core/Src/abs_enc_reading.c:10:8:new_smbus	24	static
-../Core/Src/abs_enc_reading.c:17:6:read_word_data	32	static
-../Core/Src/abs_enc_reading.c:36:6:del_smbus	16	static
-../Core/Src/abs_enc_reading.c:42:13:new_abs_encoder	24	static
-../Core/Src/abs_enc_reading.c:54:5:read_raw_angle	40	static
-../Core/Src/abs_enc_reading.c:63:6:read_byte_data	24	static
-../Core/Src/abs_enc_reading.c:74:6:refresh_angle_radians	24	static
-../Core/Src/abs_enc_reading.c:80:6:del_encoder	16	static
-../Core/Src/abs_enc_reading.c:84:13:abs_encoder_init	24	static

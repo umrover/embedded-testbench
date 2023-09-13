@@ -1,4 +1,0 @@
-hbridge.c:5:10:new_hbridge	1
-hbridge.c:20:6:init_hbridge	1
-hbridge.c:26:6:change_hbridge_pwm	3
-hbridge.c:41:6:change_hbridge_dir_val	2

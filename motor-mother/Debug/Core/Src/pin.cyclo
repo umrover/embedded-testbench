@@ -1,3 +1,0 @@
-pin.c:3:6:new_pin	1
-pin.c:11:6:read_pin_value	1
-pin.c:15:6:write_pin_value	1
