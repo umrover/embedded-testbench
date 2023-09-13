@@ -1,0 +1,6 @@
+../Core/Src/motor.c:4:8:new_motor	32	static
+../Core/Src/motor.c:22:6:init_motor	16	static
+../Core/Src/motor.c:27:6:update_motor_target	16	static
+../Core/Src/motor.c:37:6:set_motor_speed	16	static
+../Core/Src/motor.c:41:6:update_motor_speed	16	static
+../Core/Src/motor.c:60:6:move_motor_to_target	24	static

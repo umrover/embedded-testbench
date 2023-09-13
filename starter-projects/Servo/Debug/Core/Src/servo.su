@@ -1,0 +1,3 @@
+../Core/Src/servo.c:11:8:new_servo	32	static
+../Core/Src/servo.c:21:6:initialize_servo	16	static
+../Core/Src/servo.c:28:6:set_servo_angle	16	static

@@ -1,0 +1,7 @@
+i2c_bridge.c:22:9:new_i2c_bus	2
+i2c_bridge.c:34:9:CH_num_receive	16
+i2c_bridge.c:75:9:CH_num_send	16
+i2c_bridge.c:117:6:CH_process_received	16
+i2c_bridge.c:185:6:CH_prepare_send	10
+i2c_bridge.c:232:6:CH_reset	2
+i2c_bridge.c:243:6:CH_tick	2

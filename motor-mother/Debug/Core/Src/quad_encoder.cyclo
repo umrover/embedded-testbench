@@ -1,0 +1,4 @@
+quad_encoder.c:3:14:new_quad_encoder	1
+quad_encoder.c:14:6:init_quad_encoder	1
+quad_encoder.c:18:6:update_quad_encoder	1
+quad_encoder.c:24:6:set_encoder_counts	1

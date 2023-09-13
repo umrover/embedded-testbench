@@ -1,0 +1,3 @@
+servo.c:11:8:new_servo	1
+servo.c:21:6:initialize_servo	1
+servo.c:28:6:set_servo_angle	1

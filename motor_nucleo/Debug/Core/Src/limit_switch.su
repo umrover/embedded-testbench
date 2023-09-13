@@ -1,0 +1,2 @@
+../Core/Src/limit_switch.c:4:14:new_limit_switch	24	static
+../Core/Src/limit_switch.c:11:6:update_limit_switch	16	static

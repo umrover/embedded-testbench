@@ -125,6 +125,7 @@ void Error_Handler(void);
 #define I2C1_SPECTRAL_SCL_GPIO_Port GPIOB
 #define I2C1_SPECTRAL_SDA_Pin GPIO_PIN_7
 #define I2C1_SPECTRAL_SDA_GPIO_Port GPIOB
+
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

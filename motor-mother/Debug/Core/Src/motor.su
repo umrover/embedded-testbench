@@ -1,0 +1,8 @@
+../Core/Src/motor.c:4:8:new_motor	32	static
+../Core/Src/motor.c:27:6:init_motor	24	static
+../Core/Src/motor.c:32:6:update_motor_target	16	static
+../Core/Src/motor.c:42:6:set_motor_speed	16	static
+../Core/Src/motor.c:46:6:update_motor_speed	24	static
+../Core/Src/motor.c:84:6:move_motor_to_target	32	static
+../Core/Src/motor.c:93:6:update_motor_limit_switches	16	static
+../Core/Src/motor.c:108:6:refresh_motor_absolute_encoder_value	16	static

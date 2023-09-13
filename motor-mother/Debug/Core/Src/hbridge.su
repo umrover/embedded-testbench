@@ -1,0 +1,4 @@
+../Core/Src/hbridge.c:5:10:new_hbridge	32	static
+../Core/Src/hbridge.c:20:6:init_hbridge	24	static
+../Core/Src/hbridge.c:26:6:change_hbridge_pwm	16	static
+../Core/Src/hbridge.c:41:6:change_hbridge_dir_val	16	static
