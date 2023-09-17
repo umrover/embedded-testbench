@@ -166,18 +166,23 @@ int main(void)
   const uint8_t y_msb_reg = 0x35;
   const uint8_t z_lsb_reg = 0x36;
   const uint8_t z_msb_reg = 0x37;
-  const uint8_t power_ctrl_reg = 0x2D;
-  const uint8_t data_format_reg = 0x31;
+
+  const uint8_t power_ctrl_reg = TODO;
+  const uint8_t data_format_reg = TODO;
+
+  // Formats output data - Must be done before waking device
+  // TODO - Format data so that the output range is full resolution +/- 16g
+  const uint8_t data_format_val = TODO;
+  write_byte_data(i2c_dev_address, data_format_reg, data_format_val);
+
+  // Clear the link bit from power ctrl reg before waking up
+  write_byte_data(i2c_dev_address, power_ctrl_reg, 0);
 
   // Wakes the accelerometer from sleep mode.
   // TODO - Write the values to wake the accelerometer from sleep mode
   const uint8_t power_ctrl_val = TODO;
   write_byte_data(i2c_dev_address, power_ctrl_reg, power_ctrl_val);
 
-  // Formats output data
-  // TODO - Format data so that the output range is full resolution +/- 16g
-  const uint8_t data_format_val = TODO;
-  write_byte_data(i2c_dev_address, data_format_reg, data_format_val);
 
   /* USER CODE END 2 */
 
