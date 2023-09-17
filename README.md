@@ -1,8 +1,4 @@
-# Embedded Testbench Repo
-Repository for all esw testing scripts/works in progress \
-Examples of things to put in here: 
-- Arduino scripts 
-- Guides written in mark up for the wiki 
-- Beaglebone and Raspberry Pi scripts (in the future) 
-- Nucleo firmware 
-- Training projects
+# Embedded Software Starter Projects
+[Servo project](https://github.com/umrover/embedded-testbench/wiki/Nucleo-Servo-Starter-Project)  
+[Accelerometer project](https://github.com/umrover/embedded-testbench/wiki/Nucleo-Accel-Starter-Project)
+[Spectral project](https://github.com/umrover/embedded-testbench/wiki/Nucleo-Spectral-Starter-Project)
