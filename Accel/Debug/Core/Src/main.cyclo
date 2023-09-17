@@ -1,0 +1,9 @@
+../Core/Src/main.c:65:6:i2c_read	2
+../Core/Src/main.c:79:6:i2c_write	2
+../Core/Src/main.c:93:7:get_decimal	1
+../Core/Src/main.c:122:5:main	1
+../Core/Src/main.c:207:6:SystemClock_Config	4
+../Core/Src/main.c:255:13:MX_I2C1_Init	4
+../Core/Src/main.c:303:13:MX_I2C3_Init	4
+../Core/Src/main.c:351:13:MX_GPIO_Init	1
+../Core/Src/main.c:395:6:Error_Handler	1
