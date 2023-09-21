@@ -107,7 +107,7 @@ float get_decimal(uint8_t addr, uint8_t lsb_reg, uint8_t msb_reg) {
 	// TODO - Find the scale factor (can be found in the data sheet under Data Format Register section).
 	float scale_mg = 4;
     float scale_ms2 = scale * mg_to_ms2;
-	float scaled_data = combined_val * scale;
+	float scaled_data = combined_val * scale_ms2;
 
 	return scaled_data;
 }
