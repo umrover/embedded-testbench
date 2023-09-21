@@ -89,7 +89,7 @@ void i2c_write(uint8_t dev_addr, uint8_t mem_addr, uint8_t* buf, uint16_t size) 
 
 // TODO - implement this function
 float get_decimal(uint8_t addr, uint8_t lsb_reg, uint8_t msb_reg) {
-	const int mg_to_ms2 = 101.971621;
+	const int mg_to_ms2 = 0.00980665;
 
 	// Read from the lsb register and msb register
 	uint8_t accel_buf[2];
@@ -105,8 +105,9 @@ float get_decimal(uint8_t addr, uint8_t lsb_reg, uint8_t msb_reg) {
 
 	// Scale data based on values in the accelerometer library.
 	// TODO - Find the scale factor (can be found in the data sheet under Data Format Register section).
-	float scale = TODO;
-	float scaled_data = combined_val * scale;
+	float scale_mg = TODO;
+    float scale_ms2 = scale_mg * mg_to_ms2;
+	float scaled_data = combined_val * scale_ms2;
 
 	return scaled_data;
 }
