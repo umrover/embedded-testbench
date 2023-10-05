@@ -98,7 +98,7 @@ int main(void)
   MX_DMA_Init();
   MX_I2C3_Init();
   /* USER CODE BEGIN 2 */
-
+  uint8_t i = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -109,7 +109,8 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	// master code
-	HAL_I2C_Master_Transmit(&hi2c3,0x20,buffer,1,1000); // do I need to shift the address over by 1?
+	buffer[i] += 1;
+	HAL_I2C_Master_Transmit(&hi2c3,0x10,buffer,1,1000); // do I need to shift the address over by 1?
 	HAL_Delay(100);
 
 	// slave code
