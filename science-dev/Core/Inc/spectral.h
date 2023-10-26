@@ -10,6 +10,9 @@
 
 enum {
 	DEV_SEL = 0x4F,
+	I2C_51 = 0x00,
+	I2C_52 = 0x01,
+	I2C_53 = 0x02,
 
 	I2C_AS72XX_SLAVE_STATUS_REG = 0x00,
 	I2C_AS72XX_SLAVE_WRITE_REG = 0x01,
@@ -67,6 +70,12 @@ Spectral *new_spectral(SMBus *smbus);
 // EFFECTS: Initializes the spectral device
 void initialize_spectral(Spectral *spectral);
 
+
+// REQUIRES: spectral is an object, device_num is either 0, 1, or 2
+// MODIFIES: nothing
+// EFFECTS: changes which spectral device (when using triad) is being read from
+void select_device(Spectral *spectral, uint8_t device_num);
+
 // REQUIRES: spectral is an object
 // MODIFIES: spectral.channels array
 // EFFECTS: Updates values of spectral struct's channels array with data from spectral sensor
@@ -75,7 +84,7 @@ void update_spectral_all_channel_data(Spectral *spectral);
 // REQUIRES: spectral is an object and 0 <= channel < 6
 // MODIFIES: spectral.channels array
 // EFFECTS: Updates values of spectral struct's channels array with data from spectral sensor
-void update_spectral_channel_data(Spectral *spectral, uint8_t channel, uint8_t *error_flag);
+void update_spectral_channel_data(Spectral *spectral, uint8_t device_num, uint8_t channel, uint8_t *error_flag);
 
 // REQUIRES: spectral is an object and 0 <= channel < 6
 // MODIFIES: nothing

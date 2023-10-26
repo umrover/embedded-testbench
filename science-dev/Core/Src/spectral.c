@@ -32,6 +32,13 @@ void initialize_spectral(Spectral *spectral)
 	// Integration time is 0xFF * 2.8ms
 	HAL_Delay(50);
 	virtual_write_spectral(spectral, INT_TIME, 0xFF);  // increases integration time
+
+	select_device(spectral, I2C_51);
+}
+
+
+void select_device(Spectral *spectral, uint8_t device_num) {
+	virtual_write_spectral(spectral, DEV_SEL, device_num);
 }
 
 // REQUIRES: spectral is an object
@@ -41,15 +48,15 @@ void update_spectral_all_channel_data(Spectral *spectral) {
 	uint8_t *error_flag = 0;
 	// Update ALL channels in the spectral struct
 	for(int i = 0; i < SPECTRAL_CHANNELS; ++i) {
-		update_spectral_channel_data(spectral, i, error_flag);
+		update_spectral_channel_data(spectral, i, I2C_51, error_flag);
 	}
 }
 
 // REQUIRES: spectral is an object and 0 <= channel < 6
 // MODIFIES: spectral.channels array
 // EFFECTS: Updates values of spectral struct's channels array with data from spectral sensor
-void update_spectral_channel_data(Spectral *spectral, uint8_t channel, uint8_t *error_flag) {
-
+void update_spectral_channel_data(Spectral *spectral, uint8_t channel, uint8_t device_num, uint8_t *error_flag) {
+	select_device(spectral, device_num);
 
 	if (0 <= channel && channel < 6) {
 		uint8_t START_REG = RAW_VALUE_RGA_HIGH;

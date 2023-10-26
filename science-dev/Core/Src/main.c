@@ -136,7 +136,7 @@ int main(void)
 
 	for (size_t i = 0; i < SPECTRAL_CHANNELS; ++i) {
 	  uint8_t error_flag = 0;
-	  update_spectral_channel_data(spectral, i, error_flag);
+	  update_spectral_channel_data(spectral, i, I2C_51, error_flag);
 
 	  // If spectral I2C NAKs, leave early
 	  if(error_flag) {
@@ -145,7 +145,7 @@ int main(void)
 
 	  spectral_data[i] = get_spectral_channel_data(spectral, i);
 	}
-	bridge_send_spectral(bridge, spectral_data);
+//	bridge_send_spectral(bridge, spectral_data);
 
 	HAL_GPIO_WritePin(GPIOD, GPIO_PIN_2, GPIO_PIN_SET);
   }
